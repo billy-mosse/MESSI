@@ -125,6 +125,11 @@ pip3 install pandas &&\
 pip3 install networkx
 \end{lstlisting}
 
+Notar que creo que tal vez era esto lo que había uqe hacer:
+
+\begin{lstlisting}
+./sage --python -m easy_install <package_name>
+\end{lstlisting}
 
 \item Instalar sage para python:
 
@@ -137,6 +142,14 @@ make configure &&\
 ./configure --with-python=3 &&\
 make build
 \end{lstlisting}
+
+Si te tira error \say{make: execvp: ./bootstrap: Permission denied} yo lo arreglé con
+
+\begin{lstlisting}
+chmod +x bootstrap
+\end{lstlisting}
+
+Si no anda para python3 correr distclean...
 
 \end{itemize}
 
