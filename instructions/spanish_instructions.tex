@@ -1,0 +1,153 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{listingsutf8}
+\usepackage[spanish]{babel}
+\usepackage{dirtytalk}
+
+\begin{document}
+
+Hay varias cosas para hacer. Están itemizadas, con una explicación después de cada tarea:
+
+\lstset{language=bash,
+basicstyle=\ttfamily,
+extendedchars=true,
+inputencoding=latin1,
+literate=
+{á}{{\'a}}1
+{à}{{\`a}}1
+{ã}{{\~a}}1
+{é}{{\'e}}1
+{ê}{{\^e}}1
+{í}{{\'i}}1
+{ó}{{\'o}}1
+{õ}{{\~o}}1
+{ú}{{\'u}}1
+{ü}{{\"u}}1
+{ç}{{\c{c}}}1
+}
+
+\begin{itemize}
+
+	\item Instalar git. 
+\begin{lstlisting}
+#Para tener las versiones de paquetes más recientes
+sudo apt-get update
+#GIT
+sudo apt-get install git
+\end{lstlisting}
+
+Dicho mal y pronto, git es un programa usado para trabajar en equipo sobre un proyecto (como overleaf/sharelatex, dropbox, etc), pero con algunas diferencias. La más importante es que si uno hace cambios en los archivos, éstos \textbf{no se actualizan instantáneamente} en la computadora de la otra persona.
+
+Además, podemos trabajar sobre el mismo archivo (en lugares distintos), y luego combinar los cambios de manera muy fácil.
+
+\item Crease una cuenta en \url{https://github.com/}
+
+El proyecto que hice para el final está alojado (hosteado) en un sitio web - el que más se usa - llamado \textbf{github}. Es gratis. Tendrías que hacerte una cuenta ahí así te puedo agregar al proyecto.
+
+(¿Estás de acuerdo con que sea público?)
+
+\item Compartirme tu usuario de github por email, así te agrego al proyecto y podés subir cambios.
+
+\item Elegir carpeta donde trabajar.
+
+En tercer lugar, tenés que elegir una carpeta en tu máquina donde vas tus proyectos de github. Yo uso \textbf{/home/billy/Projects/git/github}, pero no hace falta que sea ni remotamente parecida.
+
+\item Bajarse el proyecto de github.
+
+\begin{lstlisting}
+#Estate parada en la carpeta donde vas a trabajar
+#La carpeta no debería ser "MESSI"
+#porque este comando te baja todo a una carpeta "MESSI"
+git clone https://github.com/billy-mosse/MESSI.git
+\end{lstlisting}
+
+Deberías ver una carpeta \say{MESSI} con subcarpetas \say{code, garbage, instructions}, etc.
+
+\item Instalar la última versión de \textbf{python3}:
+
+\begin{lstlisting}
+#Creo que viene por default ya, igual.
+sudo apt-get install python3
+#Si ya lo tenías instalado, actualizalo
+sudo apt-get upgrade python3
+\end{lstlisting}
+
+\item Instalar \textbf{pip}, para bajarse librerías de python, y otros yuyos:
+
+\begin{lstlisting}
+sudo apt-get -y install python3-pip
+pip3 install --upgrade pip
+
+#Yo tuve un problema y tuve que hacer esto
+pip3 install --upgrade setuptools pip
+\end{lstlisting}
+
+\item (Opcional, pero recomendado) Instalar \textbf{virtualenv}:
+
+\begin{lstlisting}
+#Instalar virtualenv por medio de pip.
+python3 -m pip install --user virtualenv
+\end{lstlisting}
+
+Virtualenv sirve para cuando tenés más de un proyecto en python. Tal vez para uno necesitás la versión 3.7 de la librería matplotlib, pero otro es medio antiguo y sólo anda con la versión 2.2. Virtualenv hace que puedas no instalar paquetes \textbf{globalmente}.
+
+Cuando uno trabaje en este proyecto, \say{prende} el entorno virtual de python correspondiente, que va a tener instaladas las versiones específicas de las librerías necesarias. (Es un comando muy simple.)
+
+De nuevo, no hace falta, a mí no me cambia nada si lo usás o no. Es más para uno.
+
+\item (Opcional, cont) Crear el virtualenv correspondiente al proyecto, en la misma carpeta del proyecto, o en una carpeta virtualenvs/ en tu home:
+
+\begin{lstlisting}
+python3 -m virtualenv env_messi
+\end{lstlisting}
+
+¡Avisame si en vez de env\_messi usás otro nombre para el virtualenv, porque en ese caso tengo que hacer algo!
+
+\item Prender el entorno virtual:
+
+\begin{lstlisting}
+source env_messi/bin/activate
+\end{lstlisting}
+
+\item Instalar las librerías que necesita el proyecto:
+
+\begin{lstlisting}
+#El doble AND es para correr comandos en serie (uno detras de otro)
+#siempre y cuando mp devuelvan error
+pip3 install numpy &&\
+pip3 install matplotlib &&\
+pip3 install pandas &&\
+pip3 install networkx
+\end{lstlisting}
+
+
+\item Instalar sage para python:
+
+Bajarse sage de \url{http://linorg.usp.br/sage/linux/index.html}
+
+Descomprimirlo, y correr:
+
+\begin{lstlisting}
+make configure &&\
+./configure --with-python=3 &&\
+make build
+\end{lstlisting}
+
+\end{itemize}
+
+
+
+https://packaging.python.org/guides/installing-using-pip-and-virtualenv/
+Instrucciones para instalarse el entorno de trabajo:
+
+
+\begin{lstlisting}
+sudo apt-get install python3
+\end{lstlisting}
+
+\end{document}

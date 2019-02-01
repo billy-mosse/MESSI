@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#Ver https://wiki.sagemath.org/Python3-compatible%20code para sage
+
+from __future__ import division, absolute_import, print_function
 
 import sys
 
