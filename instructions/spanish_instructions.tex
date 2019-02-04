@@ -11,7 +11,6 @@
 
 \begin{document}
 
-Hay varias cosas para hacer. Están itemizadas, con una explicación después de cada tarea:
 
 \lstset{language=bash,
 basicstyle=\ttfamily,
@@ -30,6 +29,53 @@ literate=
 {ü}{{\"u}}1
 {ç}{{\c{c}}}1
 }
+
+
+TL;DR: versión corta de lo que tenés que hacer. Si copipasteás, creo que va a correr todo sin problemas.
+
+\begin{lstlisting}
+sudo apt-get update
+
+sudo apt-get install git &&\
+#Carpeta temporal donde va a estar el proyecto
+mkdir -p $HOME/Projects/git/github &&\
+cd $HOME/Projects/git/github &&\
+git clone https://github.com/billy-mosse/MESSI.git &&\
+sudo apt-get install python3 &&\
+sudo apt-get upgrade python3 &&\
+sudo apt-get -y install python3-pip
+
+#Este tal vez no ande, no importa
+pip3 install --upgrade pip
+
+python3 -m pip install --user virtualenv &&\
+cd MESSI &&\
+python3 -m virtualenv env_messi &&\
+source env_messi/bin/activate
+
+#Primero con pip3
+pip3 install numpy &&\
+pip3 install matplotlib &&\
+pip3 install pandas &&\
+pip3 install networkx
+
+#Si no anda, con pip
+pip install numpy &&\
+pip install matplotlib &&\
+pip install pandas &&\
+pip install networkx
+
+#Probamos que ande todo:
+#Abrimos una consola de python
+python3
+
+#Dentro de la consola, probamos importar la librería numpy
+import numpy
+\end{lstlisting}
+
+
+A continuación, están las instrucciones con más detalles. Hay varias cosas para hacer. Están itemizadas, con una explicación después de cada tarea:
+
 
 \begin{itemize}
 
