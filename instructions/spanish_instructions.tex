@@ -59,10 +59,9 @@ Esta carpeta va a ser la que tendrá tus proyectos de github. Yo uso \textbf{/ho
 
 \item Bajarse el proyecto de github.
 
+El comando de abajo de baja el proyecto a una carpeta llamada \say{MESSI}, así que correlo parada en la carpeta que va a tener todos tus proyectos de github:
+
 \begin{lstlisting}
-#Estate parada en la carpeta donde vas a trabajar
-#La carpeta no debería ser "MESSI"
-#porque este comando te baja todo a una carpeta "MESSI"
 git clone https://github.com/billy-mosse/MESSI.git
 \end{lstlisting}
 
@@ -75,6 +74,13 @@ Deberías ver una carpeta \say{MESSI} con subcarpetas \say{code, garbage, instru
 sudo apt-get install python3
 #Si ya lo tenías instalado, actualizalo
 sudo apt-get upgrade python3
+\end{lstlisting}
+
+Podés chequear que está instalado con:
+
+\begin{lstlisting}
+python3 --version
+#Output: Python 3.5.2
 \end{lstlisting}
 
 \item Instalar \textbf{pip}, para bajarse librerías de python, y otros yuyos:
@@ -129,6 +135,16 @@ pip3 install pandas &&\
 pip3 install networkx
 \end{lstlisting}
 
+Si esto no te anda, cambiá pip3 por pip. Luego, chequeá que las librerías estén instaladas corriendo:
+
+\begin{lstlisting}
+#Te abre una consola de python
+python3
+
+#Dentro de la consola
+import numpy
+\end{lstlisting}
+
 %Notar que creo que tal vez era esto lo que había uqe hacer:
 
 %\begin{lstlisting}
@@ -155,6 +171,8 @@ y rezar. Si te tira error \say{make: execvp: ./bootstrap: Permission denied} pod
 \begin{lstlisting}
 chmod +x bootstrap
 \end{lstlisting}
+
+pero no gastes demasiado tiempo.
 
 \end{itemize}
 \end{document}
