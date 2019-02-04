@@ -41,7 +41,7 @@ sudo apt-get update
 sudo apt-get install git
 \end{lstlisting}
 
-Dicho mal y pronto, git es un programa usado para trabajar en equipo sobre un proyecto (como overleaf/sharelatex, dropbox, etc), pero con algunas diferencias. La más importante es que si uno hace cambios en los archivos, éstos \textbf{no se actualizan instantáneamente} en la computadora de la otra persona.
+Dicho mal y pronto, git es un programa usado para trabajar en equipo sobre un proyecto (como overleaf/sharelatex, dropbox, etc), pero con ciertas diferencias. La más importante es que si uno hace cambios en los archivos, éstos \textbf{no se actualizan instantáneamente} en la computadora de la otra persona.
 
 Además, podemos trabajar sobre el mismo archivo (en lugares distintos), y luego combinar los cambios de manera muy fácil.
 
@@ -51,11 +51,11 @@ El proyecto que hice para el final está alojado (hosteado) en un sitio web - el
 
 (¿Estás de acuerdo con que sea público?)
 
-\item Compartirme tu usuario de github por email, así te agrego al proyecto y podés subir cambios.
+\item Compartirme tu usuario de github por email, así te agrego al proyecto y eso te habilita a subir cambios. Esto es independiente del resto de los pasos del instructivo.
 
 \item Elegir carpeta donde trabajar.
 
-En tercer lugar, tenés que elegir una carpeta en tu máquina donde vas tus proyectos de github. Yo uso \textbf{/home/billy/Projects/git/github}, pero no hace falta que sea ni remotamente parecida.
+Esta carpeta va a ser la que tendrá tus proyectos de github. Yo uso \textbf{/home/billy/Projects/git/github}, pero no hace falta que sea ni remotamente parecida.
 
 \item Bajarse el proyecto de github.
 
@@ -96,13 +96,17 @@ python3 -m pip install --user virtualenv
 
 Virtualenv sirve para cuando tenés más de un proyecto en python. Tal vez para uno necesitás la versión 3.7 de la librería matplotlib, pero otro es medio antiguo y sólo anda con la versión 2.2. Virtualenv hace que puedas no instalar paquetes \textbf{globalmente}.
 
-Cuando uno trabaje en este proyecto, \say{prende} el entorno virtual de python correspondiente, que va a tener instaladas las versiones específicas de las librerías necesarias. (Es un comando muy simple.)
+La idea es que cuando trabajemos en este proyecto, \say{prendamos} el entorno virtual de python correspondiente, que va a tener instaladas las versiones específicas de las librerías necesarias. (Es un comando muy simple.)
 
-De nuevo, no hace falta, a mí no me cambia nada si lo usás o no. Es más para uno.
+No hace realmente falta que lo instales pero es muy útil para no tener problemas de versiones en el futuro.
 
 \item (Opcional, cont) Crear el virtualenv correspondiente al proyecto, en la misma carpeta del proyecto, o en una carpeta virtualenvs/ en tu home:
 
 \begin{lstlisting}
+#Crea un entorno virtual llamado env_messi
+#y deja los archivos de configuracion
+#en una carpeta env_messi
+#en el directorio donde estás parada
 python3 -m virtualenv env_messi
 \end{lstlisting}
 
@@ -118,20 +122,23 @@ source env_messi/bin/activate
 
 \begin{lstlisting}
 #El doble AND es para correr comandos en serie (uno detras de otro)
-#siempre y cuando mp devuelvan error
+#siempre y cuando no devuelvan error
 pip3 install numpy &&\
 pip3 install matplotlib &&\
 pip3 install pandas &&\
 pip3 install networkx
 \end{lstlisting}
 
-Notar que creo que tal vez era esto lo que había uqe hacer:
+%Notar que creo que tal vez era esto lo que había uqe hacer:
 
-\begin{lstlisting}
-./sage --python -m easy_install <package_name>
-\end{lstlisting}
+%\begin{lstlisting}
+%./sage --python -m easy_install <package_name>
+%\end{lstlisting}
 
-\item Instalar sage para python:
+\item (Totalmente opcional) Intentar instalar sage para python:
+
+
+Sage funciona bien con python 2.6, y está \say{en fase experimental} para python 3. Si querés podés intentar instalarlo para python 3. Yo usé python 2.6 para el final de Alicia pero quiero pasar todo a python 3, y me parece que sage es totalmente reemplazable por la librería scipy.linalg.
 
 Bajarse sage de \url{http://linorg.usp.br/sage/linux/index.html}
 
@@ -143,24 +150,11 @@ make configure &&\
 make build
 \end{lstlisting}
 
-Si te tira error \say{make: execvp: ./bootstrap: Permission denied} yo lo arreglé con
+y rezar. Si te tira error \say{make: execvp: ./bootstrap: Permission denied} podés intentar arreglarlo con:
 
 \begin{lstlisting}
 chmod +x bootstrap
 \end{lstlisting}
 
-Si no anda para python3 correr distclean...
-
 \end{itemize}
-
-
-
-https://packaging.python.org/guides/installing-using-pip-and-virtualenv/
-Instrucciones para instalarse el entorno de trabajo:
-
-
-\begin{lstlisting}
-sudo apt-get install python3
-\end{lstlisting}
-
 \end{document}
