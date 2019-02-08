@@ -5,7 +5,7 @@
 from __future__ import division, absolute_import, print_function
 
 import sys
-
+import os
 import numpy as np
 
 from numpy.linalg import det
@@ -16,6 +16,9 @@ import Utils
 from SignInformation import SignInformation
 import itertools
 import MESSIUtils
+
+#For nice-printing of tables
+import texttable as tt
 
 #NICETOHAVE: GUI para ingresar un grafo y que se fije si admite estructura MESSI y haga todas las cuentitas.
 
@@ -78,14 +81,16 @@ def getFullSigmaSubperp(Bperp, Mt, s, d):
         elif(result < 0):# and '-' not in signs:
             signs.append('-')
             witnesses.append(['-', J, Jc])
-        Sigma_subperp.append([Jc, mM, J, mB, result])
+        Sigma_subperp.append([JcL, mM, JL, mB, result])
 
-    
+    print_table(Sigma_subperp)
     if len(signs) > 1:
-        print "Sigma_perp is mixed! Great, then we can find v in T^perp and w in S with same sign."
+        print("Sigma_perp is mixed! Great, then we can find v in T^perp and w in S with same sign.")
         #print witnesses
     else:
-        print "Sigma_perp is NOT mixed"
+        print("Sigma_perp is NOT mixed")
+        exit(0)
+
     return Sigma_subperp    
     #Faltaria armar la tabla, que es bastante grande, no? No se si la voy a armar
     #Pero si voy  devolver
@@ -95,25 +100,61 @@ def getFullSigmaSubperp(Bperp, Mt, s, d):
 
 
 def print_table(table):
-    longest_cols = [
+    '''longest_cols = [
         (max([len(str(row[i])) for row in table]) + 3)
         for i in range(len(table[0]))
     ]
     row_format = "".join(["{:>" + str(longest_col) + "}" for longest_col in longest_cols])
     for row in table:
-        print(row_format.format(*row))
+        print(row_format.format(*row))'''
+    headings = table.pop(0)
+
+    table2 = []
+    map(table2, zip(*table))
+    
+    table2 = list(map(list, np.transpose(table)))
+    
+    tab = tt.Texttable()
+    tab.header(headings)
+    Jc = table2[0]
+    menorMt = table2[1]
+    J = table2[2]
+    menorBPerp = table2[3]
+    result = table2[4]
+
+    for row in zip(Jc, menorMt, J, menorBPerp, result):
+        tab.add_row(row)
+    s = tab.draw()
+    print (s)
+
+#Theorem 5.8
+def get_multistationarity_witnesses(v, w, s, d):
+    x1 = []
+    x2 = []
+    for i in range (0, s):
+        if v[i] != 0:
+            x1.append(w[i] * 1.0 / (np.exp(v[i])-1))
+        else:
+            x1.append(1)
+
+        x2.append(np.exp(v[i]) * x1[i])
+    return x1,x2
+
+
 
 def main(debug):
 
+    #TODO
     relevant_matrices = MESSIUtils.getRelevantMatrices(debug)
 
-
+    #Hardcoded from example 2.7
     Bperp = np.array([
     [1, 0, 0, 0, 0, 0, 0, 0, -1, 0],
     [0, 1, 0, 0, 2, 2, 1, 1, 2, 1],
     [-0, 0, 1, 0, 1, 1, 1, 1, 1, 1],
     [-0, 0, 0, 1, -1, -1, 0, -0, -1, -1]])
 
+    #Hardcoded from example 2.7
     Mt = np.array([
     [1, 0, 0, 0, 0, 0, -1, 1, 0, -1],
     [0, 1, 0, 0, 0, 0, -1, 1, 0, -1],
@@ -122,9 +163,13 @@ def main(debug):
     [0, 0, 0, 0, 1, 0, -1, 1, -1, -1],
     [0, 0, 0, 0, 0, 1, -1, 1, -0, -2]])
 
+    #From now on, almost everything is automatized
 
+    #Columns of B^\perp
     s = np.shape(Bperp)[1]
     assert s == np.shape(Mt)[1]
+
+
     d = np.shape(Bperp)[0]
     assert np.shape(Mt)[0] == s-d
 
@@ -133,61 +178,67 @@ def main(debug):
     #Mt = np.array([[1, 1, 1, 1], [5, 2, 0, 5]])
 
 
-    print ""
-    print ""
-    print "For the second part of the program, we will be working with toy matrices"
-    print "B^perp is:"
-    print Bperp
-    print "M^t is:"
-    print Mt
+    print("The matrices M^t and B^perp are hardcoded. The idea is to calculate them automatically in the future.")
+    print("B^perp is:")
+    print(Bperp)
+    input()
+
+    print("M^t is:")
+    print(Mt)
+    input()
 
     assert d<=s
 
-    print "First we will compute Sigma_perp to check if it's mixed."
+    print("First we will compute Sigma_perp to check if it's mixed.")
+    input()
+    
     FULL_Sigma_subperp = getFullSigmaSubperp(Bperp, Mt, s, d)
 
     sign_information_Bperp = SignInformation(Bperp)
     sign_information_Mt = SignInformation(Mt)
     #print(sign_information_Bperp.circuits)
 
-    if not debug or True:
-        var = raw_input("Press ENTER to continue.")
+
+    if not debug:
+        var = input("Press ENTER to continue.")
 
     orthants = list(itertools.product([-1,0,1],repeat=s))
 
+    equal_sign_vectors = []
 
-
+    #Steps 2,3,4
     for orthant in orthants:
         conformal_circuits_Bperp = sign_information_Bperp.get_conformal_circuits(orthant)
-        #print "Los siguientes circuitos son conformes a..."
-        #print orthant
-        #print ".."
-        #print conformal_circuits
-
         U_Bperp = Utils.union(conformal_circuits_Bperp)
-
-        '''print "orthant:"
-        print orthant
-        print "U:"
-        print U
-        print "______"'''
-
+        
         if U_Bperp != None and Utils.hasEqualSign(orthant, U_Bperp):
             #Si el ortante tiene soporte igual a la union de los circuitos de Bperp, sigo con el paso 3 del algoritmo.
             conformal_circuits_Mt = sign_information_Mt.get_conformal_circuits(orthant)
             U_Mt = Utils.union(conformal_circuits_Mt)
             if U_Mt != None and Utils.hasEqualSign(orthant, U_Mt):
-                print "Two vectors with the same sign, corresponding to the orthant %s, are %s, from T^perp, and %s, from S." % (orthant, U_Bperp, U_Mt)
+                equal_sign_vectors.append([U_Bperp, U_Mt])
+                print("Two vectors with the same sign, corresponding to the orthant %s, are %s, from T^perp, and %s, from S." % (orthant, U_Bperp, U_Mt))
         else:
             continue
-            #No hago nada.
+            #Isn't useful
 
+    input("Now let's get witnesses for multistationarity.")
+    if len(equal_sign_vectors) == 0:
+        print("No solutions were found. Was the system not s-toric?")
+        print("TODO: this should be ckecked automatically")
+    else:
+        first_solution = equal_sign_vectors[0]
+        v = first_solution[0]
+        w = first_solution[1]
 
+        #Step 6
+        x1, x2 = get_multistationarity_witnesses(v, w, s, d)
+        print("x1 is %s" % x1)
+        print("x2 is %s" % x2)
 
-    sign_information_Mt = SignInformation(Mt)
-    #print(sign_information_Mt.circuits)
+        #Step 6
+        Utils.getKappa(x1,x2)
 
-    #print_table(FULL_Sigma_subperp)
 
 
 if __name__=="__main__":

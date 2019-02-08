@@ -9,9 +9,11 @@ class SignInformation:
         d = np.shape(self.matrix)[0]
         s= np.shape(self.matrix)[1]
 
+        #Para que vaya de 1 a s.
         SList = range(1,s+1)
         circuits = []
 
+        print(M)
         #Obtengo todos los subconjuntos de tamanio d-1, donde d es la cantidad de filas de la matriz
         L = Utils.getRsubsets(SList,d-1)
         for J in L:
@@ -34,7 +36,10 @@ class SignInformation:
                     '''
 
                     circuit.append(int(round(fl,0)))
+            #print circuit
+
             circuits.append(circuit)
+            #var = input("Press ENTER to continue")
 
         #Agrego a los opuestos
         all_circuits = []
@@ -46,6 +51,8 @@ class SignInformation:
                 all_circuits.append(opposite_circuit)
 
         #Elimino a repetidos de una manera probablemente muy costosa
+        #print all_circuits
+        #var = input("Press ENTER to continue")
         return all_circuits
 
 
