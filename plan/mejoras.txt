@@ -1,0 +1,7 @@
+MEJORAS:
+
+Tirar ortantes si los subespacios no viven ahí (si hay columnas que tienen el mismo signo)
+
+Tirar menores si sabemos que van a dar cero por la mejora #1 de alicia.
+
+La mejora del problema abierto de usar info de este chequeo para calcular los coeficientes.
