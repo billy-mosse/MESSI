@@ -9,6 +9,9 @@ import scipy
 
 
 debug=False
+
+#This function is not mine! I stole it.
+#Billy.
 def combinationUtil(arr, n, r,  
                     index, data, i, L): 
     # Current combination is  
@@ -38,13 +41,15 @@ def combinationUtil(arr, n, r,
     combinationUtil(arr, n, r, index,  
                     data, i + 1, L) 
   
-  
-# The main function that 
-# prints all combinations 
-# of size r in arr[] of 
-# size n. This function  
-# mainly uses combinationUtil() 
+#This function is also not mine!
+#Billy.
 def getRsubsets(arr, r):
+    """The main function that 
+    prints all combinations 
+    of  size r in arr[] of 
+    size n. This function  
+    mainly uses combinationUtil() 
+    """
     n = len(arr) 
     L = []
     # A temporary array to 

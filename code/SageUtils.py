@@ -11,6 +11,8 @@ from sage.all import *
 
 
 from scipy import linalg, matrix
+
+
 #Como instalar cosas nuevas:
 #https://ask.sagemath.org/question/35457/importing-python-packages-into-sage-or-vice-versa/
 #el que sirve es este: ./sage --python -m easy_install <package_name>

@@ -4,7 +4,11 @@ import numpy as np
 import copy
 
 class SignInformation:
+
+
     def getCircuits(self, M):
+        """Gets all the circuits of matrix M
+        """
 
         d = np.shape(self.matrix)[0]
         s= np.shape(self.matrix)[1]
@@ -62,14 +66,17 @@ class SignInformation:
 
 
     def get_conformal_circuits(self, orthant):
+        """Gets all circuits that are conformal
+        to the orthant received as a parameter"""
+
         conformal_circuits = []
         for circuit in self.circuits:
             if Utils.isConformal(orthant, circuit):
                 conformal_circuits.append(circuit)
-
+        
         return conformal_circuits
 
 
 def mu(l, J):
-    rta = sum(1 for j in J if j < l) % 2
-    return rta
+    ret = sum(1 for j in J if j < l) % 2
+    return ret

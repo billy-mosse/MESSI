@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#Ver https://wiki.sagemath.org/Python3-compatible%20code para sage
+#Check https://wiki.sagemath.org/Python3-compatible%20code
+#if someday we want to use sage again
 
+#This shouldn't be necessary, as we are using python 3 now
 from __future__ import division, absolute_import, print_function
 
 import sys
@@ -12,48 +14,66 @@ from numpy.linalg import det
 from numpy import shape
 import copy
 
+#our library
 import Utils
+
+#our library
 from SignInformation import SignInformation
 import itertools
+
+#our libary
 import MESSIUtils
 
 #For nice-printing of tables
 import texttable as tt
 
+############################################################
+#Old obsolete comments:
 #NICETOHAVE: GUI para ingresar un grafo y que se fije si admite estructura MESSI y haga todas las cuentitas.
-
 #Objetivo para hoy: hacer que calcule los circuitos.
 #Objetivo secundario: hacer la otra parte.
-
 #Pregunta: tengo que guardar la info de los circuitos, no? Para calcular los witnesses despues
-
 #Deberia hacer la union "circuital" de vectores
 
+#For running sage:
 #./sage -python circuits.py
-def union(circ1,circ2):
-    d = []
+############################################################
+
+
+def union(conformalCircuit1,conformalCircuit2):
+    """Returns the union of 2 cicuits.
+    The circuits are assumed to be conformal.
+    """
+    ret = []
     for i in range(0, len(circ1)):
-        c1 = circ1[i]
-        c2 = circ2[i]
-        if c1==1 or c2==1:
-            d.append(1)
-        elif c1==-1 or c2==-1:
-            d.append(-1)
+        c1i = conformalCircuit1[i]
+        c2i = conformalCircuit2[i]
+        if c1i==1 or c2i==1:
+            ret.append(1)
+        elif c1i==-1 or c2i==-1:
+            ret.append(-1)
         else:
-            d.append(0)
-    return d
+            ret.append(0)
+    return ret
 
-#TODO: podrian ser SETS mejor.
+#TODO: maybe we could use sets.
+#TODO: names of parameters could be nicer.
 def getFullSigmaSubperp(Bperp, Mt, s, d):
-
+    """
+    This function checks if SigmaSubperp is mixed.
+    TODO: the name of the function is wrong!
+    """
     signs = []
     witnesses = []
     
-    #Bperp tiene d filas y s columnas.
-    #Mt tiene s-d filas y s columnas.
+    #Bperp has d rows and s columns.
+    #Mt has s-d rows and s columns.
     SList = range(1,s+1)
 
-    #Obtengo todos los subconjuntos de tamanio d
+    #First we get all subsets of size d.
+    #TODO: an obvious optimization:
+    #Don't store all subsets, but generate them dynamically.
+    #Stop generathing them if we get mixed signs for a subset.
     L = Utils.getRsubsets(SList,d)
 
     S = set(SList)
@@ -83,7 +103,7 @@ def getFullSigmaSubperp(Bperp, Mt, s, d):
             witnesses.append(['-', J, Jc])
         Sigma_subperp.append([JcL, mM, JL, mB, result])
 
-    print_table(Sigma_subperp)
+    print_Sigma_subperp_table(Sigma_subperp)
     if len(signs) > 1:
         print("Sigma_perp is mixed! Great, then we can find v in T^perp and w in S with same sign.")
         #print witnesses
@@ -99,14 +119,10 @@ def getFullSigmaSubperp(Bperp, Mt, s, d):
 
 
 
-def print_table(table):
-    '''longest_cols = [
-        (max([len(str(row[i])) for row in table]) + 3)
-        for i in range(len(table[0]))
-    ]
-    row_format = "".join(["{:>" + str(longest_col) + "}" for longest_col in longest_cols])
-    for row in table:
-        print(row_format.format(*row))'''
+def print_Sigma_subperp_table(table):
+    """
+    Prints the Sigma_subperp table.
+    """
     headings = table.pop(0)
 
     table2 = []
