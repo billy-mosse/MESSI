@@ -3,9 +3,10 @@ before_script: cd code
 language: python
 
 python:
-	- "3.5.2"
+  - "3.5.2"
 
 install:
-	- pip install -r requirements.txt
+  - pip install -r requirements.txt
 
-script: pytest tests.py
+script:
+  - pytest tests.py
