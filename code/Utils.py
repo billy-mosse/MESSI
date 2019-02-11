@@ -75,6 +75,7 @@ def i(cols):
 #La cantidad de columnas es tal que cuando sliceamos, obtenemos una matriz cuadrada 
 #OJO que los indices empiezan en cero
 def minor(A, cols):
+
     A_sliced = A[:, i(cols)]
     #Deberia ser cuadrada
     assert np.shape(A_sliced)[0] == np.shape(A_sliced)[1]
@@ -126,6 +127,24 @@ def union(conformal_circuits):
         for circuit in conformal_circuits:
             U[j]=U[j]+circuit[j]
     return U
+
+'''
+useless function
+def union(conformalCircuit1,conformalCircuit2):
+    """Returns the union of 2 cicuits.
+    The circuits are assumed to be conformal.
+    """
+    ret = []
+    for i in range(0, len(circ1)):
+        c1i = conformalCircuit1[i]
+        c2i = conformalCircuit2[i]
+        if c1i==1 or c2i==1:
+            ret.append(1)
+        elif c1i==-1 or c2i==-1:
+            ret.append(-1)
+        else:
+            ret.append(0)
+    return ret'''
 
 def orthant_has_conformal_circuit(orthant, sign_information_M):
     """unused function that checks if the orthant parameter is conformal
@@ -210,6 +229,10 @@ def get_kappa(x1, x2):
 
     if np.linalg.norm(A.dot(nk) < 0.0001):
         print("f(x2, k) = 0")
+        return nk
     else:
         print("f(x2, k) != 0")
+        return None
+
+
 

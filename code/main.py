@@ -40,21 +40,7 @@ import texttable as tt
 ############################################################
 
 
-def union(conformalCircuit1,conformalCircuit2):
-    """Returns the union of 2 cicuits.
-    The circuits are assumed to be conformal.
-    """
-    ret = []
-    for i in range(0, len(circ1)):
-        c1i = conformalCircuit1[i]
-        c2i = conformalCircuit2[i]
-        if c1i==1 or c2i==1:
-            ret.append(1)
-        elif c1i==-1 or c2i==-1:
-            ret.append(-1)
-        else:
-            ret.append(0)
-    return ret
+
 
 #TODO: maybe we could use sets.
 #TODO: names of parameters could be nicer.
@@ -176,7 +162,7 @@ def get_hardcoded_matrices():
 
 
 
-def get_equal_sign_vectors(s, sign_information_Bperp, sign_information_Mt):
+def get_equal_sign_vectors(s, circuits_information_Bperp, circuits_information_Mt):
     equal_sign_vectors = []
 
     #TODO: create them dynamically
@@ -184,12 +170,14 @@ def get_equal_sign_vectors(s, sign_information_Bperp, sign_information_Mt):
 
     #Steps 2,3,4
     for orthant in orthants:
-        conformal_circuits_Bperp = sign_information_Bperp.get_conformal_circuits(orthant)
+        conformal_circuits_Bperp = circuits_information_Bperp.get_conformal_circuits(orthant)
+
+        #union of the circuits conformal to the orthant
         U_Bperp = Utils.union(conformal_circuits_Bperp)
         
         if U_Bperp != None and Utils.has_equal_sign(orthant, U_Bperp):
             #Si el ortante tiene soporte igual a la union de los circuitos de Bperp, sigo con el paso 3 del algoritmo.
-            conformal_circuits_Mt = sign_information_Mt.get_conformal_circuits(orthant)
+            conformal_circuits_Mt = circuits_information_Mt.get_conformal_circuits(orthant)
             U_Mt = Utils.union(conformal_circuits_Mt)
             if U_Mt != None and Utils.has_equal_sign(orthant, U_Mt):
                 equal_sign_vectors.append([U_Bperp, U_Mt])
@@ -220,7 +208,6 @@ def main(debug):
     s = np.shape(Bperp)[1]
     assert s == np.shape(Mt)[1]
 
-
     d = np.shape(Bperp)[0]    
     assert np.shape(Mt)[0] == s-d
     assert d<=s
@@ -228,16 +215,18 @@ def main(debug):
     print("1) Compute Sigma_perp and check if it is mixed.")
     input()
     
+    #exits if false
     check_if_sigma_subperp_is_mixed(Bperp, Mt, s, d)
 
-    #
-    sign_information_Bperp = CircuitsInformation(Bperp)
-    sign_information_Mt = CircuitsInformation(Mt)
+    #circuits of matrices Bperp, Mt
+    circuits_information_Bperp = CircuitsInformation(Bperp)
+    circuits_information_Mt = CircuitsInformation(Mt)
 
     if not debug:
         input("Press ENTER to continue.")
 
-    equal_sign_vectors = get_equal_sign_vectors(s, sign_information_Bperp, sign_information_Mt)    
+    #Steps 2-5
+    equal_sign_vectors = get_equal_sign_vectors(s, circuits_information_Bperp, circuits_information_Mt)    
 
     input("Multistationarity witnesses.")
     if len(equal_sign_vectors) == 0:
@@ -257,6 +246,7 @@ def main(debug):
         #Step 6
         #TODO: there are some hardcoded stuff inside this function
         Utils.get_kappa(x1,x2)
+
 
 
 
