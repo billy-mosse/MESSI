@@ -58,7 +58,7 @@ def union(conformalCircuit1,conformalCircuit2):
 
 #TODO: maybe we could use sets.
 #TODO: names of parameters could be nicer.
-def checkIfSigmaSubperpIsMixed(Bperp, Mt, s, d):
+def check_if_sigma_subperp_is_mixed(Bperp, Mt, s, d):
     """
     This function checks if SigmaSubperp is mixed.
     TODO: the name of the function is wrong!
@@ -160,7 +160,7 @@ def get_multistationarity_witnesses(v, w, s, d):
 
 
 
-def get_hardcoded_matrices()
+def get_hardcoded_matrices():
     Bperp = np.array([
     [1, 0, 0, 0, 0, 0, 0, 0, -1, 0],
     [0, 1, 0, 0, 2, 2, 1, 1, 2, 1],
@@ -179,63 +179,9 @@ def get_hardcoded_matrices()
     return Bperp, Mt
 
 
-def main(debug):
-    """
-    the debug flag is used for fast computation
-    """
 
-
-    #for easier reading
-    Bperp, Mt = get_hardcoded_matrices()
-
-    #TODO: finish this MESSIUtils function instead of using hardcoded Bperp and Mt.
-    #The function should return BPerp and Mt from user input of the MESSI system.
-    #MESSIUtils.getRelevantMatrices(debug)
-
-
-    #From now on, almost everything is automated
-
-    #Columns of B^\perp
-    s = np.shape(Bperp)[1]
-    assert s == np.shape(Mt)[1]
-
-
-    d = np.shape(Bperp)[0]
-    assert np.shape(Mt)[0] == s-d
-
-
-    print("B^perp:")
-    print(Bperp)
-
-    #This acts as a "pause"
-    input()
-
-    print("M^t:")
-    print(Mt)
-    input()
-
-    assert d<=s
-
-    print("1) Compute Sigma_perp and check if it is mixed.")
-    input()
-    
-    checkIfSigmaSubperpIsMixed(Bperp, Mt, s, d)
-
-
-    #circuits information
-    sign_information_Bperp = SignInformation(Bperp)
-    sign_information_Mt = SignInformation(Mt)
-
-
-    if not debug:
-        var = input("Press ENTER to continue.")
-
-
-    #TODO: create them dynamically
-    orthants = list(itertools.product([-1,0,1],repeat=s))
-
+def get_equal_sign_vectors():
     equal_sign_vectors = []
-
     #Steps 2,3,4
     for orthant in orthants:
         conformal_circuits_Bperp = sign_information_Bperp.get_conformal_circuits(orthant)
@@ -251,6 +197,50 @@ def main(debug):
         else:
             continue
             #Isn't useful
+    return equal_sign_vectors
+
+
+def main(debug):
+    """
+    gets multistationarity witnesses x^1, x^2, \\kappa or exits.
+    the debug flag is used for fast computation
+    """
+
+    #for easier reading
+    Bperp, Mt = get_hardcoded_matrices()
+
+    #TODO: finish this MESSINetworkBuilder function instead of using hardcoded Bperp and Mt.
+    #The function should return BPerp and Mt from user input of the MESSI system.
+    #MESSINetworkBuilder.getRelevantMatrices(debug)
+
+
+    #From now on, almost everything is automated
+
+    #Columns of B^\perp
+    s = np.shape(Bperp)[1]
+    assert s == np.shape(Mt)[1]
+
+
+    d = np.shape(Bperp)[0]    
+    assert np.shape(Mt)[0] == s-d
+    assert d<=s
+
+    print("1) Compute Sigma_perp and check if it is mixed.")
+    input()
+    
+    check_if_sigma_subperp_is_mixed(Bperp, Mt, s, d)
+
+    #circuits information
+    sign_information_Bperp = SignInformation(Bperp)
+    sign_information_Mt = SignInformation(Mt)
+
+    if not debug:
+        input("Press ENTER to continue.")
+
+    #TODO: create them dynamically
+    orthants = list(itertools.product([-1,0,1],repeat=s))
+
+    equal_sign_vectors = get_equal_sign_vectors()    
 
     input("Multistationarity witnesses.")
     if len(equal_sign_vectors) == 0:

@@ -103,7 +103,7 @@ def hasEqualSign(orthant, circuit):
         #They DON'T have equal sign if they have opposite nonzero signs, or if XOR is false
         #
 
-        if (orthant[i] * circuit[i] < 0) or (bool(orthant[i]) != bool(citcuit[i])):
+        if (orthant[i] * circuit[i] < 0) or (bool(orthant[i]) != bool(circuit[i])):
             return False
 
         #if (orthant[i] * circuit[i] < 0) or (orthant[i] == 0 and circuit[i] != 0) or (orthant[i] != 0 and circuit[i] == 0):

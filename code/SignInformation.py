@@ -16,7 +16,7 @@ class SignInformation:
         d = np.shape(self.matrix)[0]
         s= np.shape(self.matrix)[1]
 
-        #Para que vaya de 1 a s.
+        #range(1,s+1) returns [1,..., s]
         SList = range(1,s+1)
         circuits = []
 
@@ -62,7 +62,7 @@ class SignInformation:
         #var = input("Press ENTER to continue")
         return all_circuits
 
-    
+
     def get_conformal_circuits(self, orthant):
         """Gets all circuits that are conformal
         to the orthant received as a parameter"""
