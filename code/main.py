@@ -18,11 +18,11 @@ import copy
 import Utils
 
 #our library
-from SignInformation import SignInformation
+from CircuitsInformation import CircuitsInformation
 import itertools
 
 #our libary
-import MESSIUtils
+import MESSINetworkBuilder
 
 #For nice-printing of tables
 import texttable as tt
@@ -74,7 +74,7 @@ def check_if_sigma_subperp_is_mixed(Bperp, Mt, s, d):
     #TODO: an obvious optimization:
     #Don't store all subsets, but generate them dynamically.
     #Stop generathing them if we get mixed signs for a subset.
-    L = Utils.getRsubsets(SList,d)
+    L = Utils.get_r_subsets(SList,d)
 
     S = set(SList)
     Sigma_subperp = [["J^c", "menor M^t", "J", "menor B^\\perp", "Result"]]
@@ -156,10 +156,6 @@ def get_multistationarity_witnesses(v, w, s, d):
     return x1,x2
 
 
-
-
-
-
 def get_hardcoded_matrices():
     Bperp = np.array([
     [1, 0, 0, 0, 0, 0, 0, 0, -1, 0],
@@ -180,18 +176,22 @@ def get_hardcoded_matrices():
 
 
 
-def get_equal_sign_vectors():
+def get_equal_sign_vectors(s, sign_information_Bperp, sign_information_Mt):
     equal_sign_vectors = []
+
+    #TODO: create them dynamically
+    orthants = list(itertools.product([-1,0,1],repeat=s))
+
     #Steps 2,3,4
     for orthant in orthants:
         conformal_circuits_Bperp = sign_information_Bperp.get_conformal_circuits(orthant)
         U_Bperp = Utils.union(conformal_circuits_Bperp)
         
-        if U_Bperp != None and Utils.hasEqualSign(orthant, U_Bperp):
+        if U_Bperp != None and Utils.has_equal_sign(orthant, U_Bperp):
             #Si el ortante tiene soporte igual a la union de los circuitos de Bperp, sigo con el paso 3 del algoritmo.
             conformal_circuits_Mt = sign_information_Mt.get_conformal_circuits(orthant)
             U_Mt = Utils.union(conformal_circuits_Mt)
-            if U_Mt != None and Utils.hasEqualSign(orthant, U_Mt):
+            if U_Mt != None and Utils.has_equal_sign(orthant, U_Mt):
                 equal_sign_vectors.append([U_Bperp, U_Mt])
                 print("Two vectors with the same sign, corresponding to the orthant %s, are %s, from T^perp, and %s, from S." % (orthant, U_Bperp, U_Mt))
         else:
@@ -211,7 +211,7 @@ def main(debug):
 
     #TODO: finish this MESSINetworkBuilder function instead of using hardcoded Bperp and Mt.
     #The function should return BPerp and Mt from user input of the MESSI system.
-    #MESSINetworkBuilder.getRelevantMatrices(debug)
+    #MESSINetworkBuilder.get_relevant_matrices(debug)
 
 
     #From now on, almost everything is automated
@@ -230,17 +230,14 @@ def main(debug):
     
     check_if_sigma_subperp_is_mixed(Bperp, Mt, s, d)
 
-    #circuits information
-    sign_information_Bperp = SignInformation(Bperp)
-    sign_information_Mt = SignInformation(Mt)
+    #
+    sign_information_Bperp = CircuitsInformation(Bperp)
+    sign_information_Mt = CircuitsInformation(Mt)
 
     if not debug:
         input("Press ENTER to continue.")
 
-    #TODO: create them dynamically
-    orthants = list(itertools.product([-1,0,1],repeat=s))
-
-    equal_sign_vectors = get_equal_sign_vectors()    
+    equal_sign_vectors = get_equal_sign_vectors(s, sign_information_Bperp, sign_information_Mt)    
 
     input("Multistationarity witnesses.")
     if len(equal_sign_vectors) == 0:
@@ -259,7 +256,7 @@ def main(debug):
 
         #Step 6
         #TODO: there are some hardcoded stuff inside this function
-        Utils.getKappa(x1,x2)
+        Utils.get_kappa(x1,x2)
 
 
 

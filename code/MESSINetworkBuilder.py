@@ -7,7 +7,17 @@ import networkx as nx
 import pandas as pd
 
 
-def getRelevantMatrices(debug):
+"""
+Python module for generating relevant data from a MESSI network.
+TODOs:
+ 1. automatic checking of toricity.
+ 2. generation of binomials.
+ 3. graphs of multistationarity.
+ 4. nicer visualization of network?
+"""
+
+
+def get_relevant_matrices(debug):
 
     reactions = []
     if not debug:

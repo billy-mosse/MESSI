@@ -12,7 +12,7 @@ debug=False
 
 #This function is not mine! I stole it.
 #Billy.
-def combinationUtil(arr, n, r,  
+def combination_util(arr, n, r,  
                     index, data, i, L): 
     # Current combination is  
     # ready to be printed, 
@@ -30,7 +30,7 @@ def combinationUtil(arr, n, r,
     # put next at next 
     # location  
     data[index] = arr[i] 
-    combinationUtil(arr, n, r,  
+    combination_util(arr, n, r,  
                     index + 1, data, i + 1, L) 
       
     # current is excluded,  
@@ -38,17 +38,17 @@ def combinationUtil(arr, n, r,
     # next (Note that i+1  
     # is passed, but index  
     # is not changed) 
-    combinationUtil(arr, n, r, index,  
+    combination_util(arr, n, r, index,  
                     data, i + 1, L) 
   
 #This function is also not mine!
 #Billy.
-def getRsubsets(arr, r):
+def get_r_subsets(arr, r):
     """The main function that 
     prints all combinations 
     of  size r in arr[] of 
     size n. This function  
-    mainly uses combinationUtil() 
+    mainly uses combination_util() 
     """
     n = len(arr) 
     L = []
@@ -60,7 +60,7 @@ def getRsubsets(arr, r):
     # Print all combination  
     # using temporary  
     # array 'data[]' 
-    combinationUtil(arr, n, r,  
+    combination_util(arr, n, r,  
                     0, data, 0, L) 
 
     #print L
@@ -72,8 +72,6 @@ def i(cols):
     return [col-1 for col in cols]
 
 
-
-
 #La cantidad de columnas es tal que cuando sliceamos, obtenemos una matriz cuadrada 
 #OJO que los indices empiezan en cero
 def minor(A, cols):
@@ -82,8 +80,8 @@ def minor(A, cols):
     assert np.shape(A_sliced)[0] == np.shape(A_sliced)[1]
     return np.linalg.det(A_sliced)
 
-#Asume que son del mismo tamanio
-def isConformal(orthant, circuit):
+#Asume que son del mismo tamaño
+def is_conformal(orthant, circuit):
     for i in range(0, len(orthant)):
         
         #No son conformes si tienen signos opuestos, distintos de cero, en alguna coordenada.
@@ -94,7 +92,7 @@ def isConformal(orthant, circuit):
 #def sign(x):
 #      return 1-(x<=0)
 
-def hasEqualSign(orthant, circuit):
+def has_equal_sign(orthant, circuit):
     """
     returns true iff the circuit parameter has equal sign as the orthant
     """
@@ -129,19 +127,19 @@ def union(conformal_circuits):
             U[j]=U[j]+circuit[j]
     return U
 
-def orthantHasConformalCircuit(orthant, sign_information_M):
+def orthant_has_conformal_circuit(orthant, sign_information_M):
     """unused function that checks if the orthant parameter is conformal
     to any of M's circuits"""
 
     for circuit in sign_information_M.circuits:
-        if isConformal(orthant, circuit):
+        if is_conformal(orthant, circuit):
             if debug:
                 print("The orthant %s is conformal to the circuit %s" % (orthant, circuit))
             return True
     return False
 
 
-def getKappa(x1, x2):
+def get_kappa(x1, x2):
     '''M = matrix([
     [-x1[0] * x1[8], x1[4], 0, 0, 0, 0, 0, 0, 0, -x1[3] * x1[0], -x1[7], 0],
     [0, 0, x1[4], -x1[1] * x1[0],  x1[5], 0, -x1[2]*x1[1], x1[6], x1[6], 0, 0, 0],
@@ -202,11 +200,14 @@ def getKappa(x1, x2):
     var = input("The following matrix A was calculated by hand.")
     var = input("The condition f(x2,k)=0 is equivalent to A k^t=0")
     print(A)
-    var = input("On the other hand, the first kappa is:")
+    
+    var = input("kappa is:")
     print(nk)
-    print(input("And the product, ladies and gentelmen, is:"))
+
+    print(input("Product:"))
     z = A.dot(nk)
     print(z)
+
     if np.linalg.norm(A.dot(nk) < 0.0001):
         print("Mazel tov!")
     else:
