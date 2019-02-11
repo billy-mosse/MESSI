@@ -91,14 +91,23 @@ def isConformal(orthant, circuit):
             return False
     return True
 
+#def sign(x):
+#      return 1-(x<=0)
 
 def hasEqualSign(orthant, circuit):
+    """
+    returns true iff the circuit parameter has equal sign as the orthant
+    """
     for i in range(0, len(orthant)):
         
-        #No tienen el mismo signo si tienen signos opuestos distintos de cero,
-        #O alguno es cero y el otro no 
-        if (orthant[i] * circuit[i] < 0) or (orthant[i] == 0 and circuit[i] != 0) or (orthant[i] != 0 and circuit[i] == 0):
+        #They DON'T have equal sign if they have opposite nonzero signs, or if XOR is false
+        #
+
+        if (orthant[i] * circuit[i] < 0) or (bool(orthant[i]) != bool(citcuit[i])):
             return False
+
+        #if (orthant[i] * circuit[i] < 0) or (orthant[i] == 0 and circuit[i] != 0) or (orthant[i] != 0 and circuit[i] == 0):
+        #    return False
     return True
 
 #Esta funcion hace la union de unos conformal circuits.
@@ -106,8 +115,9 @@ def hasEqualSign(orthant, circuit):
 #si algun circuito tiene la coordenada i distinta de cero,
 #la union tiene esa coordenada igual a la del circuito.
 
-#La union podria ser la suma, tranquilamente, pero prefiero hacer esto.
 def union(conformal_circuits):
+    """returns the sum of the conformal circuits list.
+    """
     if len(conformal_circuits) == 0:
         return None
     
@@ -116,17 +126,13 @@ def union(conformal_circuits):
     U = [0 for i in range(s)]
     for j in range(0,s):
         for circuit in conformal_circuits:
-            #if circuit[j] != 0:
-            #Tengo que sumar porque sino no me da en el espacio...
             U[j]=U[j]+circuit[j]
-            #    break
     return U
 
-#Esta funcion chequea si el ortante orthant
-#tiene algun circuito conforme a los circuitos de M
-#
-#Al final no la necesito.
 def orthantHasConformalCircuit(orthant, sign_information_M):
+    """unused function that checks if the orthant parameter is conformal
+    to any of M's circuits"""
+
     for circuit in sign_information_M.circuits:
         if isConformal(orthant, circuit):
             if debug:

@@ -8,7 +8,6 @@ import pandas as pd
 
 def getRelevantMatrices(debug):
 
-
     reactions = []
     if not debug:
 
@@ -40,7 +39,9 @@ def getRelevantMatrices(debug):
         ['FP1','P1+F', 'k11'],
         ['FP1','P0+F', 'k12']]
 
-    #Deberia ser un MultiGraph si quiero que anden bien los labels
+
+    #This part needs some work.
+    #I think we should use a multigraph for (label) visualization but a digraph for computations
     G = nx.DiGraph(directed=True)
 
     sources = set([reaction[0] for reaction in reactions])
@@ -173,7 +174,11 @@ labels={node:node for node in G.nodes()},
         if not debug:
             var = input("Press ENTER to continue with the program.")
 
+        #TODO: finish.
+
 '''
+Para el primer mensaje:
+
 (S0+E, ES0,k1)
 (ES0, S0+E, k2)
 (ES0, S1+E,k3)
@@ -193,6 +198,9 @@ END
 #P0_intermediates=[ES0,FS1,S1P0,FP1]
 #P_cores=[[S0,S1],[P0,P1],[E],[F]]
 '''
+
+Para el segundo mensaje:
+
 ES0
 FS1
 S1P0

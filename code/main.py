@@ -58,7 +58,7 @@ def union(conformalCircuit1,conformalCircuit2):
 
 #TODO: maybe we could use sets.
 #TODO: names of parameters could be nicer.
-def getFullSigmaSubperp(Bperp, Mt, s, d):
+def checkIfSigmaSubperpIsMixed(Bperp, Mt, s, d):
     """
     This function checks if SigmaSubperp is mixed.
     TODO: the name of the function is wrong!
@@ -111,7 +111,6 @@ def getFullSigmaSubperp(Bperp, Mt, s, d):
         print("Sigma_perp is NOT mixed")
         exit(0)
 
-    return Sigma_subperp    
     #Faltaria armar la tabla, que es bastante grande, no? No se si la voy a armar
     #Pero si voy  devolver
 
@@ -158,12 +157,10 @@ def get_multistationarity_witnesses(v, w, s, d):
 
 
 
-def main(debug):
 
-    #TODO
-    relevant_matrices = MESSIUtils.getRelevantMatrices(debug)
 
-    #Hardcoded from example 2.7
+
+def get_hardcoded_matrices()
     Bperp = np.array([
     [1, 0, 0, 0, 0, 0, 0, 0, -1, 0],
     [0, 1, 0, 0, 2, 2, 1, 1, 2, 1],
@@ -179,7 +176,24 @@ def main(debug):
     [0, 0, 0, 0, 1, 0, -1, 1, -1, -1],
     [0, 0, 0, 0, 0, 1, -1, 1, -0, -2]])
 
-    #From now on, almost everything is automatized
+    return Bperp, Mt
+
+
+def main(debug):
+    """
+    the debug flag is used for fast computation
+    """
+
+
+    #for easier reading
+    Bperp, Mt = get_hardcoded_matrices()
+
+    #TODO: finish this MESSIUtils function instead of using hardcoded Bperp and Mt.
+    #The function should return BPerp and Mt from user input of the MESSI system.
+    #MESSIUtils.getRelevantMatrices(debug)
+
+
+    #From now on, almost everything is automated
 
     #Columns of B^\perp
     s = np.shape(Bperp)[1]
@@ -189,35 +203,35 @@ def main(debug):
     d = np.shape(Bperp)[0]
     assert np.shape(Mt)[0] == s-d
 
-    #Bperp = np.array([[1, 0, -3, 2],
-                     #[0, 1, -2, 1]])
-    #Mt = np.array([[1, 1, 1, 1], [5, 2, 0, 5]])
 
-
-    print("The matrices M^t and B^perp are hardcoded. The idea is to calculate them automatically in the future.")
-    print("B^perp is:")
+    print("B^perp:")
     print(Bperp)
+
+    #This acts as a "pause"
     input()
 
-    print("M^t is:")
+    print("M^t:")
     print(Mt)
     input()
 
     assert d<=s
 
-    print("First we will compute Sigma_perp to check if it's mixed.")
+    print("1) Compute Sigma_perp and check if it is mixed.")
     input()
     
-    FULL_Sigma_subperp = getFullSigmaSubperp(Bperp, Mt, s, d)
+    checkIfSigmaSubperpIsMixed(Bperp, Mt, s, d)
 
+
+    #circuits information
     sign_information_Bperp = SignInformation(Bperp)
     sign_information_Mt = SignInformation(Mt)
-    #print(sign_information_Bperp.circuits)
 
 
     if not debug:
         var = input("Press ENTER to continue.")
 
+
+    #TODO: create them dynamically
     orthants = list(itertools.product([-1,0,1],repeat=s))
 
     equal_sign_vectors = []
@@ -238,21 +252,23 @@ def main(debug):
             continue
             #Isn't useful
 
-    input("Now let's get witnesses for multistationarity.")
+    input("Multistationarity witnesses.")
     if len(equal_sign_vectors) == 0:
         print("No solutions were found. Was the system not s-toric?")
         print("TODO: this should be ckecked automatically")
     else:
+        input("Step 5) Conformal vectors v and w")
         first_solution = equal_sign_vectors[0]
         v = first_solution[0]
         w = first_solution[1]
 
-        #Step 6
+        input("6) x^1, x^2, \\kappa")
         x1, x2 = get_multistationarity_witnesses(v, w, s, d)
         print("x1 is %s" % x1)
         print("x2 is %s" % x2)
 
         #Step 6
+        #TODO: there are some hardcoded stuff inside this function
         Utils.getKappa(x1,x2)
 
 

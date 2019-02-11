@@ -5,6 +5,9 @@ import copy
 
 class SignInformation:
 
+    def __init__(self, M):
+        self.matrix = M
+        self.circuits = self.getCircuits(M)
 
     def getCircuits(self, M):
         """Gets all the circuits of matrix M
@@ -59,12 +62,7 @@ class SignInformation:
         #var = input("Press ENTER to continue")
         return all_circuits
 
-
-    def __init__(self, M):
-        self.matrix = M
-        self.circuits = self.getCircuits(M)
-
-
+    
     def get_conformal_circuits(self, orthant):
         """Gets all circuits that are conformal
         to the orthant received as a parameter"""
