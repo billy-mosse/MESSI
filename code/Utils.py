@@ -209,7 +209,7 @@ def get_kappa(x1, x2):
     print(z)
 
     if np.linalg.norm(A.dot(nk) < 0.0001):
-        print("Mazel tov!")
+        print("f(x2, k) = 0")
     else:
-        print("Keep trying...")
+        print("f(x2, k) != 0")
 
