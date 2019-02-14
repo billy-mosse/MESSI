@@ -191,6 +191,8 @@ def get_kappa(x1, x2):
     ARR = scipy.linalg.null_space(M)
     print(ARR)
 
+    print("Why should be the vectors in the nullspace positive?")
+
     input()
 
     k = []
