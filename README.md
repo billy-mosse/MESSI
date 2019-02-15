@@ -1,5 +1,7 @@
 # A MESSI system analyzer
 
+[![Build Status](https://travis-ci.com/billy-mosse/MESSI.png)](https://travis-ci.com/billy-mosse/MESSI)
+
 A simple program that provides rate constants which witness multistationarity of MESSI systems that satisfy conditions stated in Theorem 5.4 of "[The Structure of MESSI Biological Systems](https://arxiv.org/abs/1612.08763)", by Alicia Dickenstein and Mercedes Pérez Millán. (Under construction.)
 
 ## What is it useful for?
