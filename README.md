@@ -11,7 +11,7 @@ TODO
 
 TODO
 
-### Example usage: (it's really easy!)
+### Example usage (it's really easy!):
 
 #### How to analyze a custom network
 
