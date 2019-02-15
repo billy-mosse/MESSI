@@ -9,7 +9,7 @@ class Test1(unittest.TestCase):
 
 
 	def test__buildup_of_conformal_circuit_to_matrix_using_Lemma_A5(self):
-		M1 =  Bperp = np.array([
+		M1 = np.array([
     		[1, 0],
     		[0, 3]])
 
@@ -23,7 +23,7 @@ class Test1(unittest.TestCase):
 		self.assertTrue([-3,0] in circuits_information_M1.circuits)
 
 
-		M2 =  Bperp = np.array([
+		M2 = np.array([
     		[-1, 0, 2],
     		[2, 4, 1]])
 
@@ -36,3 +36,14 @@ class Test1(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+"""
+1) podriamos testear que los kappa sean positivos para algunos ejemplos
+
+2) Ejemplos para testear generacion de matrices con nombre a partir de la estructura de grafo:
+
+
+
+"""

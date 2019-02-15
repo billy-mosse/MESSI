@@ -187,6 +187,8 @@ def get_kappa(x1, x2):
     [0, 0, 0, -x1[1]*x1[9], x1[5], x1[5], 0, 0, 0, -x1[3]*x1[9], x1[7], x1[7]]])#10
     
 
+    #HAY QUE ASEGURAR QUE SEAN POSITIVOS.
+    #https://arxiv.org/abs/1102.1590
     print("The kappas which are solution of f(x1, k) = 0 are (in columns):")
     ARR = scipy.linalg.null_space(M)
     print(ARR)

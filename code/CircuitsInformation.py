@@ -3,6 +3,7 @@ import Utils
 import numpy as np
 import copy
 
+
 class CircuitsInformation:
 
     def __init__(self, M):

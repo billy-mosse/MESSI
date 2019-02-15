@@ -89,7 +89,8 @@ def check_if_sigma_subperp_is_mixed(Bperp, Mt, s, d):
             witnesses.append(['-', J, Jc])
         Sigma_subperp.append([JcL, mM, JL, mB, result])
 
-    print_Sigma_subperp_table(Sigma_subperp)
+    #print_Sigma_subperp_table(Sigma_subperp)
+    
     if len(signs) > 1:
         print("Sigma_perp is mixed! Great, then we can find v in T^perp and w in S with same sign.")
         #print witnesses
