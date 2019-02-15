@@ -7,6 +7,10 @@ A simple program that provides rate constants which witness multistationarity of
 TODO
 <!-- This program does amazing stuff -->
 
+### Installation
+
+TODO
+
 ### Example usage: it's really easy!
 
 #### How to analyze a custom network
