@@ -10,30 +10,30 @@ Under development. [Visualization of (hoping: big) networks, analysis of multist
 
 <!-- This program does amazing stuff -->
 
-### Installation
+## Installation
 
 Under development. When the project is finished, an executable file will be released for each major platform:
  - Windows (32 and 64 bit)
  - Linx (32 and 64 bit)
  - Mac OS X (32 and 64 bit)
 
-### Example usage (it's really easy!):
+## Example usage (it's really easy!):
 
 Under development. The program will have a `--help` command and example networks to play with!
 
-#### How to analyze a custom network
+### How to analyze a custom network
 
 Under development.
 
-##### But, is my system MESSI?
+#### But, is my system MESSI?
 
 Under development. You may check the conditions manually in [the paper](https://arxiv.org/abs/1612.08763), for now.
 
-#### Examples (built-in MESSI networks)
+### Examples (built-in MESSI networks)
 
 Under development
 
-#### How to test the project
+### How to test the project
 
 Assuming you have python 3 installed, just run `python tests.py`.
 
