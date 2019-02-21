@@ -25,7 +25,25 @@ TODO
 
 ##### How to test the project
 
-TODO
+Assuming you have python 3 installed, just run `python tests.py`.
+
+Current (passing) tests:
+
+- test_buildup_of_conformal_circuit_to_matrix_using_Lemma_A5:
+
+Asserts that we can correctly build a circuit conformal to a given matrix.
+
+- test_buildup_of_incidence_matrix_from_network
+
+Asserts that we can correctly build the incidence matrix from a given (MESSINetwork) network.
+
+- test_buildup_of_complexes_matrix_from_network
+
+Asserts that we can correctly build the educt complexes matrix from a given (MESSINetwork) network.
+
+- test_buildup_of_stoichiometric_matrix_from_network
+
+Asserts that we can correctly build the stoichiometric matrix from a given (MESSINetwork) network.
 
 (See [this](https://travis-ci.com/billy-mosse/MESSI).)
 
