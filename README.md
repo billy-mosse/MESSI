@@ -29,7 +29,7 @@ Assuming you have python 3 installed, just run `python tests.py`.
 
 Current (passing) tests:
 
-- test_buildup_of_conformal_circuit_to_matrix_using_Lemma_A5:
+- test_buildup_of_conformal_circuit_to_matrix
 
 Asserts that we can correctly build a circuit conformal to a given matrix.
 
