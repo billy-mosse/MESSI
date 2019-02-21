@@ -31,7 +31,7 @@ Under development. You may check the conditions manually in [the paper](https://
 
 ### Examples (built-in MESSI networks)
 
-![Example built with the program](https://github.com/billy-mosse/MESSI/blob/master/code/phosphorylation_cascade_circo.png){:height="50%" width="50%"}
+ <img src="https://github.com/billy-mosse/MESSI/blob/master/code/phosphorylation_cascade_circo.png" alt="Example built with the programt" style="width:500px;height:600px;"> 
 
 Under development
 
