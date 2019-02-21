@@ -6,32 +6,56 @@ A simple program that provides rate constants which witness multistationarity of
 
 ## What is it useful for?
 
-TODO
+Under development. [Visualization of (hoping: big) networks, analysis of multistationarity. It doesn't clean the dishes though.]
+
 <!-- This program does amazing stuff -->
 
-### Installation
+## Installation
 
-TODO
+Under development. When the project is finished, an executable file will be released for each major platform:
+ - Windows (32 and 64 bit)
+ - Linx (32 and 64 bit)
+ - Mac OS X (32 and 64 bit)
 
-### Example usage (it's really easy!):
+## Example usage (it's really easy!):
 
-#### How to analyze a custom network
+Under development. The program will have a `--help` command and example networks to play with!
 
-TODO
+### How to analyze a custom network
 
-##### Is my system MESSI?
+Under development.
 
-TODO
+#### But, is my system MESSI?
 
-##### How to test the project
+Under development. You may check the conditions manually in [the paper](https://arxiv.org/abs/1612.08763), for now.
 
-TODO
+### Examples (built-in MESSI networks)
 
-(See [this](https://travis-ci.com/billy-mosse/MESSI).)
+Under development
 
-#### Examples (built-in systems)
+### How to test the project
 
-TODO
+Assuming you have python 3 installed, just run `python tests.py`.
+
+Current (passing) tests:
+
+- test_buildup_of_conformal_circuit_to_matrix
+
+Asserts that we can correctly build a circuit conformal to a given matrix.
+
+- test_buildup_of_incidence_matrix_from_network
+
+Asserts that we can correctly build the incidence matrix from a given (MESSINetwork) network.
+
+- test_buildup_of_complexes_matrix_from_network
+
+Asserts that we can correctly build the educt complexes matrix from a given (MESSINetwork) network.
+
+- test_buildup_of_stoichiometric_matrix_from_network
+
+Asserts that we can correctly build the stoichiometric matrix from a given (MESSINetwork) network.
+
+If the README has build/passing, everything's OK! It means that the tests aren't failing.
 
 <!-- ##### How to process a big network -->
 
