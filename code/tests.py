@@ -47,8 +47,22 @@ def get_24_toric_graph():
         G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
     return G
 
+G = get_24_toric_graph()
+complexes = [
+        [0, 4], #x0+x1
+        [1, 4], #x2
+        [2], #x3+1
+        [0, 5], #x3 + x4
+        [1, 5], #x5
+        [3] #x0+x4
+        ]
+messi_network = MESSINetworkBuilder.MESSINetwork(G, complexes)
 
 class Test1(unittest.TestCase):
+
+
+    
+
 
     def assert_same_columns(self, np_array_1, np_array_2):
         array_1_columns = np_array_1.transpose().tolist()
@@ -90,6 +104,7 @@ class Test1(unittest.TestCase):
 
 
     
+    
 
     def test_buildup_of_incidence_matrix_from_network(self):
         
@@ -105,9 +120,9 @@ class Test1(unittest.TestCase):
 
         #The complexes are labeled y0, y1, y...
 
-        G = get_24_toric_graph()
-        messi_network = MESSINetworkBuilder.MESSINetwork(G, None)
-        I = MESSIGraphUtils.build_incidence_matrix(messi_network)
+        
+        
+        incidence_matrix = MESSIGraphUtils.build_incidence_matrix(messi_network)
 
         """I_solution = numpy.array([
         [-1, 1, 0, 0, 0, 0],
@@ -129,7 +144,7 @@ class Test1(unittest.TestCase):
     ['5', '3', 'k6']
     ] """
 
-        I_solution = numpy.array([
+        incidence_matrix_solution = numpy.array([
         [-1, 1,  0,  0,  0,  0],
         [0,  0,  1,  0,  0,  0],
         [1,  -1, -1, 0,  0,  0],
@@ -138,7 +153,7 @@ class Test1(unittest.TestCase):
         [0,  0,   0, 1, -1, -1]])
 
         #The incidence matrix might have columns in another order.
-        self.assert_same_columns(I, I_solution)
+        self.assert_same_columns(incidence_matrix, incidence_matrix_solution)
 
 
     def test_buildup_of_complexes_matrix_from_network(self):
@@ -161,16 +176,7 @@ class Test1(unittest.TestCase):
         E   --> x4
         F --> x5
         """
-        complexes = [
-        [0, 4], #x0+x1
-        [1, 4], #x2
-        [2], #x3+1
-        [0, 5], #x3 + x4
-        [1, 5], #x5
-        [3] #x0+x4
-        ]
-
-        messi_network = MESSINetworkBuilder.MESSINetwork(G, complexes)
+        
         complexes_matrix = MESSIGraphUtils.build_complexes_matrix(messi_network)
 
 
@@ -196,14 +202,28 @@ class Test1(unittest.TestCase):
         self.assert_same_columns(complexes_matrix, complexes_matrix_solution)
 
 
+    def test_buildup_of_stoichiometric_matrix_from_network(self):
+        incidence_matrix = MESSIGraphUtils.build_incidence_matrix(messi_network)
+        complexes_matrix = MESSIGraphUtils.build_complexes_matrix(messi_network)
 
+        stoichiometric_matrix = MESSIGraphUtils.build_stoichiometric_matrix(incidence_matrix, complexes_matrix)
+
+        stoichiometric_matrix_solution = numpy.array(
+            [[-1,  1,  0, -1,  0,  1],
+             [ 1, -1, -1,  0,  0,  0],
+             [ 1, -1, -1,  0,  0,  0],
+             [ 0,  0,  1,  1, -1, -1],
+             [ 0,  0,  0,  0,  1,  0],
+             [ 0,  0,  0,  0,  1,  0]]
+            )
+
+
+        self.assert_same_columns(stoichiometric_matrix, stoichiometric_matrix_solution)
 
 
 
 if __name__ == '__main__':
     unittest.main()
-
-
 
 """
 1) podriamos testear que los kappa sean positivos para algunos ejemplos
