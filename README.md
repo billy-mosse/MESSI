@@ -29,7 +29,11 @@ Under development.
 
 Under development. You may check the conditions manually in [the paper](https://arxiv.org/abs/1612.08763), for now.
 
-##### How to test the project
+#### Examples (built-in MESSI networks)
+
+Under development
+
+#### How to test the project
 
 Assuming you have python 3 installed, just run `python tests.py`.
 
@@ -52,10 +56,6 @@ Asserts that we can correctly build the educt complexes matrix from a given (MES
 Asserts that we can correctly build the stoichiometric matrix from a given (MESSINetwork) network.
 
 If the README has build/passing, everything's OK!
-
-#### Examples (built-in MESSI networks)
-
-Under development
 
 <!-- ##### How to process a big network -->
 
