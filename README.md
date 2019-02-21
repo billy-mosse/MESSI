@@ -55,7 +55,7 @@ Asserts that we can correctly build the educt complexes matrix from a given (MES
 
 Asserts that we can correctly build the stoichiometric matrix from a given (MESSINetwork) network.
 
-If the README has build/passing, everything's OK!
+If the README has build/passing, everything's OK! It means that the tests aren't failing.
 
 <!-- ##### How to process a big network -->
 
