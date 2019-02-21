@@ -9,7 +9,7 @@ class Complex:
 
 
 
-def buildIncidenceMatrix(network):
+def build_incidence_matrix(messi_network):
     """
     the matrix whose i-th column has a 1 in
 the row corresponding to the product complex of the i-th reaction and a −1 for the educt (reactant, i.e., origin)
@@ -22,13 +22,16 @@ complex.
     #while simultaneously keeping the index 0, 1, 2, ...
     #for index, edge in enumerate(nx.edges()):
 
+    G = messi_network.nx
+
     rows = []
-    n_columns = len(network.nodes())
+    n_columns = len(G.nodes())
 
     #an empty row with amount of columns equal to amount of nodes of the network
     empty_row = [0]*n_columns
 
-    for educt, product in network.edges():
+    #print(G.edges())
+    for educt, product in G.edges():
         row = empty_row.copy()
         row[int(educt)] = -1
         row[int(product)] =1
@@ -37,13 +40,28 @@ complex.
 
     return np.array(rows).transpose()
 
-def buildComplexesMatrix(network):
+def build_complexes_matrix(messi_network):
+    rows = []
+    G = messi_network.nx
+    n_columns = len(G.nodes())
+    empty_row = [0]*n_columns
+
+    for educt, _ in G.edges():
+        row = empty_row.copy()
+
+        for species in messi_network.complexes[educt]:
+            row[species] = 1
+        rows.append(row)
+
+    return np.array(rows).transpose()
+
+
+def build_stochiometric_matrix(network):
     return None
 
-def buildStochiometricMatrix(network):
-    return None
-
-
+'''
+#Creo que esto esta totalmente de mas
+#VOLAR
 class EductVector:
     def __init__(self, complexes):
         self.complexes = complexes
@@ -56,6 +74,7 @@ def buildEductVector(network):
     return None
 
 
+#Idem, volar
 class MessiNetwork:
 
 	#network es un networkx digraph
@@ -79,4 +98,4 @@ class MessiNetwork:
 
         #what whould the structure of the  educt(origin vector) be?
         #I think it suffices for it to be a list of complexes with some hidden methods...
-        self.educt_vector = buildEductVector(network)
+        self.educt_vector = buildEductVector(network)'''

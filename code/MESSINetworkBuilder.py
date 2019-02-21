@@ -17,6 +17,18 @@ TODOs:
 """
 
 
+
+class MESSINetwork:
+    def __init__(self, nx, complexes):
+        self.nx = nx
+
+        #list of complexes
+        #example: [[0,1], [2], [3,1]]
+        #represents x0+x1, x2, x3+x1
+        self.complexes = complexes
+
+
+
 def get_relevant_matrices(debug):
 
     reactions = []

@@ -7,9 +7,58 @@ import Utils
 import MessiGraphUtils
 import networkx as nx
 import numpy
+import MESSINetworkBuilder
 
 #TODO: write an integration test (when - some day - we write the main output in a file)
+
+
+def get_24_toric_graph():
+    print("(2.4) of Toric paper")
+
+
+    """
+    S0+E   --> y0
+    S1+E   --> y1
+    ES0    --> y2
+    S0 + F --> y3
+    S1 + F --> y4
+    FS1    --> y5
+    """
+    reactions = [
+    [0, 2,'k1'],
+    [2, 0, 'k2'],
+    [2, 1,'k3'],
+    [4, 5, 'k4'],
+    [5, 4, 'k5'],
+    [5, 3, 'k6']
+    ]        
+
+
+
+    G = nx.DiGraph(directed=True)
+
+    sources = set([reaction[0] for reaction in reactions])
+
+    targets = set([reaction[1] for reaction in reactions])
+
+    nodes = sources.union(targets)
+    G.add_nodes_from(nodes)
+    for reaction in reactions:
+        G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
+    return G
+
+
 class Test1(unittest.TestCase):
+
+    def assert_same_columns(self, np_array_1, np_array_2):
+        array_1_columns = np_array_1.transpose().tolist()
+        array_2_columns = np_array_2.transpose().tolist()
+
+        for col_1 in array_1_columns:
+            self.assertTrue(col_1 in array_2_columns)
+
+        for col_2 in array_2_columns:
+            self.assertTrue(col_2 in array_1_columns)
 
 
     def test_buildup_of_conformal_circuit_to_matrix_using_Lemma_A5(self):
@@ -40,11 +89,10 @@ class Test1(unittest.TestCase):
 
 
 
-
+    
 
     def test_buildup_of_incidence_matrix_from_network(self):
         
-        print("(2.4) of Toric paper")
 
         """reactions = [
         ['S0+E', 'ES0','k1'],
@@ -55,49 +103,102 @@ class Test1(unittest.TestCase):
         ['FS1', 'S0+F', 'k6']
         ]"""
 
-        reactions = [
-        ['0', '1','k1'],
-        ['1', '0', 'k2'],
-        ['1', '2','k3'],
-        ['3', '4', 'k4'],
-        ['4', '3', 'k5'],
-        ['4', '5', 'k6']
-        ]        
+        #The complexes are labeled y0, y1, y...
 
-        G = nx.DiGraph(directed=True)
+        G = get_24_toric_graph()
+        messi_network = MESSINetworkBuilder.MESSINetwork(G, None)
+        I = MessiGraphUtils.build_incidence_matrix(messi_network)
 
-        sources = set([reaction[0] for reaction in reactions])
-
-        targets = set([reaction[1] for reaction in reactions])
-
-        nodes = sources.union(targets)
-        G.add_nodes_from(nodes)
-        for reaction in reactions:
-            G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
-
-        I = MessiGraphUtils.buildIncidenceMatrix(G)
-
-        I_solution = numpy.array([
+        """I_solution = numpy.array([
         [-1, 1, 0, 0, 0, 0],
         [1, -1, -1, 0, 0, 0],
         [0, 0, 1, 0, 0, 0],
         [0, 0, 0, -1, 1, 0],
         [0, 0, 0, 1, -1, -1],
         [0, 0, 0, 0, 0, 1]
-        ])
+        ])"""
+
+        """
+
+        reactions = [
+    ['0', '2','k1'],
+    ['2', '0', 'k2'],
+    ['2', '1','k3'],
+    ['4', '5', 'k4'],
+    ['5', '4', 'k5'],
+    ['5', '3', 'k6']
+    ] """
+
+        I_solution = numpy.array([
+        [-1, 1,  0,  0,  0,  0],
+        [0,  0,  1,  0,  0,  0],
+        [1,  -1, -1, 0,  0,  0],
+        [0,  0,   0, 0,  0,  1],
+        [0,  0,   0, -1, 1,  0],
+        [0,  0,   0, 1, -1, -1]])
 
         #The incidence matrix might have columns in another order.
-        I_columns = I.transpose().tolist()
-        I_solution_columns = I_solution.transpose().tolist()
+        self.assert_same_columns(I, I_solution)
 
-        for I_col in I_columns:
-            self.assertTrue(I_col in I_solution_columns)
 
-        for I_solution_col in I_solution_columns:
-            self.assertTrue(I_solution_col in I_columns)
+    def test_buildup_of_complexes_matrix_from_network(self):
+        G = get_24_toric_graph()
 
-        #v = numpy.array([[1,2,3],[4,5,6]])
-        #self.assertTrue([1,2,3] in v)
+        """
+        S0+E   --> y0
+        S1+E   --> y1
+        ES0    --> y2
+        S0 + F --> y3
+        S1 + F --> y4
+        FS1    --> y5
+        """
+
+        """
+        S0  --> x0
+        S1   --> x1
+        ES0 --> x2
+        FS1  --> x3
+        E   --> x4
+        F --> x5
+        """
+        complexes = [
+        [0, 4], #x0+x1
+        [1, 4], #x2
+        [2], #x3+1
+        [0, 5], #x3 + x4
+        [1, 5], #x5
+        [3] #x0+x4
+        ]
+
+        messi_network = MESSINetworkBuilder.MESSINetwork(G, complexes)
+        complexes_matrix = MessiGraphUtils.build_complexes_matrix(messi_network)
+
+
+        """
+        ordered educts:
+        s0+e, es0, es0, s1+f, fs1, fs1
+
+        that is:
+        x0+x4, x2, x2, x1+x5, x3, x3
+
+        """
+
+        complexes_matrix_solution = numpy.array(
+            [
+            [1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0],
+            [0, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1],
+            [1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0]
+            ])
+
+        self.assert_same_columns(complexes_matrix, complexes_matrix_solution)
+
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
