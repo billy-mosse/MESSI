@@ -4,7 +4,7 @@ import numpy as np
 from CircuitsInformation import CircuitsInformation
 import Utils
 
-import MessiGraphUtils
+import MESSIGraphUtils
 import networkx as nx
 import numpy
 import MESSINetworkBuilder
@@ -107,7 +107,7 @@ class Test1(unittest.TestCase):
 
         G = get_24_toric_graph()
         messi_network = MESSINetworkBuilder.MESSINetwork(G, None)
-        I = MessiGraphUtils.build_incidence_matrix(messi_network)
+        I = MESSIGraphUtils.build_incidence_matrix(messi_network)
 
         """I_solution = numpy.array([
         [-1, 1, 0, 0, 0, 0],
@@ -171,7 +171,7 @@ class Test1(unittest.TestCase):
         ]
 
         messi_network = MESSINetworkBuilder.MESSINetwork(G, complexes)
-        complexes_matrix = MessiGraphUtils.build_complexes_matrix(messi_network)
+        complexes_matrix = MESSIGraphUtils.build_complexes_matrix(messi_network)
 
 
         """
