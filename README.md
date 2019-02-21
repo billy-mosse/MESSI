@@ -6,22 +6,28 @@ A simple program that provides rate constants which witness multistationarity of
 
 ## What is it useful for?
 
-TODO
+Under development. [Visualization of (hoping: big) networks, analysis of multistationarity. It doesn't clean the dishes though.]
+
 <!-- This program does amazing stuff -->
 
 ### Installation
 
-TODO
+Under development. When the project is finished, an executable file will be released for each major platform:
+ - Windows (32 and 64 bit)
+ - Linx (32 and 64 bit)
+ - Mac OS X (32 and 64 bit)
 
 ### Example usage (it's really easy!):
 
+Under development. The program will have a `--help` command and example networks to play with!
+
 #### How to analyze a custom network
 
-TODO
+Under development.
 
-##### Is my system MESSI?
+##### But, is my system MESSI?
 
-TODO
+Under development. You may check the conditions manually in [the paper](https://arxiv.org/abs/1612.08763), for now.
 
 ##### How to test the project
 
@@ -45,11 +51,11 @@ Asserts that we can correctly build the educt complexes matrix from a given (MES
 
 Asserts that we can correctly build the stoichiometric matrix from a given (MESSINetwork) network.
 
-(See [this](https://travis-ci.com/billy-mosse/MESSI).)
+If the README has build/passing, everything's OK!
 
-#### Examples (built-in systems)
+#### Examples (built-in MESSI networks)
 
-TODO
+Under development
 
 <!-- ##### How to process a big network -->
 
