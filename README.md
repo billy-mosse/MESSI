@@ -14,7 +14,7 @@ Under development. [Visualization of (hoping: big) networks, analysis of multist
 
 Under development. When the project is finished, an executable file will be released for each major platform:
  - Windows (32 and 64 bit)
- - Linx (32 and 64 bit)
+ - Linux (32 and 64 bit)
  - Mac OS X (32 and 64 bit)
 
 ## Example usage (it's really easy!):
