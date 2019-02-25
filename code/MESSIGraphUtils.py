@@ -1,5 +1,6 @@
 
 import numpy as np
+import networkx as nx
 
 class Complex:
     def __init__(self, species):
@@ -8,7 +9,7 @@ class Complex:
         self.species = species
 
 
-
+#TODO: estos van a ser metodos de la clase, me parece.
 def build_incidence_matrix(messi_network):
     """
     the matrix whose i-th column has a 1 in
@@ -31,21 +32,22 @@ complex.
     empty_row = [0]*n_columns
 
     #print(G.edges())
+
     for educt, product in G.edges():
         row = empty_row.copy()
         row[int(educt)] = -1
         row[int(product)] =1
         rows.append(row)
 
-
     return np.array(rows).transpose()
 
-def build_complexes_matrix(messi_network):
+def build_educt_complexes_matrix(messi_network):
     rows = []
     G = messi_network.nx
     n_columns = len(G.nodes())
     empty_row = [0]*n_columns
 
+    #p#rint("Edges: %s" % G.edges())
     for educt, _ in G.edges():
         row = empty_row.copy()
 
@@ -56,6 +58,22 @@ def build_complexes_matrix(messi_network):
     return np.array(rows).transpose()
 
 
+def build_complexes_matrix(messi_network):
+    #Y^t tiene, en cada columna, al complejo
+    #Entonces Y tiene, en cada fila, al complejo
+    #Cada fila tiene de tamaño la cantidad de especies
+    n_columns = len(messi_network.species)
+    empty_row = [0]*n_columns
+    rows = []
+    for complex in messi_network.complexes:
+        row = empty_row.copy()
+        for species_index in complex:
+            row[species_index] = 1
+        rows.append(row)
+    return np.array(rows)
+
+
+
 def build_stoichiometric_matrix(incidence_matrix, complexes_matrix):
     """
     returns the stoichiometrix matrix of the vector.
@@ -64,7 +82,42 @@ def build_stoichiometric_matrix(incidence_matrix, complexes_matrix):
     """
 
     #@ is matrix multiplication
+
     return complexes_matrix.transpose() @ incidence_matrix
+
+
+def build_stoichiometric_matrix_from_messi_network(messi_network):
+    incidence_matrix = build_incidence_matrix(messi_network)
+    complexes_matrix = build_complexes_matrix(messi_network)
+
+    return build_stoichiometric_matrix(incidence_matrix, complexes_matrix)
+
+def build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix(messi_network):
+    """
+    returns an integer basis of the orthogonal complement of the stoichiometric matrix of a graph
+    
+    """
+    G = messi_network.nx
+    n_columns = len(G.nodes())
+    empty_row = [0]*n_columns
+
+    simple_cycles = nx.simple_cycles(G)
+    rows =[]
+    for cycle in simple_cycles:
+        row=empty_row.copy()
+        #print("cicle: %s" % cycle)
+        for complex_index in cycle:
+            complex = messi_network.complexes[complex_index]
+            print("complex: %s" % complex)
+            for species in complex:                
+                row[species] +=1
+        #print(row)
+        rows.append(row)
+
+    #print("rows: %s" % rows)
+    return np.array(rows)
+
+
 
 '''
 #Creo que esto esta totalmente de mas

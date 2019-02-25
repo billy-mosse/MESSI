@@ -47,6 +47,8 @@ def get_24_toric_graph():
         G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
     return G
 
+
+
 G = get_24_toric_graph()
 complexes = [
         [0, 4], #x0+x1
@@ -56,13 +58,11 @@ complexes = [
         [1, 5], #x5
         [3] #x0+x4
         ]
-messi_network = MESSINetworkBuilder.MESSINetwork(G, complexes)
+
+species = range(0,6)
+messi_network = MESSINetworkBuilder.MESSINetwork(G, complexes, species)
 
 class Test1(unittest.TestCase):
-
-
-    
-
 
     def assert_same_columns(self, np_array_1, np_array_2):
         array_1_columns = np_array_1.transpose().tolist()
@@ -75,35 +75,47 @@ class Test1(unittest.TestCase):
             self.assertTrue(col_2 in array_1_columns)
 
 
-    def test_buildup_of_conformal_circuit_to_matrix_using_Lemma_A5(self):
-        M1 = np.array([
+    def test_buildup_of_conformal_circuit_to_matrix(self):
+        matrix_1 = np.array([
             [1, 0],
             [0, 3]])
 
 
-        circuits_information_M1 = CircuitsInformation(M1)
+        circuits_information_matrix_1 = CircuitsInformation(matrix_1)
 
         #Supposedly, this is the output of lemma A.5
-        self.assertTrue([0,-3] in circuits_information_M1.circuits)
-        self.assertTrue([0,3] in circuits_information_M1.circuits)
-        self.assertTrue([3,0] in circuits_information_M1.circuits)
-        self.assertTrue([-3,0] in circuits_information_M1.circuits)
+        self.assertTrue([0,-3] in circuits_information_matrix_1.circuits)
+        self.assertTrue([0,3] in circuits_information_matrix_1.circuits)
+        self.assertTrue([3,0] in circuits_information_matrix_1.circuits)
+        self.assertTrue([-3,0] in circuits_information_matrix_1.circuits)
 
 
-        M2 = np.array([
+        matrix_2 = np.array([
             [-1, 0, 2],
             [2, 4, 1]])
 
 
-        circuits_information_M2 = CircuitsInformation(M2)
+        circuits_information_matrix_2 = CircuitsInformation(matrix_2)
 
         for c in [[0, 4, 5], [0, -4, -5], [-4, 0, 8], [4, 0, -8], [-5, -8, 0], [5, 8, 0]]:
-            self.assertTrue(c in circuits_information_M2.circuits)
+            self.assertTrue(c in circuits_information_matrix_2.circuits)
 
 
 
 
-    
+    def test_buildup_of_complexes_matrix_from_network(self):
+        complexes_matrix = MESSIGraphUtils.build_complexes_matrix(messi_network)
+        complexes_matrix_solution = numpy.array([
+            [1, 0, 0, 0, 1, 0],
+            [0, 1, 0, 0, 1, 0],
+            [0, 0, 1, 0, 0, 0],
+            [1, 0, 0, 0, 0, 1],
+            [0, 1, 0, 0, 0, 1],
+            [0, 0, 0, 1, 0, 0]]
+            )
+
+        self.assert_same_columns(complexes_matrix, complexes_matrix_solution)
+
     
 
     def test_buildup_of_incidence_matrix_from_network(self):
@@ -124,6 +136,8 @@ class Test1(unittest.TestCase):
         
         incidence_matrix = MESSIGraphUtils.build_incidence_matrix(messi_network)
 
+        print("Incidence matrix: ")
+        print(incidence_matrix)
         """I_solution = numpy.array([
         [-1, 1, 0, 0, 0, 0],
         [1, -1, -1, 0, 0, 0],
@@ -156,8 +170,8 @@ class Test1(unittest.TestCase):
         self.assert_same_columns(incidence_matrix, incidence_matrix_solution)
 
 
-    def test_buildup_of_complexes_matrix_from_network(self):
-        G = get_24_toric_graph()
+    def test_buildup_of_educt_complexes_matrix_from_network(self):
+        #G = get_24_toric_graph()
 
         """
         S0+E   --> y0
@@ -177,7 +191,7 @@ class Test1(unittest.TestCase):
         F --> x5
         """
         
-        complexes_matrix = MESSIGraphUtils.build_complexes_matrix(messi_network)
+        educt_complexes_matrix = MESSIGraphUtils.build_educt_complexes_matrix(messi_network)
 
 
         """
@@ -189,7 +203,7 @@ class Test1(unittest.TestCase):
 
         """
 
-        complexes_matrix_solution = numpy.array(
+        educt_complexes_matrix_solution = numpy.array(
             [
             [1, 0, 0, 0, 0, 0],
             [0, 0, 0, 1, 0, 0],
@@ -199,7 +213,7 @@ class Test1(unittest.TestCase):
             [0, 0, 0, 1, 0, 0]
             ])
 
-        self.assert_same_columns(complexes_matrix, complexes_matrix_solution)
+        self.assert_same_columns(educt_complexes_matrix, educt_complexes_matrix_solution)
 
 
     def test_buildup_of_stoichiometric_matrix_from_network(self):
@@ -208,19 +222,71 @@ class Test1(unittest.TestCase):
 
         stoichiometric_matrix = MESSIGraphUtils.build_stoichiometric_matrix(incidence_matrix, complexes_matrix)
 
+
+        print("stoichiometric_matrix")
+        print(stoichiometric_matrix)
+
+        #rango 3
+
+
+        
+
         stoichiometric_matrix_solution = numpy.array(
-            [[-1,  1,  0, -1,  0,  1],
-             [ 1, -1, -1,  0,  0,  0],
-             [ 1, -1, -1,  0,  0,  0],
-             [ 0,  0,  1,  1, -1, -1],
-             [ 0,  0,  0,  0,  1,  0],
-             [ 0,  0,  0,  0,  1,  0]]
+            [[-1,  1,  0, 0,  1,  0],
+            [ 0,  0,  1, -1,  0,  1],
+            [ 1, -1, -1,  0,  0,  0],
+            [ 0,  0,  0,  1, -1, -1],
+            [-1,  1,  1,  0,  0,  0],
+            [ 0,  0,  0, -1,  1,  1]]
             )
 
 
         self.assert_same_columns(stoichiometric_matrix, stoichiometric_matrix_solution)
 
+    def test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix(self):
+        ortoghonal_complement_of_stoichiometric_matrix = MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix(messi_network)
 
+        stoichiometric_matrix = MESSIGraphUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
+
+        stoch_shape = np.shape(stoichiometric_matrix)
+        complement_shape = np.shape(ortoghonal_complement_of_stoichiometric_matrix)
+
+        #same columns
+        self.assertTrue(stoch_shape[1] == complement_shape[1])
+
+
+        print(stoch_shape)
+        print(complement_shape)
+
+        #dimensions are OK
+        #self.assertTrue(stoch_shape[0] + complement_shape[0] == stoch_shape[1])
+
+        stoch_rank = np.linalg.matrix_rank(stoichiometric_matrix)
+
+        complement_rank =  np.linalg.matrix_rank(ortoghonal_complement_of_stoichiometric_matrix)
+
+
+        print(stoch_rank)
+
+        print(complement_rank)
+
+        #No da! Hay algún otro vector en el espacio estequiométrico que no viene de un ciclo.
+        self.assertTrue(stoch_shape[1] == stoch_rank + complement_rank)
+
+        for row in complement_shape.rows():
+            for column in stoichiometric_matrix.transpose():
+                print(numpy.dot(row, column))
+
+
+
+        print(ortoghonal_complement_of_stoichiometric_matrix)
+        print("")
+        print("")
+        print("")
+        print(stoichiometric_matrix)
+
+        print(ortoghonal_complement_of_stoichiometric_matrix @ stoichiometric_matrix)
+        print(stoichiometric_matrix @ ortoghonal_complement_of_stoichiometric_matrix)
 
 if __name__ == '__main__':
     unittest.main()

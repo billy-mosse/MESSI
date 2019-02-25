@@ -194,6 +194,7 @@ def main(debug):
     gets multistationarity witnesses x^1, x^2, \\kappa or exits.
     the debug flag is used for fast computation
     """
+    MESSINetworkBuilder.get_relevant_matrices(False)
 
     #for easier reading
     Bperp, Mt = get_hardcoded_matrices()

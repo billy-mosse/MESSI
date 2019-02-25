@@ -7,6 +7,16 @@ import networkx as nx
 import pandas as pd
 
 
+from networkx.drawing.nx_pydot import write_dot
+from graphviz import Digraph
+
+import pylab
+from networkx.drawing.nx_agraph import graphviz_layout, to_agraph
+
+#sudo apt-get install -y graphviz libgraphviz-dev pkg-config python-pip
+#sudo pip install pygraphviz
+
+import pygraphviz as pgv
 """
 Python module for generating relevant data from a MESSI network.
 TODOs:
@@ -19,20 +29,118 @@ TODOs:
 
 
 class MESSINetwork:
-    def __init__(self, nx, complexes):
+    def __init__(self, nx, complexes, species):
         self.nx = nx
 
         #list of complexes
         #example: [[0,1], [2], [3,1]]
         #represents x0+x1, x2, x3+x1
         self.complexes = complexes
+        self.species = species
 
 
+
+def plot_as_multi_digraph(G):
+    reaction_constants = nx.get_edge_attributes(G,'reaction_constant')
+    print(reaction_constants)
+    """Gm = nx.MultiDiGraph()
+    for edge in G.edges():
+        Gm.add_edge(edge[0], edge[1], reaction_constant=reaction_constants[edge])"""
+
+    """df = pd.DataFrame(index=Gm.nodes(), columns=Gm.nodes())
+    for row, data in nx.shortest_path_length(Gm):
+        for col, dist in data.items():
+            df.loc[row,col] = dist
+
+    df = df.fillna(df.max().max())  
+
+    layout = nx.kamada_kawai_layout(Gm, dist=df.to_dict())   
+    nx.draw(G,layout,arrows=True, edge_color='black',width=1,linewidths=1,\
+node_size=500,node_color='pink',alpha=0.9,arrowsize=12,arrowstyle='-|>',\
+labels={node:node for node in G.nodes()},
+) 
+
+    edge_labels = nx.get_edge_attributes(Gm,'reaction_constant')
+
+
+    nx.draw_networkx_edge_labels(Gm, pos=layout, edge_labels = edge_labels)
+
+    if not debug:
+        plt.show()"""
+    #write_dot(G,'multi2')
+    G.graph['graph']={'rankdir':'TD'}
+    G.graph['node']={'shape':'circle'}
+    G.graph['edges']={'arrowsize':'4.0'}
+
+
+    
+
+    """for edge in G.edges():
+        #print(edge[0])
+        #print(edge[1])
+        A.add_edge(edge[0], edge[1])
+        #print(A)
+        #exit(0)
+        #horrible hack. https://stackoverflow.com/questions/15455855/how-to-add-and-show-weights-on-edges-of-a-undirected-graph-using-pygraphviz
+        print(A)
+        a_edge = A.get_edge(edge[0], edge[1])
+        a_edge.attr['label'] = reaction_constants[edge]"""
+
+    #See https://stackoverflow.com/questions/39657395/how-to-draw-properly-networkx-graphs
+    #we are creating it manually...
+    A = to_agraph(G)
+
+
+
+    print(A)
+    print(reaction_constants)
+    for edge in G.edges():
+        #print(edge)
+        a_edge = A.get_edge(edge[0], edge[1])
+        a_edge.attr['label'] = reaction_constants[edge]
+
+    print(A)
+
+
+    #See https://pygraphviz.github.io/documentation/pygraphviz-1.3rc1/reference/agraph.html
+    #WHERE ARE THE OTHER ATTRIBUTES?
+    #Maybe check https://pygraphviz.github.io/documentation/pygraphviz-1.5/tutorial.html#attributes
+
+    #Update: this is the complete documentation - I think. https://graphviz.gitlab.io/_pages/doc/info/attrs.html
+    #See also https://www.contentful.com/blog/2018/05/04/using-graphviz-to-visualize-structured-content-from-contentful-spaces/
+    """A.node_attr.update(color='red')
+    A.edge_attr.update(len='2.0',color='blue')
+    A.graph_attr.update(label= '(Expanded) Phosphorylation cascade', 
+        decorate=True, dim=3
+        )"""
+
+    A.node_attr.update(
+        shape='circle', width=0.3, fixedsize='shape', margin=0, style='filled', fontname='Helvetica', color='#23a6db66', fontsize=8  
+        )
+
+    A.edge_attr.update(
+    fontname='Helvetica', color='blue', fontcolor='blue', fontsize=8
+    )
+
+    A.graph_attr.update(
+        pack=True, rankdir='TD', bgcolor='transparent', fontname='Helvetica', fontcolor='blue', fontsize=8,
+        label= '(Expanded) Phosphorylation cascade', decorate=True
+        )
+
+
+    #circo and dot are nice
+    #neato, twopi
+    for var in ['circo', 'dot']:
+        print(var)
+        A.layout(prog=var)
+        A.draw('phosphorylation_cascade_%s.png' % var)
+    #dot = Digraph()
+    #dot.render('multi', view=True)
 
 def get_relevant_matrices(debug):
 
     reactions = []
-    if not debug:
+    if False:
 
         print("Welcome to an implementation of Algorithm 1 of the paper")
         print ("Please, input the graph G corresponding to the reaction network you want to analyze")
@@ -87,14 +195,17 @@ def get_relevant_matrices(debug):
 
     #pos = nx.spring_layout(G)
 
-    nx.draw(G,layout,arrows=True, edge_color='black',width=1,linewidths=1,\
-node_size=500,node_color='pink',alpha=0.9,arrowsize=12,arrowstyle='-|>',\
-labels={node:node for node in G.nodes()},
-)
+    plot_as_multi_digraph(G)
+    exit(0)
+
+    #nx.draw(G,layout,arrows=True, edge_color='black',width=1,linewidths=1,\
+    #node_size=500,node_color='pink',alpha=0.9,arrowsize=12,arrowstyle='-|>',\
+    #labels={node:node for node in G.nodes()},
+    #)
 
 
-    edge_labels = nx.get_edge_attributes(G,'reaction_constant')
-    nx.draw_networkx_edge_labels(G, pos=layout, edge_labels = edge_labels)
+    #edge_labels = nx.get_edge_attributes(G,'reaction_constant')
+    #nx.draw_networkx_edge_labels(G, pos=layout, edge_labels = edge_labels)
 
     if not debug:
         plt.show()
