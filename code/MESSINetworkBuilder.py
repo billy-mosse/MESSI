@@ -30,13 +30,21 @@ TODOs:
 
 class MESSINetwork:
     def __init__(self, nx, complexes, species):
-        self.nx = nx
+        self.G = nx
 
         #list of complexes
         #example: [[0,1], [2], [3,1]]
         #represents x0+x1, x2, x3+x1
         self.complexes = complexes
         self.species = species
+        #self.partitions = ?
+        #self.G = nx
+        self.G1 = self.buildG1()
+        self.G2 = self.buildG2()
+
+
+    def buildG1(self):
+        print("hola")
 
 
 
