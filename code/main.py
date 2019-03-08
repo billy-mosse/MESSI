@@ -214,7 +214,7 @@ def main(debug):
     assert np.shape(Mt)[0] == s-d
     assert d<=s
 
-    print("1) Compute Sigma_perp and check if it is mixed.")
+    print("We now compute Sigma_perp and check if it is mixed. Press ENTER to continue.")
     input()
     
     #exits if false
@@ -230,13 +230,13 @@ def main(debug):
     #Steps 2-5
     equal_sign_vectors = get_equal_sign_vectors(s, circuits_information_Bperp, circuits_information_Mt)    
 
-    input("Multistationarity witnesses.")
+    input("We now compute multistationarity witnesses.")
     if len(equal_sign_vectors) == 0:
         print("No solutions were found. Was the system not s-toric?")
         print("TODO: this should be ckecked automatically")
     else:
-        input("Step 5) Conformal vectors v and w")
-        print("For each solution orthanth, we will now product x1,x2, and kappa")
+        #input("Step 5) Conformal vectors v and w")
+        print("For each solution orthanth, we will now produce the steady states x1 and x2, and the reaction constants kappa")
 
         #We iterate the list equal_sign_vectors, while simultaneously generating counter "index"
         for index, L in enumerate(equal_sign_vectors):
@@ -248,7 +248,7 @@ def main(debug):
             v = first_solution[0]
             w = first_solution[1]
 
-            input("6) x^1, x^2, \\kappa")
+            #input("6) x^1, x^2, \\kappa")
             x1, x2 = get_multistationarity_witnesses(v, w, s, d)
             print("x1 is %s" % x1)
             print("x2 is %s" % x2)
