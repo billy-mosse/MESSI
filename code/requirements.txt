@@ -5,3 +5,4 @@ networkx
 texttable
 pytest
 scipy
+graphviz
