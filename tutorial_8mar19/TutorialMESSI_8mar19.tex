@@ -1,0 +1,36 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{enumerate}
+\usepackage[T1]{fontenc}
+\sffamily
+\begin{document}
+Pasos a seguir al 8/3/19:
+
+\begin{enumerate}
+
+
+\item Ejecutar 
+
+\begin{lstlisting}[language=bash]
+python main.py
+\end{lstlisting}
+
+en la carpeta correspondiente.
+
+\item Ingresar las reallciones (en el readme va a estar el ejemplo que anda por el momento)
+
+\item Por ahora, el usuario tiene que confrimarle al programa que la red es MESSI, e ingresar $S^{(0)}, S^{(1)}$, etc y finalizar con un END CORES
+
+\item El programa chequea la condición $C'$. Por hoy, nos gustarís que pueda chequear si hay un único simple path que una dos vértices de $G_2$. Esperamos, en esta primera versión del programa, trabajar bajo las hipótesis del Teorema 35.
+  Por hoy, el usuario tiene que chequear a mano si es s-toric y dar ENTER. Como todavía no podemos encontrar los binomios, la B también se debe ingresar manualmente. (La M también, pero en breve haremos que el programa la calcule sola a partir del grafo.)
+
+\item Chequea si es mixed
+
+\item Aplica el algoritmo del paper de los MESSI systems y devuelve: los ortantes (con vectores testigo en cada ortante) y los testigos $x_1, x_2$, y $\kappa$. En breve mostrará testigos por cada ortante. (Sería ideal que mostrara kappas positivos, pero estamos esperando la respuesta de Carsten.)
+
+\end{enumerate}
+\end{document}
