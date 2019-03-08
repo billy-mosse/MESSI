@@ -136,8 +136,6 @@ class Test1(unittest.TestCase):
         
         incidence_matrix = MESSIGraphUtils.build_incidence_matrix(messi_network)
 
-        print("Incidence matrix: ")
-        print(incidence_matrix)
         """I_solution = numpy.array([
         [-1, 1, 0, 0, 0, 0],
         [1, -1, -1, 0, 0, 0],
