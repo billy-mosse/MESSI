@@ -6,3 +6,4 @@ texttable
 pytest
 scipy
 graphviz
+pygraphviz
