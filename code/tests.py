@@ -243,7 +243,7 @@ class Test1(unittest.TestCase):
 
         self.assert_same_columns(stoichiometric_matrix, stoichiometric_matrix_solution)
 
-    def test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix(self):
+    """def test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix(self):
         ortoghonal_complement_of_stoichiometric_matrix = MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix(messi_network)
 
         stoichiometric_matrix = MESSIGraphUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
@@ -286,7 +286,7 @@ class Test1(unittest.TestCase):
         print(stoichiometric_matrix)
 
         print(ortoghonal_complement_of_stoichiometric_matrix @ stoichiometric_matrix)
-        print(stoichiometric_matrix @ ortoghonal_complement_of_stoichiometric_matrix)
+        print(stoichiometric_matrix @ ortoghonal_complement_of_stoichiometric_matrix)"""
 
 if __name__ == '__main__':
     unittest.main()

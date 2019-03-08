@@ -83,6 +83,8 @@ def build_stoichiometric_matrix(incidence_matrix, complexes_matrix):
 
     #@ is matrix multiplication
 
+    print("complexes matrix")
+
     return complexes_matrix.transpose() @ incidence_matrix
 
 
@@ -97,7 +99,7 @@ def build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix
     returns an integer basis of the orthogonal complement of the stoichiometric matrix of a graph
     
     """
-    G = messi_network.nx
+    """G = messi_network.nx
     n_columns = len(G.nodes())
     empty_row = [0]*n_columns
 
@@ -115,7 +117,7 @@ def build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix
         rows.append(row)
 
     #print("rows: %s" % rows)
-    return np.array(rows)
+    return np.array(rows)"""
 
 
 
