@@ -42,7 +42,7 @@ class MESSINetwork:
 
 def plot_as_multi_digraph(G):
     reaction_constants = nx.get_edge_attributes(G,'reaction_constant')
-    print(reaction_constants)
+    #print(reaction_constants)
     """Gm = nx.MultiDiGraph()
     for edge in G.edges():
         Gm.add_edge(edge[0], edge[1], reaction_constant=reaction_constants[edge])"""
@@ -92,14 +92,14 @@ labels={node:node for node in G.nodes()},
 
 
 
-    print(A)
-    print(reaction_constants)
+    #print(A)
+    #print(reaction_constants)
     for edge in G.edges():
         #print(edge)
         a_edge = A.get_edge(edge[0], edge[1])
         a_edge.attr['label'] = reaction_constants[edge]
 
-    print(A)
+    #print(A)
 
 
     #See https://pygraphviz.github.io/documentation/pygraphviz-1.3rc1/reference/agraph.html
@@ -131,7 +131,7 @@ labels={node:node for node in G.nodes()},
     #circo and dot are nice
     #neato, twopi
     for var in ['circo', 'dot']:
-        print(var)
+        #print(var)
         A.layout(prog=var)
         A.draw('phosphorylation_cascade_%s.png' % var)
     #dot = Digraph()
@@ -142,10 +142,10 @@ def get_relevant_matrices(debug):
     reactions = []
     if True:
 
-        print("Welcome to an implementation of Algorithm 1 of the paper")
-        print ("Please, input the graph G corresponding to the reaction network you want to analyze")
-        print ("Input each reaction with the following format: (SOURCE, TARGET, REACTION_CONSTANT)")
-        print ("One example could be: (S0 +E, ES0, k1)")
+        print ("Welcome to an implementation of Algorithm 1 of the paper The structure of MESSI biological systems.")
+        print ("Please, input the graph G corresponding to the reaction network you want to analyze.")
+        print ("Input each reaction with the following format: (SOURCE COMPLEX, TARGET COMPLEX, REACTION_CONSTANT)")
+        print ("One example would be: (S0 + E, ES0, k1).")
         print ("When finished, enter the command END")
 
     #Descomentar para Alicia
@@ -225,7 +225,7 @@ def get_relevant_matrices(debug):
         
         if not debug:
             print("Great! Then if it's s-toric we will be able to check multistationarity.")
-            print("Please introduce the nodes for P^0. As usual, write END when finished:")
+            print("Please introduce the species for S^(0). As usual, write END when finished:")
             node = ""
             while(node != "END"):
                 node = input()
@@ -236,7 +236,7 @@ def get_relevant_matrices(debug):
             #TODO: falta chequear que no sean vacios y hay al menos 1.
             node = ""
             while(node != "END_CORES"):
-                print("Please introduce the nodes for P^%d. Press END to advance to the next set and END_CORES to let us know this was the last set." % i)
+                print("Please introduce the species for S^(%d). Press END to advance to the next set of species and END_CORES to let us know this was the last set." % i)
 
                 node = ""
                 i = i+1
@@ -254,15 +254,15 @@ def get_relevant_matrices(debug):
         #TODO: check it.
         print("I'm trusting you that this is a MESSI structure...")
 
-        print("Let's check that it is s-toric...")
+        print("We would like to check that it is s-toric...")
 
         cores = [y for x in P_cores for y in x]
 
         is_s_toric = True
 
-        print("Checking C'...")
+        print("Checking condition C'...")
         for intermediate in P0_intermediates:
-            print("checking intermediate complex %s..." % intermediate)
+            #print("checking intermediate complex %s..." % intermediate)
 
 
             simple_o_paths_from_core_source = 0
@@ -284,7 +284,7 @@ def get_relevant_matrices(debug):
                                     only_goes_through_intermediates=False
                                     break;
                         if only_goes_through_intermediates:
-                            print("Path %s only goes through intermediates" % simple_path)
+                            #print("Path %s only goes through intermediates" % simple_path)
 
                             simple_o_paths_from_core_source = simple_o_paths_from_core_source +1
 
@@ -297,14 +297,15 @@ def get_relevant_matrices(debug):
         if is_s_toric:
             print("Condition C' holds!")
         else:
-            print("Condition C' doesn't hold, so the network is not toric")
+            print("Condition C' doesn't hold, so the network is not necessarily toric")
 
         print("")
-        print("")
+        #print("")
         print("TODO: check other conditions.")
         print("Assuming the network is s-toric, by Theorem 4.8, it's toric.")
-        print("Morover, the exponents of the binomials can be calculated explicitely.")
+        print("Morover, if there is a unique simple path between each node of the graph G2, the exponents of the binomials can be explicitely computed:")
         print("to be continued...")
+        print("")
 
         if not debug:
             var = input("Press ENTER to continue with the program.")
