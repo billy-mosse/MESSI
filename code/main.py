@@ -242,7 +242,7 @@ def main(debug):
         for index, L in enumerate(equal_sign_vectors):
 
             #Here, %d is replaced by index+1.
-            print("Producing witness N° %d" % index+1)
+            print("Producing witness N° %d" % (index+1))
 
             first_solution = L
             v = first_solution[0]
