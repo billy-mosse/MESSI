@@ -140,7 +140,7 @@ labels={node:node for node in G.nodes()},
 def get_relevant_matrices(debug):
 
     reactions = []
-    if False:
+    if True:
 
         print("Welcome to an implementation of Algorithm 1 of the paper")
         print ("Please, input the graph G corresponding to the reaction network you want to analyze")
@@ -196,7 +196,7 @@ def get_relevant_matrices(debug):
     #pos = nx.spring_layout(G)
 
     plot_as_multi_digraph(G)
-    exit(0)
+    #exit(0)
 
     #nx.draw(G,layout,arrows=True, edge_color='black',width=1,linewidths=1,\
     #node_size=500,node_color='pink',alpha=0.9,arrowsize=12,arrowstyle='-|>',\
@@ -289,6 +289,7 @@ def get_relevant_matrices(debug):
                             simple_o_paths_from_core_source = simple_o_paths_from_core_source +1
 
 
+            #TODO: tal vez esto se puede mejorar
             if simple_o_paths_from_core_source!=1:
                 is_s_toric=False
                 break
