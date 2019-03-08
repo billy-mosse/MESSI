@@ -236,20 +236,27 @@ def main(debug):
         print("TODO: this should be ckecked automatically")
     else:
         input("Step 5) Conformal vectors v and w")
-        first_solution = equal_sign_vectors[0]
-        v = first_solution[0]
-        w = first_solution[1]
+        print("For each solution orthanth, we will now product x1,x2, and kappa")
 
-        input("6) x^1, x^2, \\kappa")
-        x1, x2 = get_multistationarity_witnesses(v, w, s, d)
-        print("x1 is %s" % x1)
-        print("x2 is %s" % x2)
+        #We iterate the list equal_sign_vectors, while simultaneously generating counter "index"
+        for index, L in enumerate(equal_sign_vectors):
 
-        #Step 6
-        #TODO: there are some hardcoded stuff inside this function
-        Utils.get_kappa(x1,x2)
+            #Here, %d is replaced by index+1.
+            print("Producing witness N° %d" % index+1)
 
+            first_solution = L
+            v = first_solution[0]
+            w = first_solution[1]
 
+            input("6) x^1, x^2, \\kappa")
+            x1, x2 = get_multistationarity_witnesses(v, w, s, d)
+            print("x1 is %s" % x1)
+            print("x2 is %s" % x2)
+
+            #Step 6
+            #TODO: there are some hardcoded stuff inside this function
+            Utils.get_kappa(x1,x2)
+            print("_______________________________________")
 
 
 if __name__=="__main__":
