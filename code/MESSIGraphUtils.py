@@ -23,7 +23,7 @@ complex.
     #while simultaneously keeping the index 0, 1, 2, ...
     #for index, edge in enumerate(nx.edges()):
 
-    G = messi_network.nx
+    G = messi_network.G
 
     rows = []
     n_columns = len(G.nodes())
@@ -43,7 +43,7 @@ complex.
 
 def build_educt_complexes_matrix(messi_network):
     rows = []
-    G = messi_network.nx
+    G = messi_network.G
     n_columns = len(G.nodes())
     empty_row = [0]*n_columns
 
@@ -99,7 +99,7 @@ def build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix
     returns an integer basis of the orthogonal complement of the stoichiometric matrix of a graph
     
     """
-    """G = messi_network.nx
+    """G = messi_network.G
     n_columns = len(G.nodes())
     empty_row = [0]*n_columns
 
