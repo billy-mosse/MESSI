@@ -83,7 +83,7 @@ def build_stoichiometric_matrix(incidence_matrix, complexes_matrix):
 
     #@ is matrix multiplication
 
-    print("complexes matrix")
+    #print("complexes matrix")
 
     return complexes_matrix.transpose() @ incidence_matrix
 

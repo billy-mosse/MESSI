@@ -48,23 +48,31 @@ class MESSINetwork:
         L = []
         for partition in self.partitions[1:]:
             L += partition
+        #print("L")
+        #print(L)
 
         L_indices = []
         for index, complex_name in enumerate(self.complexes):
-            print(complex_name)
+            #print(complex_name)
             found=True
             for i in complex_name:
+                #print("self.species[i]: ")
+                #print(self.species[i])
                 if self.species[i] not in L:
                     found=False
             if found:
                 L_indices.append(index)
-        print(L_indices)
         return L_indices
 
-    def complexes_reactions_by_intermediates(self, core_complexes):
+    def complexes_reactions_by_intermediates(self, core_complexes, intermediates):
         new_edges = []
 
-        core_complexes
+        #print("core complexes")
+        #print(core_complexes)
+
+        #print("intermediates")
+        #print(intermediates)
+
 
         for source in core_complexes:
             for target in core_complexes:
@@ -76,22 +84,30 @@ class MESSINetwork:
                 for simple_path in L:
                     only_goes_through_intermediates=True
                     source = simple_path[0]
-
-                    if source not in P0_intermediates:
-                        for index, c in enumerate(simple_path):
-                            if index > 0:
-                                if c not in P0_intermediates:
-                                    only_goes_through_intermediates=False
-                                    break;
-                        if only_goes_through_intermediates:
-                            new_edges.append([source, target])
+                    #print("simple path")
+                    #print(simple_path)
+                    for index, c in enumerate(simple_path):
+                        if index > 0:
+                            #print(self.complexes[c])
+                            for complex in self.complexes[c]:
+                                for species_index in self.complexes[complex]:
+                                    #print("species")
+                                    #print(self.species[species_index])
+                                    if self.species[species_index] not in intermediates:
+                                        only_goes_through_intermediates=False
+                                        break;#this is ugly and should be refactorized
+                    if only_goes_through_intermediates:
+                        new_edges.append([source, target])
+        
+        #print("new edges: ")
+        #print(new_edges)
         return new_edges
 
     def buildG1(self):
         vertices = self.core_complexes()
-        print(vertices)
+        #print(vertices)
 
-        edges = self.complexes_reactions_by_intermediates(vertices)
+        edges = self.complexes_reactions_by_intermediates(vertices, self.partitions[0])
         
         G1_nx = nx.DiGraph(directed=True)
 
@@ -104,8 +120,8 @@ class MESSINetwork:
         for index, reaction in enumerate(edges):
             G1_nx.add_edge(reaction[0], reaction[1], "k%d" % index)
    
-        print(G1_nx.nodes())
-        print(G1_nx.edges()) 
+        #print(G1_nx.nodes())
+        #print(G1_nx.edges()) 
 
     def buildG2(self):
         print("hola")

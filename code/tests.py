@@ -13,7 +13,7 @@ import MESSINetworkBuilder
 
 
 def get_24_toric_graph():
-    print("(2.4) of Toric paper")
+    #print("(2.4) of Toric paper")
 
 
     """
@@ -59,7 +59,7 @@ complexes = [
         [3] #x0+x4
         ]
 
-species = range(0,6)
+species = ['S0', 'S1', 'ES0', 'FS1', 'E', 'F']
 
 
 partitions = [['ES0', 'FS1', 'S1P0', 'FP1'],
@@ -230,8 +230,8 @@ class Test1(unittest.TestCase):
         stoichiometric_matrix = MESSIGraphUtils.build_stoichiometric_matrix(incidence_matrix, complexes_matrix)
 
 
-        print("stoichiometric_matrix")
-        print(stoichiometric_matrix)
+        #print("stoichiometric_matrix")
+        #print(stoichiometric_matrix)
 
         #rango 3
 
