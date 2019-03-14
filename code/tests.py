@@ -60,7 +60,16 @@ complexes = [
         ]
 
 species = range(0,6)
-messi_network = MESSINetworkBuilder.MESSINetwork(G, complexes, species)
+
+
+partitions = [['ES0', 'FS1', 'S1P0', 'FP1'],
+['S0', 'S1'],
+['P0', 'P1'],
+['E'],
+['F']]
+
+
+messi_network = MESSINetworkBuilder.MESSINetwork(G, complexes, species, partitions)
 
 class Test1(unittest.TestCase):
 

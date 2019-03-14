@@ -29,7 +29,9 @@ TODOs:
 
 
 class MESSINetwork:
-    def __init__(self, G, complexes, species):
+
+
+    def __init__(self, G=None, complexes=[], species=[], partitions=[]):
         self.G = G
 
         #list of complexes
@@ -37,14 +39,73 @@ class MESSINetwork:
         #represents x0+x1, x2, x3+x1
         self.complexes = complexes
         self.species = species
-        #self.partitions = ?
+        self.partitions = partitions
         #self.G = nx
         self.G1 = self.buildG1()
-        self.G2 = self.buildG2()
+        #self.G2 = self.buildG2()
 
+    def core_complexes(self):
+        L = []
+        for partition in self.partitions[1:]:
+            L += partition
+
+        L_indices = []
+        for index, complex_name in enumerate(self.complexes):
+            print(complex_name)
+            found=True
+            for i in complex_name:
+                if self.species[i] not in L:
+                    found=False
+            if found:
+                L_indices.append(index)
+        print(L_indices)
+        return L_indices
+
+    def complexes_reactions_by_intermediates(self, core_complexes):
+        new_edges = []
+
+        core_complexes
+
+        for source in core_complexes:
+            for target in core_complexes:
+                #Deberia bastar solo los simple paths. Chequear
+                simple_paths = nx.all_simple_paths(self.G, source, target)
+
+                L = list(simple_paths)
+
+                for simple_path in L:
+                    only_goes_through_intermediates=True
+                    source = simple_path[0]
+
+                    if source not in P0_intermediates:
+                        for index, c in enumerate(simple_path):
+                            if index > 0:
+                                if c not in P0_intermediates:
+                                    only_goes_through_intermediates=False
+                                    break;
+                        if only_goes_through_intermediates:
+                            new_edges.append([source, target])
+        return new_edges
 
     def buildG1(self):
-        print("hola")
+        vertices = self.core_complexes()
+        print(vertices)
+
+        edges = self.complexes_reactions_by_intermediates(vertices)
+        
+        G1_nx = nx.DiGraph(directed=True)
+
+        sources = set([reaction[0] for reaction in edges])
+
+        targets = set([reaction[1] for reaction in edges])
+
+        nodes = sources.union(targets)
+        G1_nx.add_nodes_from(nodes)
+        for index, reaction in enumerate(edges):
+            G1_nx.add_edge(reaction[0], reaction[1], "k%d" % index)
+   
+        print(G1_nx.nodes())
+        print(G1_nx.edges()) 
 
     def buildG2(self):
         print("hola")
