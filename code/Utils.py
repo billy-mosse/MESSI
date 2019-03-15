@@ -193,9 +193,9 @@ def get_kappa(x1, x2):
     ARR = scipy.linalg.null_space(M)
     print(ARR)
 
-    print("Why should be the vectors in the nullspace positive?")
+    #print("Why should be the vectors in the nullspace positive?")
 
-    input()
+    print("Press ENTER to continue")
 
     k = []
     for i in range(0, np.shape(ARR)[0]):
@@ -218,24 +218,25 @@ def get_kappa(x1, x2):
     print("")
     #input("The moment of truth has arrived.")
     input("We must check that both x1 and x2 are (positive) steady states.")
-    var = input("We just gotta check that f(x2,k) is also zero.")
+    input("Let's do it with the first choice of kappa, i.e., the first column.")
+    #var = input("We just gotta check that f(x2,k) is also zero.")
     #var = input("Ok, let's do it!")
-    var = input("The following matrix A was calculated by hand.")
-    var = input("The condition f(x2,k)=0 is equivalent to A k^t=0")
-    print(A)
+    #var = input("The following matrix A was calculated by hand.")
+    #var = input("The condition f(x2,k)=0 is equivalent to A k^t=0")
+    #print(A)
     
-    var = input("kappa is:")
-    print(nk)
+    #var = input("kappa is:")
+    #print(nk)
 
-    print(input("Product:"))
+    #print(input("Product:"))
     z = A.dot(nk)
-    print(z)
+    #print(z)
 
     if np.linalg.norm(A.dot(nk) < 0.0001):
-        print("f(x2, k) = 0")
+        print("f(x2, k) = 0. It's a steady state!")
         return nk
     else:
-        print("f(x2, k) != 0")
+        print("f(x2, k) != 0. It's not a steady state.")
         return None
 
 

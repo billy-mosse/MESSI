@@ -257,6 +257,8 @@ def main(debug):
             #TODO: there are some hardcoded stuff inside this function
             Utils.get_kappa(x1,x2)
             print("_______________________________________")
+            input("Press ENTER to continue.")
+
 
 
 if __name__=="__main__":
