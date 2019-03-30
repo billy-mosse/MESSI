@@ -295,6 +295,73 @@ class Test1(unittest.TestCase):
         print(ortoghonal_complement_of_stoichiometric_matrix @ stoichiometric_matrix)
         print(stoichiometric_matrix @ ortoghonal_complement_of_stoichiometric_matrix)"""
 
+
+    def test_build_G1(self):
+
+        species = ['S0', 'E', 'S1', 'P0', 'P1', 'F', 'ES0', 'S1', 'P0',
+         'FS1', 'FP1']
+
+        complexes = [
+        [0, 1], #1
+        [6], #1
+        [2, 1], #2
+        [2, 3], #3
+        [7], #4
+        [4, 2], #5
+        [2, 5], #6
+        [8], #7
+        [0, 5], #8
+        [4, 5], #9
+        [9], #10
+        [3, 5]] #11
+
+        reactions = [
+        [0, 1, 'k1'],
+        [1, 0, 'k2'],
+        [1, 2, 'k3'],
+        [3, 4, 'k4'],
+        [4, 3, 'k5'],
+        [4, 5, 'k6'],
+        [6, 7, 'k7'],
+        [7, 6, 'k8'],
+        [7, 8, 'k9'],
+        [9, 10, 'k10'],
+        [10, 9, 'k11'],
+        [10, 11, 'k12']]
+
+        partitions = [
+        [6, 7, 8, 9],
+        [0, 2],
+        [3, 4],
+        [1],
+        [5]
+        ]
+
+
+
+        G = nx.DiGraph(directed=True)
+
+        sources = set([reaction[0] for reaction in reactions])
+
+        targets = set([reaction[1] for reaction in reactions])
+
+        nodes = sources.union(targets)
+        G.add_nodes_from(nodes)
+        for reaction in reactions:
+            G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
+
+        M = MESSINetworkBuilder.MESSINetwork(G, complexes, species, partitions)
+        
+        nodes = M.G1.nodes()
+        edges = M.G1.edges()
+        self.assertTrue(len(nodes) == 8)
+        for c in [0, 2, 3, 5, 6, 8, 9, 11]:
+            self.assertTrue(c in nodes)
+    
+        self.assertTrue(len(edges) == 4)
+        for e in [[0, 2], [3, 5], [6, 8], [9, 11]]:
+            self.assertTrue(e in edges)
+
 if __name__ == '__main__':
     unittest.main()
 
