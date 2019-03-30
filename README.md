@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/billy-mosse/MESSI.png)](https://travis-ci.com/billy-mosse/MESSI)
 
-A simple program that provides rate constants which witness multistationarity of MESSI systems that satisfy conditions stated in Theorem 5.4 of "The Structure of MESSI Biological Systems", by Alicia Dickenstein and Mercedes Pérez Millán [[arXiv](http://arxiv.org/pdf/1612.08763.pdf)][[Journal](http://www.siam.org/journals/siads/17-2/M111372.html)]. (Under construction.)
+A simple program that analyzes MESSI systems and decides whether they are monostationary or multistationary. If the system is multistationary, it provides rate constants and two different steady states (on the same stoichiometric compatibility class) that witness multistationarity. The program is based on Theorem 5.4 of the article "The Structure of MESSI Biological Systems", by Alicia Dickenstein and Mercedes Pérez Millán [[arXiv](http://arxiv.org/pdf/1612.08763.pdf)][[Journal](http://www.siam.org/journals/siads/17-2/M111372.html)]. (Under construction.)
 
 ## What is it useful for?
 
