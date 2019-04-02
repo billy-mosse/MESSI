@@ -41,6 +41,7 @@ complex.
 
     return np.array(rows).transpose()
 
+
 def build_educt_complexes_matrix(messi_network):
     rows = []
     G = messi_network.G
@@ -94,7 +95,71 @@ def build_stoichiometric_matrix_from_messi_network(messi_network):
 
     return build_stoichiometric_matrix(incidence_matrix, complexes_matrix)
 
-def build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix(messi_network):
+
+
+#Creo que a esta no la tengo que llamar con la stoichiometric matrix....
+def get_basis_of_columns_and_index(long_matrix):
+    nrows, ncolumns = np.shape(long_matrix)
+    column_basis = []
+    index_column_basis = []
+    for index, column in enumerate(long_matrix.transpose()):
+        tmp_basis = column_basis.copy()
+        tmp_basis.append(column)
+
+        if np.linalg.matrix_rank(tmp_basis) > np.linalg.matrix_rank(column_basis):
+            column_basis.append(column)
+            index_column_basis.append(index)
+
+    return np.array(column_basis).transpose(), index_column_basis
+
+
+
+def extract_column_basis(matrix):
+    column_basis = []
+    for column in matrix.transpose():
+        tmp_basis = column_basis.copy()
+        tmp_basis.append(column)
+
+        if np.linalg.matrix_rank(tmp_basis) > np.linalg.matrix_rank(column_basis):
+            column_basis.append(column)
+    return np.array(column_basis)
+
+def build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(stoichiometric_matrix_column_basis):
+    column_basis, index_column_basis = get_basis_of_columns_and_index(stoichiometric_matrix_column_basis)
+    column_basis_det = np.linalg.det(column_basis)
+    inverse_of_columns = np.linalg.inv(column_basis)
+    
+    #Tiene la identidad en las columnas index_column_basis, y M' en el resto
+    IdAndMPrime = inverse_of_columns @ stoichiometric_matrix_column_basis
+
+    d, r = np.shape(IdAndMPrime)
+
+    index_column_basis_complement = [i for i in range(0, r) if i not in index_column_basis]
+    #Devuelvo -M' en las filas buenas y la identidad en las malas
+
+    result = [0]* r
+    empty_row = [0]* (r-d)
+
+    only_Mp = []
+    for i in index_column_basis_complement:
+        only_Mp.append(IdAndMPrime.transpose()[i])
+
+    only_Mp = np.array(only_Mp).transpose()
+
+    for index, column_index in enumerate(index_column_basis):
+        new_row = np.dot(-1, only_Mp[index])
+        result[column_index] = new_row
+    
+    for index, column_index in enumerate(index_column_basis_complement):
+            new_row = empty_row.copy()
+            new_row[index] = 1
+            result[column_index] = new_row
+
+    return np.dot(column_basis_det, np.array(result))
+
+
+
+
     """
     returns an integer basis of the orthogonal complement of the stoichiometric matrix of a graph
     
