@@ -124,6 +124,8 @@ def extract_column_basis(matrix):
             column_basis.append(column)
     return np.array(column_basis)
 
+#TODO test what happens if the basis isnt in the first columns
+#I think that situation ever arises, though
 def build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(stoichiometric_matrix_column_basis):
     column_basis, index_column_basis = get_basis_of_columns_and_index(stoichiometric_matrix_column_basis)
     column_basis_det = np.linalg.det(column_basis)

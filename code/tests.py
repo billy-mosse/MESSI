@@ -252,7 +252,7 @@ class Test1(unittest.TestCase):
 
     def test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(self):
 
-
+        #columns form generators of stoichiometric subspace
         stoichiometric_matrix = MESSIGraphUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
 
         #Matriz alta
