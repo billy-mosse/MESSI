@@ -114,7 +114,7 @@ class Test1(unittest.TestCase):
 
     def test_buildup_of_complexes_matrix_from_network(self):
         complexes_matrix = MESSIGraphUtils.build_complexes_matrix(messi_network)
-        complexes_matrix_solution = numpy.array([
+        complexes_matrix_solution = np.array([
             [1, 0, 0, 0, 1, 0],
             [0, 1, 0, 0, 1, 0],
             [0, 0, 1, 0, 0, 0],
@@ -145,7 +145,7 @@ class Test1(unittest.TestCase):
         
         incidence_matrix = MESSIGraphUtils.build_incidence_matrix(messi_network)
 
-        """I_solution = numpy.array([
+        """I_solution = np.array([
         [-1, 1, 0, 0, 0, 0],
         [1, -1, -1, 0, 0, 0],
         [0, 0, 1, 0, 0, 0],
@@ -165,7 +165,7 @@ class Test1(unittest.TestCase):
     ['5', '3', 'k6']
     ] """
 
-        incidence_matrix_solution = numpy.array([
+        incidence_matrix_solution = np.array([
         [-1, 1,  0,  0,  0,  0],
         [0,  0,  1,  0,  0,  0],
         [1,  -1, -1, 0,  0,  0],
@@ -210,7 +210,7 @@ class Test1(unittest.TestCase):
 
         """
 
-        educt_complexes_matrix_solution = numpy.array(
+        educt_complexes_matrix_solution = np.array(
             [
             [1, 0, 0, 0, 0, 0],
             [0, 0, 0, 1, 0, 0],
@@ -238,7 +238,7 @@ class Test1(unittest.TestCase):
 
         
 
-        stoichiometric_matrix_solution = numpy.array(
+        stoichiometric_matrix_solution = np.array(
             [[-1,  1,  0, 0,  1,  0],
             [ 0,  0,  1, -1,  0,  1],
             [ 1, -1, -1,  0,  0,  0],
@@ -250,64 +250,100 @@ class Test1(unittest.TestCase):
 
         self.assert_same_columns(stoichiometric_matrix, stoichiometric_matrix_solution)
 
-    """def test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix(self):
-        ortoghonal_complement_of_stoichiometric_matrix = MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix(messi_network)
+    def test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(self):
+
 
         stoichiometric_matrix = MESSIGraphUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
 
+        #Matriz alta
+        stoichiometric_matrix_column_basis = MESSIGraphUtils.extract_column_basis(stoichiometric_matrix)
+
+
+        ortoghonal_complement_of_stoichiometric_matrix_column_basis = \
+            MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(stoichiometric_matrix_column_basis)
+        
+        #Quizas haya que transponer...
+        
+        #Es el nucleo a derecha
+        #product1 = ortoghonal_complement_of_stoichiometric_matrix_column_basis @ stoichiometric_matrix_column_basis
+        product2 = stoichiometric_matrix_column_basis @ ortoghonal_complement_of_stoichiometric_matrix_column_basis
+
+        #self.assertTrue(np.linalg.matrix_rank(product1) == 0)
+        self.assertTrue(np.linalg.matrix_rank(product2) == 0)
+
+
         stoch_shape = np.shape(stoichiometric_matrix)
-        complement_shape = np.shape(ortoghonal_complement_of_stoichiometric_matrix)
+        complement_shape = np.shape(ortoghonal_complement_of_stoichiometric_matrix_column_basis)
 
-        #same columns
-        self.assertTrue(stoch_shape[1] == complement_shape[1])
+    def test_build_G1(self):
 
+        species = ['S0', 'E', 'S1', 'P0', 'P1', 'F', 'ES0', 'S1', 'P0',
+         'FS1', 'FP1']
 
-        print(stoch_shape)
-        print(complement_shape)
+        complexes = [
+        [0, 1], #1
+        [6], #1
+        [2, 1], #2
+        [2, 3], #3
+        [7], #4
+        [4, 2], #5
+        [2, 5], #6
+        [8], #7
+        [0, 5], #8
+        [4, 5], #9
+        [9], #10
+        [3, 5]] #11
 
-        #dimensions are OK
-        #self.assertTrue(stoch_shape[0] + complement_shape[0] == stoch_shape[1])
+        reactions = [
+        [0, 1, 'k1'],
+        [1, 0, 'k2'],
+        [1, 2, 'k3'],
+        [3, 4, 'k4'],
+        [4, 3, 'k5'],
+        [4, 5, 'k6'],
+        [6, 7, 'k7'],
+        [7, 6, 'k8'],
+        [7, 8, 'k9'],
+        [9, 10, 'k10'],
+        [10, 9, 'k11'],
+        [10, 11, 'k12']]
 
-        stoch_rank = np.linalg.matrix_rank(stoichiometric_matrix)
+        partitions = [
+        [6, 7, 8, 9],
+        [0, 2],
+        [3, 4],
+        [1],
+        [5]
+        ]
 
         complement_rank =  np.linalg.matrix_rank(ortoghonal_complement_of_stoichiometric_matrix)
 
 
-        print(stoch_rank)
+        G = nx.DiGraph(directed=True)
 
-        print(complement_rank)
+        sources = set([reaction[0] for reaction in reactions])
 
-        #No da! Hay algun otro vector en el espacio estequiometrico que no viene de un ciclo.
-        self.assertTrue(stoch_shape[1] == stoch_rank + complement_rank)
+        targets = set([reaction[1] for reaction in reactions])
 
-        for row in complement_shape.rows():
-            for column in stoichiometric_matrix.transpose():
-                print(numpy.dot(row, column))
+        nodes = sources.union(targets)
+        G.add_nodes_from(nodes)
+        for reaction in reactions:
+            G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
+
+        M = MESSINetworkBuilder.MESSINetwork(G, complexes, species, partitions)
+        
+        nodes = M.G1.nodes()
+        edges = M.G1.edges()
+        self.assertTrue(len(nodes) == 8)
+        for c in [0, 2, 3, 5, 6, 8, 9, 11]:
+            self.assertTrue(c in nodes)
+    
+        self.assertTrue(len(edges) == 4)
+        for e in [[0, 2], [3, 5], [6, 8], [9, 11]]:
+            self.assertTrue(e in edges)
 
 
-
-        print(ortoghonal_complement_of_stoichiometric_matrix)
-        print("")
-        print("")
-        print("")
-        print(stoichiometric_matrix)
-
-        print(ortoghonal_complement_of_stoichiometric_matrix @ stoichiometric_matrix)
-        print(stoichiometric_matrix @ ortoghonal_complement_of_stoichiometric_matrix)"""
-
-
-    def test_get_integer_kernel(self):
-        M = numpy.array([
-            [1.0, 1, 1, 1],
-            [2, 2, 2, 2]])
-
-        K = MESSIGraphUtils.get_integer_kernel(M)
-        for row in K:
-            for a in row:
-                self.assertTrue(a.is_integer())
-
-        product = M @ K
-        self.assertTrue(product.matrix_rank() ==0 )
+        #TODO check labels.
 
 if __name__ == '__main__':
     unittest.main()
