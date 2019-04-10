@@ -277,7 +277,7 @@ class Test1(unittest.TestCase):
 
         print(complement_rank)
 
-        #No da! Hay algún otro vector en el espacio estequiométrico que no viene de un ciclo.
+        #No da! Hay algun otro vector en el espacio estequiometrico que no viene de un ciclo.
         self.assertTrue(stoch_shape[1] == stoch_rank + complement_rank)
 
         for row in complement_shape.rows():
@@ -294,6 +294,20 @@ class Test1(unittest.TestCase):
 
         print(ortoghonal_complement_of_stoichiometric_matrix @ stoichiometric_matrix)
         print(stoichiometric_matrix @ ortoghonal_complement_of_stoichiometric_matrix)"""
+
+
+    def test_get_integer_kernel(self):
+        M = numpy.array([
+            [1.0, 1, 1, 1],
+            [2, 2, 2, 2]])
+
+        K = MESSIGraphUtils.get_integer_kernel(M)
+        for row in K:
+            for a in row:
+                self.assertTrue(a.is_integer())
+
+        product = M @ K
+        self.assertTrue(product.matrix_rank() ==0 )
 
 if __name__ == '__main__':
     unittest.main()

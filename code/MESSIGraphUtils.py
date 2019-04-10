@@ -59,9 +59,9 @@ def build_educt_complexes_matrix(messi_network):
 
 
 def build_complexes_matrix(messi_network):
-    #Y^t tiene, en cada columna, al complejo
-    #Entonces Y tiene, en cada fila, al complejo
-    #Cada fila tiene de tamaño la cantidad de especies
+    """Y^t tiene, en cada columna, al complejo
+    Entonces Y tiene, en cada fila, al complejo
+    Cada fila tiene de tamaño la cantidad de especies"""
     n_columns = len(messi_network.species)
     empty_row = [0]*n_columns
     rows = []
@@ -118,6 +118,88 @@ def build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix
 
     #print("rows: %s" % rows)
     return np.array(rows)"""
+
+
+
+def get_positive_column_of_matrix_if_exists(M):
+
+    #Hay que conseguir los circuitos de las columnas de M!
+
+
+    """circuits = Utils.get_circuits(M.transpose())
+    non_negative_circuits = []
+    for circuit in circuits:
+        if isNonNegative(circuit):
+            non_negative_circuits.append(circuit)
+
+    perhaps_positive_vector = union(non_negative_circuits)
+    if isPositive(perhaps_positive_vector):
+        return perhaps_positive_vector
+    else
+        return None"""
+
+
+#TESTEAR QUE SI ES ENTERA N ENTONCES DA ENTERO EL KERNEL
+def get_integer_kernel(M):
+
+    n_rows = np.linalg.shape(N)[0]
+    n_cols = np.linalg.shape(N)[1]
+    if n_cols < n_rows:
+        return None
+
+    #Todas las posibles elecciones de columnas
+    L = get_r_subsets(range(0,n_columns), n_rows)
+
+    good_columns_selection = None
+    submatrix = None
+    for possible_columns_selection in L:
+        if A[:, [i for i in possible_columns_selection]].matrix_rank == n_rows:
+            good_columns_selection = possible_columns_selection
+            submatrix = A[:, [i for i in possible_columns_selection]]
+            break
+
+    submatrix_inverse = numpy.invert(submatrix)
+
+    #column permutation of [Id | M']
+    result = submatrix_inverse @ M
+
+    good_columns_selection_complement = list(filter(
+        lambda x: x not in good_columns_selection,
+        [i in range(0,n_cols)]
+        )
+
+
+    #Kernel has -M' in good rows, and Id in the other rows.
+
+
+
+    #Consigue el kernel invirtiendo una parte de la matriz y despues trabajando por bloques.
+    """
+    0) Chequeo que tiene el tamaño adecuado, sino tiro error
+    1) Tiro las filas linealmente dependientes (pueden estar intercaladas)
+    No importa porque no necesito recordar el orden de las filas. Chequear rangos para tirar filas/columnas. O chequear determinantes.
+
+    2) Me quedo con "B", la parte cuadrada inversible. Ojo que las columnas que selecciono pueden no estar todas juntas. Para tirar columnas, uso endchoosek para python.(Update: endchoosek no existe)
+
+    3) Invierto B. mirar papel para el resto.
+
+    """
+
+
+#def get_positive_vector_in_kernel_if_exists(N):
+
+    """M = get_integer_kernel(N)
+
+    positive_vector = get_positive_vector_of_matrix_if_exists(M)
+    if positive_vector != None:
+        for column in M.columns():
+            while not isNonNegative(column):
+                column += positive_vector
+                M[indice de la matriz].appendColumn(column)
+                #Habra alguna manera de directamente actualizar las columnas? Sino reemplazo.
+        return M
+    else:
+        return None"""
 
 
 
