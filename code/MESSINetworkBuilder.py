@@ -129,11 +129,125 @@ class MESSINetwork:
         #print(G1_nx.nodes())
         #print(G1_nx.edges()) 
 
+    def monomolecular(self, complex1, complex2):
+        assert(len(complex1) == len(complex2))
+        return len(complex1) == 1
+
+
+    def get_pairs_from_same_partition(self, complex1, complex2):
+        if get_partition(complex1[0]) == get_partition(complex2[0]):
+            assert(get_partition(complex1[1]) == get_partition(complex2[1]))
+            first_pair = [complex1[0], complex2[0]]
+            first_label = [complex1[1], complex2[1]]
+
+            second_pair = [complex1[1], complex2[1]]
+            second_label = [complex1[0], complex2[0]]
+
+        else:
+            assert(get_partition(complex1[0]) == get_partition(complex2[1]))
+            assert(get_partition(complex1[1]) == get_partition(complex2[0]))
+
+
+            #Labels are the other origins
+            first_pair = [complex1[0], complex2[1]]
+            first_label = [complex1[1]]
+
+            second_pair = [complex1[1], complex2[0]]
+            second_label = [complex1[0]]
+
+
+        return [[first_pair, first_label], [second_pair, second_label]]
+        """complexes = complex1 + complex2
+        pairs = []
+        for partition in partitions:
+            L = []
+            for complex in complexes:
+                if complex in partition:
+                    L.append(complex)
+                    complexes.remove(complex)
+                if len(L) == 2:
+
+                    #the label is the other 2 complexes - that's all we need
+                    label = L + complexes
+                    pairs.append([L,label])
+
+        assert(len(pairs) == 2)
+        return pairs"""
+
     def buildG2(self):
-        self.complexes
-        self.species
-        self.partitions
-        self.G2 #Otro DiGraph.
+
+        if self.G1 == None:
+            self.buildG1();
+
+
+        nodes = core_species()#hacer
+
+        new_edges = []
+        for edge in self.G1.get_edges():
+
+            complex1 = self.complexes[edge[0]]
+            complex2 = self.complexes[edge[1]]
+            if monomolecular(complex1, complex2):
+                #I add it as is
+                new_edges.append([edge, edge.get_label()])
+            else:
+
+                #If X1 + X2 -> X3 + X4, with X1 and X3 in the same partition,
+                #and the same for X2 and X4,
+                #we build edges X1-> X4
+                
+                PAIR=0
+                LABEL=1
+                first, second = \
+                    get_pairs_from_same_partition(complex1, complex2)
+
+                G2_nx = nx.DiGraph(directed=True)
+                G2_nx.add_nodes_from(nodes)
+
+                #Faltan los labels...
+                G2_nx.add_edge(first[PAIR][0], first[PAIR][1], reaction_constant=first[LABEL])
+
+                G2_nx.add_edge(second[PAIR][0], second[PAIR][1], reaction_constant=second[LABEL])
+
+
+                G2_nx.remove_edges_from(G2_nx.selfloop_edges())
+
+        return G2_nx
+
+
+        def buildG2(self):
+            nodes = core_species()#hacer
+
+            new_edges = []
+            for edge in self.G1.get_edges():
+                if monomolecular(edge):
+                    #I add it as is
+                    new_edges.append([edge, edge.get_label()])
+                else:
+                    complex1 = self.complexes[edge[0]]
+                    complex2 = self.complexes[edge[1]]
+
+                    #If X1 + X2 -> X3 + X4, with X1 and X3 in the same partition,
+                    #and the same for X2 and X4,
+                    #we build edges X1-> X4
+                    first_pair, second_pair = \
+                        get_pairs_from_same_partition(complex1, complex2)
+
+                    G2_nx = nx.DiGraph(directed=True)
+                    G2_nx.add_nodes_from(nodes)
+
+
+
+                    #HACK: los nodos en este contexto son directamente los indices de las especies
+                    #Faltan los labels...
+                    G2_nx.add_edge(first_pair[0][0], first_pair[0][1], reaction_constant=label1)
+
+                    G2_nx.add_edge(second_pair[0][0], second_pair[0][0], reaction_constant=label2)
+
+            self.G2_complexes = None
+            return G2_nx
+
+
 
 
 
