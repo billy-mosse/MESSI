@@ -85,6 +85,7 @@ class Test1(unittest.TestCase):
 
 
     def test_buildup_of_conformal_circuit_to_matrix(self):
+        print("test_buildup_of_conformal_circuit_to_matrix...")
         matrix_1 = np.array([
             [1, 0],
             [0, 3]])
@@ -109,10 +110,12 @@ class Test1(unittest.TestCase):
         for c in [[0, 4, 5], [0, -4, -5], [-4, 0, 8], [4, 0, -8], [-5, -8, 0], [5, 8, 0]]:
             self.assertTrue(c in circuits_information_matrix_2.circuits)
 
+        print("OK")
 
 
 
     def test_buildup_of_complexes_matrix_from_network(self):
+        print("test_buildup_of_complexes_matrix_from_network...")
         complexes_matrix = MESSIGraphUtils.build_complexes_matrix(messi_network)
         complexes_matrix_solution = np.array([
             [1, 0, 0, 0, 1, 0],
@@ -124,11 +127,12 @@ class Test1(unittest.TestCase):
             )
 
         self.assert_same_columns(complexes_matrix, complexes_matrix_solution)
+        print("OK")
 
     
 
     def test_buildup_of_incidence_matrix_from_network(self):
-        
+        print("test_buildup_of_incidence_matrix_from_network")
 
         """reactions = [
         ['S0+E', 'ES0','k1'],
@@ -175,9 +179,11 @@ class Test1(unittest.TestCase):
 
         #The incidence matrix might have columns in another order.
         self.assert_same_columns(incidence_matrix, incidence_matrix_solution)
+        print("OK")
 
 
     def test_buildup_of_educt_complexes_matrix_from_network(self):
+        print("test_buildup_of_educt_complexes_matrix_from_network...")
         #G = get_24_toric_graph()
 
         """
@@ -221,9 +227,12 @@ class Test1(unittest.TestCase):
             ])
 
         self.assert_same_columns(educt_complexes_matrix, educt_complexes_matrix_solution)
+        print("OK")
 
 
     def test_buildup_of_stoichiometric_matrix_from_network(self):
+
+        print("test_buildup_of_stoichiometric_matrix_from_network...")
         incidence_matrix = MESSIGraphUtils.build_incidence_matrix(messi_network)
         complexes_matrix = MESSIGraphUtils.build_complexes_matrix(messi_network)
 
@@ -234,9 +243,6 @@ class Test1(unittest.TestCase):
         #print(stoichiometric_matrix)
 
         #rango 3
-
-
-        
 
         stoichiometric_matrix_solution = np.array(
             [[-1,  1,  0, 0,  1,  0],
@@ -249,15 +255,17 @@ class Test1(unittest.TestCase):
 
 
         self.assert_same_columns(stoichiometric_matrix, stoichiometric_matrix_solution)
+        print("OK")
+
 
     def test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(self):
 
+        print("test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis...")
         #columns form generators of stoichiometric subspace
         stoichiometric_matrix = MESSIGraphUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
 
-        #Matriz alta
+        #Matriz alta...o larga? Creo que larga.
         stoichiometric_matrix_column_basis = MESSIGraphUtils.extract_column_basis(stoichiometric_matrix)
-
 
         ortoghonal_complement_of_stoichiometric_matrix_column_basis = \
             MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(stoichiometric_matrix_column_basis)
@@ -274,8 +282,48 @@ class Test1(unittest.TestCase):
 
         stoch_shape = np.shape(stoichiometric_matrix)
         complement_shape = np.shape(ortoghonal_complement_of_stoichiometric_matrix_column_basis)
+        print("OK")
+
+
+    def test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(self):
+
+        print("test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis...")
+        #columns form generators of stoichiometric subspace
+        stoichiometric_matrix = MESSIGraphUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
+
+
+        #Matriz alta
+        #
+        stoichiometric_matrix_column_basis = MESSIGraphUtils.extract_column_basis(stoichiometric_matrix)
+
+        ortoghonal_complement_of_stoichiometric_matrix_column_basis = \
+            MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(stoichiometric_matrix_column_basis)
+        
+        #Quizas haya que transponer...
+        
+        #Es el nucleo a derecha
+        #product1 = ortoghonal_complement_of_stoichiometric_matrix_column_basis @ stoichiometric_matrix_column_basis
+        product = stoichiometric_matrix_column_basis @ ortoghonal_complement_of_stoichiometric_matrix_column_basis
+
+        #self.assertTrue(np.linalg.matrix_rank(product1) == 0)
+        self.assertTrue(np.linalg.matrix_rank(product) == 0)
+
+
+        stoch_shape = np.shape(stoichiometric_matrix)
+        complement_shape = np.shape(ortoghonal_complement_of_stoichiometric_matrix_column_basis)
+
+        M = np.array([[ 0,  0,  1,  0,  0,  0],
+             [ 1,  1,  0,  0,  1,  0],
+             [ 0,  0,  0,  1,  0,  1]])
+
+        M_orthogonal_complement = MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(M)
+
+        product = M @ M_orthogonal_complement
+        self.assertTrue(np.linalg.matrix_rank(product) == 0)
+        print("test_build_G1 ")
 
     def test_build_G1(self):
+        print("test_build_G1...")
 
         species = ['S0', 'E', 'S1', 'P0', 'P1', 'F', 'ES0', 'S1', 'P0',
          'FS1', 'FP1']
@@ -316,9 +364,6 @@ class Test1(unittest.TestCase):
         [5]
         ]
 
-        complement_rank =  np.linalg.matrix_rank(ortoghonal_complement_of_stoichiometric_matrix)
-
-
         G = nx.DiGraph(directed=True)
 
         sources = set([reaction[0] for reaction in reactions])
@@ -342,11 +387,13 @@ class Test1(unittest.TestCase):
         for e in [[0, 2], [3, 5], [6, 8], [9, 11]]:
             self.assertTrue(e in edges)
 
-
+        print("OK")
         #TODO check labels.
 
 if __name__ == '__main__':
     unittest.main()
+
+    print("all OK")
 
 """
 1) podriamos testear que los kappa sean positivos para algunos ejemplos
@@ -356,3 +403,5 @@ if __name__ == '__main__':
 
 
 """
+
+
