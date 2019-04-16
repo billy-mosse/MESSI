@@ -42,7 +42,9 @@ class MESSINetwork:
         self.partitions = partitions
         #self.G = nx
         self.G1 = self.buildG1()
-        #self.G2 = self.buildG2()
+        self.G2 = self.buildG2()
+        self.G2_circle = self.buildG2_circle()
+
 
     def core_complexes(self):
         L = []
@@ -124,19 +126,22 @@ class MESSINetwork:
         for index, reaction in enumerate(edges):
             label = ("k%d" % index)
             G1_nx.add_edge(reaction[0], reaction[1], reaction_constant=label)
-   
+
         return G1_nx
-        #print(G1_nx.nodes())
-        #print(G1_nx.edges()) 
 
     def monomolecular(self, complex1, complex2):
         assert(len(complex1) == len(complex2))
         return len(complex1) == 1
 
 
+    def get_partition(self, complex):
+        for partition in self.partitions:
+            if complex in partition:
+                return partition
+
     def get_pairs_from_same_partition(self, complex1, complex2):
-        if get_partition(complex1[0]) == get_partition(complex2[0]):
-            assert(get_partition(complex1[1]) == get_partition(complex2[1]))
+        if self.get_partition(complex1[0]) == self.get_partition(complex2[0]):
+            assert(self.get_partition(complex1[1]) == self.get_partition(complex2[1]))
             first_pair = [complex1[0], complex2[0]]
             first_label = [complex1[1], complex2[1]]
 
@@ -144,8 +149,8 @@ class MESSINetwork:
             second_label = [complex1[0], complex2[0]]
 
         else:
-            assert(get_partition(complex1[0]) == get_partition(complex2[1]))
-            assert(get_partition(complex1[1]) == get_partition(complex2[0]))
+            assert(self.get_partition(complex1[0]) == self.get_partition(complex2[1]))
+            assert(self.get_partition(complex1[1]) == self.get_partition(complex2[0]))
 
 
             #Labels are the other origins
@@ -174,24 +179,30 @@ class MESSINetwork:
         assert(len(pairs) == 2)
         return pairs"""
 
-    def buildG2(self):
 
+    def buildG2(self):
         if self.G1 == None:
             self.buildG1();
 
+        #nodes = self.core_complexes()
 
-        nodes = core_species()#hacer
-
+        #nodes = set()
         new_edges = []
-        for edge in self.G1.get_edges():
+        G2_nx = None
+        G2_nx = nx.DiGraph(directed=True)
+        #G2_nx.add_nodes_from(nodes)
 
+        for edge in self.G1.edges():
             complex1 = self.complexes[edge[0]]
             complex2 = self.complexes[edge[1]]
-            if monomolecular(complex1, complex2):
+            if self.monomolecular(complex1, complex2):
                 #I add it as is
                 new_edges.append([edge, edge.get_label()])
+                
+                #nodes.add(edge[0])
+                 
+                #nodes.add(edge[1])
             else:
-
                 #If X1 + X2 -> X3 + X4, with X1 and X3 in the same partition,
                 #and the same for X2 and X4,
                 #we build edges X1-> X4
@@ -199,10 +210,12 @@ class MESSINetwork:
                 PAIR=0
                 LABEL=1
                 first, second = \
-                    get_pairs_from_same_partition(complex1, complex2)
+                    self.get_pairs_from_same_partition(complex1, complex2)
 
-                G2_nx = nx.DiGraph(directed=True)
-                G2_nx.add_nodes_from(nodes)
+                #nodes.add(first[PAIR][0])
+                #nodes.add(first[PAIR][1])
+                #nodes.add(second[PAIR][0])
+                #nodes.add(second[PAIR][1])
 
                 #Faltan los labels...
                 G2_nx.add_edge(first[PAIR][0], first[PAIR][1], reaction_constant=first[LABEL])
@@ -210,45 +223,35 @@ class MESSINetwork:
                 G2_nx.add_edge(second[PAIR][0], second[PAIR][1], reaction_constant=second[LABEL])
 
 
-                G2_nx.remove_edges_from(G2_nx.selfloop_edges())
+        nodes = []
+        for edge in G2_nx.edges():
+            if edge[0] not in nodes:
+                nodes.append(edge[0])
 
+            if edge[1] not in nodes:
+                nodes.append(edge[1])
+
+        G2_nx.add_nodes_from(nodes)
+        #G2_nx.add_nodes_from(nodes_vector)
+        #print(G2_nx.nodes())
         return G2_nx
 
+    def buildG2_circle(self):
+        G2_circle = self.G2.copy()
+        G2_circle.remove_edges_from(G2_circle.selfloop_edges())
 
-        def buildG2(self):
-            nodes = core_species()#hacer
-
-            new_edges = []
-            for edge in self.G1.get_edges():
-                if monomolecular(edge):
-                    #I add it as is
-                    new_edges.append([edge, edge.get_label()])
-                else:
-                    complex1 = self.complexes[edge[0]]
-                    complex2 = self.complexes[edge[1]]
-
-                    #If X1 + X2 -> X3 + X4, with X1 and X3 in the same partition,
-                    #and the same for X2 and X4,
-                    #we build edges X1-> X4
-                    first_pair, second_pair = \
-                        get_pairs_from_same_partition(complex1, complex2)
-
-                    G2_nx = nx.DiGraph(directed=True)
-                    G2_nx.add_nodes_from(nodes)
+        nodes_to_remove = []
+        for node in G2_circle.nodes():
+            found = False
+            for edge in G2_circle.edges():
+                if node in edge:
+                    found = True
+            if not found:
+                nodes_to_remove.append(node)
 
 
-
-                    #HACK: los nodos en este contexto son directamente los indices de las especies
-                    #Faltan los labels...
-                    G2_nx.add_edge(first_pair[0][0], first_pair[0][1], reaction_constant=label1)
-
-                    G2_nx.add_edge(second_pair[0][0], second_pair[0][0], reaction_constant=label2)
-
-            self.G2_complexes = None
-            return G2_nx
-
-
-
+        G2_circle.remove_nodes_from(nodes_to_remove)
+        return G2_circle
 
 
 def plot_as_multi_digraph(G):

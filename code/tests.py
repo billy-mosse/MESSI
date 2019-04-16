@@ -391,8 +391,8 @@ class Test1(unittest.TestCase):
         #TODO check labels.
 
 
-    def test_build_G2(self):
-        print("test_build_G2...")
+    def test_build_G2_circle(self):
+        print("test_build_G2_circle...")
 
         species = ['S0', 'E', 'S1', 'P0', 'P1', 'F', 'ES0', 'S1', 'P0',
          'FS1', 'FP1']
@@ -445,9 +445,9 @@ class Test1(unittest.TestCase):
             G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
 
         M = MESSINetworkBuilder.MESSINetwork(G, complexes, species, partitions)
-        
-        nodes = M.G1.nodes()
-        edges = M.G1.edges()
+
+        nodes = M.G2_circle.nodes()
+        edges = M.G2_circle.edges()
 
 
         self.assertTrue(len(nodes) == 4)
