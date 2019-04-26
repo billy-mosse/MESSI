@@ -231,24 +231,31 @@ def get_pairs_of_binomial_exponents_of_type_2(messi_network):
 def get_pairs_of_binomial_exponents(messi_network):
     #We assume system is s-toric
 
+    #Phi
     L1 = get_pairs_of_binomial_exponents_of_type_1(messi_network)
+    
+    #Simple path
     L2 = get_pairs_of_binomial_exponents_of_type_2(messi_network)
     return L1 + L2
 
 def get_binomial_basis(messi_network):
-    #v' no es mayor que v, sino que el orden se basa en cual tiene coef 1 no? O se cumplen ambas cosas?
 
     L = []
     pairs_of_binomial_exponents = get_pairs_of_binomial_exponents(messi_network)
     for pair in pairs_of_binomial_exponents:
-        #v'-v
         L.append(map(lambda x, y: x - y, pair[0], pair[1]))
 
 def build_binomial_matrix(messi_network):
+    """
+    builds the binomial matrix B, as described in the MESSI paper
+    """
     binomial_basis = get_binomial_basis(messi_network)
     np.array(binomial_basis).transpose()
 
 
 def build_orthogonal_complement_of_binomial_matrix(messi_network):
+    """
+    builds orthogonal complement of the binomial matrix - needed for Sigma_perp
+    """
     binomial_matrix = build_binomial_matrix(messi_network)
     return build_orthogonal_complement_of_binomial_matrix(binomial_matrix)
