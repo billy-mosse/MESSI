@@ -268,7 +268,7 @@ class Test1(unittest.TestCase):
         stoichiometric_matrix_column_basis = MESSIGraphUtils.extract_column_basis(stoichiometric_matrix)
 
         ortoghonal_complement_of_stoichiometric_matrix_column_basis = \
-            MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(stoichiometric_matrix_column_basis)
+            MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(stoichiometric_matrix_column_basis)
         
         #Quizas haya que transponer...
         
@@ -297,7 +297,7 @@ class Test1(unittest.TestCase):
         stoichiometric_matrix_column_basis = MESSIGraphUtils.extract_column_basis(stoichiometric_matrix)
 
         ortoghonal_complement_of_stoichiometric_matrix_column_basis = \
-            MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(stoichiometric_matrix_column_basis)
+            MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(stoichiometric_matrix_column_basis)
         
         #Quizas haya que transponer...
         
@@ -316,7 +316,7 @@ class Test1(unittest.TestCase):
              [ 1,  1,  0,  0,  1,  0],
              [ 0,  0,  0,  1,  0,  1]])
 
-        M_orthogonal_complement = MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(M)
+        M_orthogonal_complement = MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(M)
 
         product = M @ M_orthogonal_complement
         self.assertTrue(np.linalg.matrix_rank(product) == 0)

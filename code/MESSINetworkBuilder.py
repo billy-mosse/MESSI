@@ -45,6 +45,8 @@ class MESSINetwork:
         self.G2 = self.buildG2()
         self.G2_circle = self.buildG2_circle()
 
+    def intermediates(self):
+        return self.partitions[0]
 
     def core_complexes(self):
         L = []

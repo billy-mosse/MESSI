@@ -126,14 +126,14 @@ def extract_column_basis(matrix):
 
 #TODO test what happens if the basis isnt in the first columns
 #I think that situation ever arises, though
-def build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(stoichiometric_matrix_column_basis):
-    column_basis, index_column_basis = get_basis_of_columns_and_index(stoichiometric_matrix_column_basis)
+def build_integer_basis_matrix_of_orthogonal_complement_of_matrix(matrix):
+    column_basis, index_column_basis = get_basis_of_columns_and_index(matrix)
 
     column_basis_det = np.linalg.det(column_basis)
     inverse_of_columns = np.linalg.inv(column_basis)
     
     #Tiene la identidad en las columnas index_column_basis, y M' en el resto
-    IdAndMPrime = inverse_of_columns @ stoichiometric_matrix_column_basis
+    IdAndMPrime = inverse_of_columns @ matrix
 
     d, r = np.shape(IdAndMPrime)
 
@@ -159,3 +159,96 @@ def build_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix
             result[column_index] = new_row
 
     return np.dot(column_basis_det, np.array(result))
+
+
+def get_unique_core_reacting_through_intermediates(messi_network, intermediate_index):
+    #OJO que esto es distinto a lo que tiene G1.
+
+    #TODO: probablemente el index no es la cosa correcta que tengo que agarrar
+    possible_core = messi_network.predecessors(intermediate_index)[0]
+    found_complex = False
+    while not found_complex:
+
+        #Iterate predecessors until find a core
+        #At bifurcations, we just choose the first one
+        #because we are assuming that C' holds.
+
+        #TODO: probablemente el indice esta mal.
+        #pero la funcion predecessors() efectivamente existe.
+        possible_core = messi_network.predecessors(intermediate_index)[0]
+        if possible_core in messi_network.core_complexes():
+            found_complex = True
+
+    return possible_core
+
+
+
+def phi(messi_network, intermediate_index):
+    unique_core_reacting_through_intermediates \
+    = get_unique_core_reacting_through_intermediates(messi_network, intermediate_index)
+
+    #This should be the indices of the complex,
+    #seen as a vector of species    
+    return messi_network.complexes[complex]
+
+def get_pairs_of_binomial_exponents_of_type_1(messi_network):
+    L = []
+
+    #p es la cantidad de intermedios
+    for intermediate_index, intermediate in messi_network.intermediates():
+        L.append([intermediate_index, phi(messi_network, intermediate_index)])
+
+    return L
+
+#TODO LLAMAR A ESTA FUNCION
+def check_sufficient_condition_for_s_toricity(messi_network):
+    condition = True
+    for connected_component in messi_network.G2.connected_components():
+        for [origin, target] in connected_component.edges():
+
+            #hay un unico simple path desde target a origin?
+            if len(nx.all_simple_paths(messi_network.G2_circle, origin, target)) != 1:
+                condition = False
+
+    return condition
+
+def get_pairs_of_binomial_exponents_of_type_2(messi_network):
+    L = []
+
+    #TODO chequear que estoy construyendo G2 y no MG2
+    for edge in messi_network.G2:
+        unique_simple_path = nx.all_simple_paths(messi_network.G2_circle, origin, target)
+        first_edge_from_simple_path = unique_simple_path[0]
+        h = edge.label()
+        i = edge[0]
+        m = first_edge_from_simple_path.label()
+        j = edge[1]
+        L.add([[h, i], [m, j]])
+
+    return L
+
+
+def get_pairs_of_binomial_exponents(messi_network):
+    #We assume system is s-toric
+
+    L1 = get_pairs_of_binomial_exponents_of_type_1(messi_network)
+    L2 = get_pairs_of_binomial_exponents_of_type_2(messi_network)
+    return L1 + L2
+
+def get_binomial_basis(messi_network):
+    #v' no es mayor que v, sino que el orden se basa en cual tiene coef 1 no? O se cumplen ambas cosas?
+
+    L = []
+    pairs_of_binomial_exponents = get_pairs_of_binomial_exponents(messi_network)
+    for pair in pairs_of_binomial_exponents:
+        #v'-v
+        L.append(map(lambda x, y: x - y, pair[0], pair[1]))
+
+def build_binomial_matrix(messi_network):
+    binomial_basis = get_binomial_basis(messi_network)
+    np.array(binomial_basis).transpose()
+
+
+def build_orthogonal_complement_of_binomial_matrix(messi_network):
+    binomial_matrix = build_binomial_matrix(messi_network)
+    return build_orthogonal_complement_of_binomial_matrix(binomial_matrix)
