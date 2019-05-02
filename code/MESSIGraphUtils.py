@@ -239,7 +239,7 @@ def get_pairs_of_binomial_exponents(messi_network):
     return L1 + L2
 
 def get_binomial_basis(messi_network):
-
+    #TODO separar en 2, para testear mas facil.
     L = []
     pairs_of_binomial_exponents = get_pairs_of_binomial_exponents(messi_network)
     for pair in pairs_of_binomial_exponents:
@@ -250,9 +250,9 @@ def build_binomial_matrix(messi_network):
     builds the binomial matrix B, as described in the MESSI paper
     """
     binomial_basis = get_binomial_basis(messi_network)
-    np.array(binomial_basis).transpose()
+    return np.array(binomial_basis).transpose()
 
-
+#Aca se esta armando el ortogonal de la matriz B
 def build_orthogonal_complement_of_binomial_matrix(messi_network):
     """
     builds orthogonal complement of the binomial matrix - needed for Sigma_perp

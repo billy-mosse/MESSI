@@ -463,6 +463,42 @@ class Test1(unittest.TestCase):
         print("OK")
         #TODO check labels.
 
+
+    def test_build_binomial_matrix(self):
+        species = ['X1', 'X2', 'X3', 'X4']
+        complexes = [0, 1, 2, 3]
+        reactions = [
+        [0, 3, 't1'],
+        [1, 2, 't2'],
+        [2, 1, 't3'],
+        [3, 2, 't4'],
+        [2, 0, 't5']
+        ]
+
+        G2_circle = nx.DiGraph(directed=True)
+
+        sources = set([reaction[0] for reaction in reactions])
+
+        targets = set([reaction[1] for reaction in reactions])
+
+        nodes = sources.union(targets)
+        G2_circle.add_nodes_from(nodes)
+        for reaction in reactions:
+            G2_circle.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
+
+        messi_network = MESSINetworkBuilder.MESSINetwork(G2_circle)
+
+        binomial_matrix = MESSIGraphUtils.build_binomial_matrix(messi_network)
+
+        print(binomial_matrix)
+
+        matrix_1 = np.array([
+            [1, 0, 0, -1],
+            [0, 1, -1, 0],
+            [0, 0, 1, -1]]
+            )
+
+
 if __name__ == '__main__':
     unittest.main()
 

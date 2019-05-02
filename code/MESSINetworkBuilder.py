@@ -31,6 +31,8 @@ TODOs:
 class MESSINetwork:
 
 
+
+
     def __init__(self, G=None, complexes=[], species=[], partitions=[]):
         self.G = G
 
@@ -39,11 +41,13 @@ class MESSINetwork:
         #represents x0+x1, x2, x3+x1
         self.complexes = complexes
         self.species = species
-        self.partitions = partitions
         #self.G = nx
-        self.G1 = self.buildG1()
-        self.G2 = self.buildG2()
-        self.G2_circle = self.buildG2_circle()
+
+        if partitions:
+            self.partitions = partitions
+            self.G1 = self.buildG1()
+            self.G2 = self.buildG2()
+            self.G2_circle = self.buildG2_circle()
 
     def intermediates(self):
         return self.partitions[0]

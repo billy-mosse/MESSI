@@ -89,6 +89,35 @@ def check_if_sigma_subperp_is_mixed(Bperp, Mt, s, d):
             witnesses.append(['-', J, Jc])
         Sigma_subperp.append([JcL, mM, JL, mB, result])
 
+
+    Mperp = None
+    Bt = None
+    Sigma_supraperp = [["J", "menor M^\\perp", "Jc", "menor B^t", "Result"]]
+    for JList in L:
+        J = set(JList)
+        #Jc = set(S)[x for x in S if x not in J]
+        Jc = S - J
+        multiplier = (-1)**sum(J)
+
+        #No hay nada mas horrible que transformar una lista a un set y luego de nuevo a una lista :-)
+        
+        JL = list(J)
+        JL.sort()
+        JcL = list(Jc)
+        JcL.sort()
+
+
+        mB = Utils.minor(Mperp,JL)
+        mM = Utils.minor(Bt, JcL)
+        result = int(round(mB * mM * multiplier,0)) #son todos enteros, ver paper.
+        if(result > 0): #and '+' not in signs:
+            signs.append('+')
+            witnesses.append(['+', J, Jc])
+        elif(result < 0):# and '-' not in signs:
+            signs.append('-')
+            witnesses.append(['-', J, Jc])
+        Sigma_supraperp.append([JL, mM, JcL, mB, result])
+
     #print_Sigma_subperp_table(Sigma_subperp)
     
     if len(signs) > 1:
