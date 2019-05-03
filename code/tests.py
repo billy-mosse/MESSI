@@ -499,6 +499,8 @@ class Test1(unittest.TestCase):
 
         binomial_matrix = MESSIGraphUtils.build_binomial_matrix(messi_network)
 
+        print(binomial_matrix)
+
         binomial_matrix_result = np.array([
             [1, 0, 0, -1],
             [0, 1, -1, 0],

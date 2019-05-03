@@ -30,9 +30,6 @@ TODOs:
 
 class MESSINetwork:
 
-
-
-
     def __init__(self, G=None, complexes=[], species=[], partitions=[]):
         self.G = G
 

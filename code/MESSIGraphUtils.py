@@ -2,6 +2,9 @@
 import numpy as np
 import networkx as nx
 
+"""
+...
+"""
 class Complex:
     def __init__(self, species):
         """species is a list. For example, ['S0', 'S1']
@@ -231,8 +234,6 @@ def get_pairs_of_binomial_exponents_of_type_2(messi_network):
             i = origin
             m = get_label_from_edge(messi_network.G2_circle, first_edge_from_simple_path, "reaction_constant")
             j = target
-
-
 
             item = [[h, i], [m, j]]
             #print(item)

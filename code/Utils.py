@@ -241,3 +241,16 @@ def get_kappa(x1, x2):
 
 
 
+
+#Theorem 5.8
+def get_multistationarity_witnesses(v, w, s, d):
+    x1 = []
+    x2 = []
+    for i in range (0, s):
+        if v[i] != 0:
+            x1.append(w[i] * 1.0 / (np.exp(v[i])-1))
+        else:
+            x1.append(1)
+
+        x2.append(np.exp(v[i]) * x1[i])
+    return x1,x2
