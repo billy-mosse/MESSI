@@ -124,6 +124,8 @@ def extract_column_basis(matrix):
             column_basis.append(column)
     return np.array(column_basis)
 
+
+
 #TODO test what happens if the basis isnt in the first columns
 #I think that situation ever arises, though
 def build_integer_basis_matrix_of_orthogonal_complement_of_matrix(matrix):
@@ -212,18 +214,34 @@ def check_sufficient_condition_for_s_toricity(messi_network):
 
     return condition
 
+def get_label_from_edge(G, edge, label):
+    for origin, target, data in G.edges(data=True):
+        if origin == edge[0] and target == edge[1]:
+            return data[label]
+
 def get_pairs_of_binomial_exponents_of_type_2(messi_network):
     L = []
 
     #TODO chequear que estoy construyendo G2 y no MG2
-    for edge in messi_network.G2:
-        unique_simple_path = nx.all_simple_paths(messi_network.G2_circle, origin, target)
-        first_edge_from_simple_path = unique_simple_path[0]
-        h = edge.label()
-        i = edge[0]
-        m = first_edge_from_simple_path.label()
-        j = edge[1]
-        L.add([[h, i], [m, j]])
+    for origin, target, edge_data in messi_network.G2.edges(data=True):
+        h = edge_data["reaction_constant"]
+
+        for unique_simple_path in nx.all_simple_paths(messi_network.G2_circle, origin, target):
+            first_edge_from_simple_path = [unique_simple_path[0], unique_simple_path[0]]
+            i = origin
+            m = get_label_from_edge(messi_network.G2_circle, first_edge_from_simple_path, "reaction_constant")
+            j = target
+
+
+
+            item = [[h, i], [m, j]]
+            #print(item)
+            
+            L.append(item)
+
+
+            #Deberia haber uno solo
+            break;
 
     return L
 
@@ -233,24 +251,48 @@ def get_pairs_of_binomial_exponents(messi_network):
 
     #Phi
     L1 = get_pairs_of_binomial_exponents_of_type_1(messi_network)
-    
+
+   
     #Simple path
     L2 = get_pairs_of_binomial_exponents_of_type_2(messi_network)
+
+
     return L1 + L2
+
+def vec(messi_network, binomial):
+    v = [0] * len(messi_network.species)
+
+    #binomial puede ser, por ejemplos, [2,3]
+    for var in binomial:
+        if var != None:
+            v[var] = 1
+
+    return v
+
 
 def get_binomial_basis(messi_network):
     #TODO separar en 2, para testear mas facil.
     L = []
     pairs_of_binomial_exponents = get_pairs_of_binomial_exponents(messi_network)
+
+    #En el test esto se va a romper.
+            
     for pair in pairs_of_binomial_exponents:
-        L.append(map(lambda x, y: x - y, pair[0], pair[1]))
+
+        vec1 = vec(messi_network, pair[0])
+        vec2 = vec(messi_network, pair[1])
+        res = list(map(lambda x, y: x - y, vec1, vec2))
+
+        L.append(res)
+
+    return L
 
 def build_binomial_matrix(messi_network):
     """
     builds the binomial matrix B, as described in the MESSI paper
     """
     binomial_basis = get_binomial_basis(messi_network)
-    return np.array(binomial_basis).transpose()
+    return extract_column_basis(np.array(binomial_basis).transpose())
 
 #Aca se esta armando el ortogonal de la matriz B
 def build_orthogonal_complement_of_binomial_matrix(messi_network):

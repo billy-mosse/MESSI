@@ -468,11 +468,11 @@ class Test1(unittest.TestCase):
         species = ['X1', 'X2', 'X3', 'X4']
         complexes = [0, 1, 2, 3]
         reactions = [
-        [0, 3, 't1'],
-        [1, 2, 't2'],
-        [2, 1, 't3'],
-        [3, 2, 't4'],
-        [2, 0, 't5']
+        [0, 3, None],
+        [1, 2, None],
+        [2, 1, None],
+        [3, 2, None],
+        [2, 0, None]
         ]
 
         G2_circle = nx.DiGraph(directed=True)
@@ -486,17 +486,36 @@ class Test1(unittest.TestCase):
         for reaction in reactions:
             G2_circle.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
 
-        messi_network = MESSINetworkBuilder.MESSINetwork(G2_circle)
+
+        #So that it has no intermediates
+        partitions = [[]]
+
+        messi_network = MESSINetworkBuilder.MESSINetwork()
+
+        messi_network.G2 = G2_circle
+        messi_network.G2_circle = G2_circle
+        messi_network.partitions = partitions
+        messi_network.species = species
 
         binomial_matrix = MESSIGraphUtils.build_binomial_matrix(messi_network)
 
-        print(binomial_matrix)
-
-        matrix_1 = np.array([
+        binomial_matrix_result = np.array([
             [1, 0, 0, -1],
             [0, 1, -1, 0],
             [0, 0, 1, -1]]
             )
+
+        self.assertTrue(np.linalg.matrix_rank(binomial_matrix) == np.linalg.matrix_rank(binomial_matrix_result))
+
+
+        concatenated_matrix = np.concatenate((binomial_matrix, binomial_matrix_result), axis=0)
+        rank1 = np.linalg.matrix_rank(concatenated_matrix)
+        rank2 = np.linalg.matrix_rank(binomial_matrix)
+        
+        self.assertTrue(rank1 == rank2)
+
+        np.linalg.matrix_rank
+
 
 
 if __name__ == '__main__':

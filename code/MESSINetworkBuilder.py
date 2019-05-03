@@ -48,6 +48,10 @@ class MESSINetwork:
             self.G1 = self.buildG1()
             self.G2 = self.buildG2()
             self.G2_circle = self.buildG2_circle()
+        else:
+            self.G2 = None
+            self.G2_circle = None
+            self.partitions = None
 
     def intermediates(self):
         return self.partitions[0]
@@ -203,7 +207,9 @@ class MESSINetwork:
             complex2 = self.complexes[edge[1]]
             if self.monomolecular(complex1, complex2):
                 #I add it as is
-                new_edges.append([edge, edge.get_label()])
+
+                #TODO no creo que esto este bien
+                new_edges.append(edge)
                 
                 #nodes.add(edge[0])
                  
@@ -242,9 +248,11 @@ class MESSINetwork:
         #print(G2_nx.nodes())
         return G2_nx
 
+
+    #Chequear que los labels de los monomoleculares sean los correctos
     def buildG2_circle(self):
         G2_circle = self.G2.copy()
-        G2_circle.remove_edges_from(G2_circle.selfloop_edges())
+        G2_circle.remove_edges_from(nx.selfloop_edges(G2_circle))
 
         nodes_to_remove = []
         for node in G2_circle.nodes():
