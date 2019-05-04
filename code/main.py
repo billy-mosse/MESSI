@@ -3,8 +3,16 @@
 #Check https://wiki.sagemath.org/Python3-compatible%20code
 #if someday we want to use sage again
 
+#Tutorial for documentation using sphinx: https://pythonhosted.org/an_example_pypi_project/sphinx.html
+
 #This shouldn't be necessary, as we are using python 3 now
 from __future__ import division, absolute_import, print_function
+
+#For documentation
+from pygments import highlight
+from pygments.lexers import PythonLexer
+from pygments.formatters import HtmlFormatter
+#Tutorial! https://codeandchaos.wordpress.com/2012/07/30/sphinx-autodoc-tutorial-for-dummies/
 
 import sys
 import os
@@ -22,7 +30,7 @@ import texttable as tt
 #Custom libraries
 import SigmaUtils
 import CircuitUtils
-import MESSINetworkBuilder
+from messi import MESSINetworkBuilder
 import Utils
 
 ############################################################
@@ -34,12 +42,13 @@ import Utils
 #Deberia hacer la union "circuital" de vectores
 ############################################################
 
+Main function. It gets multistationarity witnesses::
 def main(debug):
     """
     gets multistationarity witnesses x^1, x^2, \\kappa or exits.
     the debug flag is used for fast computation
     """
-    MESSINetworkBuilder.get_relevant_matrices(False)
+    messi_network = MESSINetworkBuilder.get_network(False)
 
     #for easier reading
     Bperp, Mt = HardcodedUtils.get_hardcoded_matrices()
@@ -94,7 +103,7 @@ def main(debug):
             w = first_solution[1]
 
             #input("6) x^1, x^2, \\kappa")
-            x1, x2 = Utils.get_multistationarity_witnesses(v, w, s, d)
+            x1https://pythonhosted.org/an_example_pypi_project/sphinx.html, x2 = Utils.get_multistationarity_witnesses(v, w, s, d)
             print("x1 is %s" % x1)
             print("x2 is %s" % x2)
 

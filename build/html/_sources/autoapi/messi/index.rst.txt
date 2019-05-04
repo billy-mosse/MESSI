@@ -1,0 +1,16 @@
+:mod:`messi`
+============
+
+.. py:module:: messi
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   MESSIGraphUtils/index.rst
+   MESSINetworkBuilder/index.rst
+
+

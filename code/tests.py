@@ -1,13 +1,13 @@
 import unittest
 
 import numpy as np
-from CircuitsInformation import CircuitsInformation
+from CircuitUtils import CircuitsInformation
 import Utils
 
-import MESSIGraphUtils
+from messi import MESSIGraphUtils
 import networkx as nx
 import numpy
-import MESSINetworkBuilder
+from messi import MESSINetworkBuilder
 
 #TODO: write an integration test (when - some day - we write the main output in a file)
 
@@ -465,6 +465,7 @@ class Test1(unittest.TestCase):
 
 
     def test_build_binomial_matrix(self):
+        print("test_build_binomial_matrix...")
         species = ['X1', 'X2', 'X3', 'X4']
         complexes = [0, 1, 2, 3]
         reactions = [
@@ -499,8 +500,6 @@ class Test1(unittest.TestCase):
 
         binomial_matrix = MESSIGraphUtils.build_binomial_matrix(messi_network)
 
-        print(binomial_matrix)
-
         binomial_matrix_result = np.array([
             [1, 0, 0, -1],
             [0, 1, -1, 0],
@@ -518,13 +517,12 @@ class Test1(unittest.TestCase):
 
         np.linalg.matrix_rank
 
+        print("OK")
+
 
 
 if __name__ == '__main__':
     unittest.main()
-
-    print("all OK")
-
 """
 1) podriamos testear que los kappa sean positivos para algunos ejemplos
 

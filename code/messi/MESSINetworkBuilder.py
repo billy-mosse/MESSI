@@ -51,6 +51,17 @@ class MESSINetwork:
             self.partitions = None
 
     def intermediates(self):
+        """Retrieves a list of the intermediate complexes
+
+        Retrieves a list of the intermediate complexes, 
+        that is, the elements of the first partition of the MESSINetwork.
+
+        Args: None
+
+        Returns: a list of the intermediate complexes 
+
+        """
+
         return self.partitions[0]
 
     def core_complexes(self):
@@ -362,9 +373,11 @@ labels={node:node for node in G.nodes()},
     #dot = Digraph()
     #dot.render('multi', view=True)
 
-def get_relevant_matrices(debug):
+def get_network(debug):
 
     reactions = []
+    species = []
+    complexes = []
     if True:
 
         print ("Welcome to an implementation of Algorithm 1 of the paper The structure of MESSI biological systems.")
@@ -381,6 +394,11 @@ def get_relevant_matrices(debug):
             r = [x.strip() for x in r]
             reactions.append(r)
             r_input = input()
+            for complex in r:
+                complexes.append(complex)
+
+                for s in complex.split('+'):
+                    species.append(s.strip())
     else:
         reactions = [['S0+E', 'ES0','k1'],
         ['ES0', 'S0+E', 'k2'],
@@ -536,11 +554,13 @@ def get_relevant_matrices(debug):
             var = input("Press ENTER to continue with the program.")
 
         #TODO: finish.
+        partitions = P0_intermediates + P_cores
+    return MESSINetwork(G, complexes, species, partitions)
 
 '''
 Para el primer mensaje:
 
-(S0+E, ES0,k1)
+(S0+E, ES0, k1)
 (ES0, S0+E, k2)
 (ES0, S1+E,k3)
 (S1+F, FS1, k4)

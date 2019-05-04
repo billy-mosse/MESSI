@@ -1,0 +1,70 @@
+:mod:`messi.MESSINetworkBuilder`
+================================
+
+.. py:module:: messi.MESSINetworkBuilder
+
+
+Module Contents
+---------------
+
+.. py:class:: MESSINetwork(G=None, complexes=[], species=[], partitions=[])
+
+   
+   .. method:: intermediates(self)
+
+      Retrieves a list of the intermediate complexes
+
+      Retrieves a list of the intermediate complexes, 
+      that is, the elements of the first partition of the MESSINetwork.
+
+      Args: None
+
+      Returns: a list of the intermediate complexes 
+
+
+
+   
+   .. method:: core_complexes(self)
+
+
+
+   
+   .. method:: complexes_reactions_by_intermediates(self, core_complexes, intermediates)
+
+
+
+   
+   .. method:: buildG1(self)
+
+
+
+   
+   .. method:: monomolecular(self, complex1, complex2)
+
+
+
+   
+   .. method:: get_partition(self, complex)
+
+
+
+   
+   .. method:: get_pairs_from_same_partition(self, complex1, complex2)
+
+
+
+   
+   .. method:: buildG2(self)
+
+
+
+   
+   .. method:: buildG2_circle(self)
+
+
+
+
+.. function:: plot_as_multi_digraph(G)
+
+.. function:: get_network(debug)
+
