@@ -37,12 +37,40 @@
 <dl class="class">
 <dt id="messi.MESSINetworkBuilder.MESSINetwork">
 <em class="property">class </em><code class="descclassname">messi.MESSINetworkBuilder.</code><code class="descname">MESSINetwork</code><span class="sig-paren">(</span><em>G=None</em>, <em>complexes=[]</em>, <em>species=[]</em>, <em>partitions=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#messi.MESSINetworkBuilder.MESSINetwork" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<dd><p>A class representing a MESSI network, including the derived graphs.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>G: DiGraph</dt><dd><p>the network digraphs (nodes, edges, and reaction constant names)</p>
+</dd>
+<dt>complexes: list of list of ints</dt><dd><p>a list of complexes. Each complex a list of species indexes</p>
+</dd>
+<dt>species: list of strings</dt><dd><p>a list of species names</p>
+</dd>
+<dt>partitions: list of list of ints</dt><dd><p>a list of the partitions of the messi network. Each partition is a list of species names</p>
+</dd>
+</dl>
+<p>Example:</p>
+<p>complexes = [</p>
+<p>[0, 4], #S0+E</p>
+<p>[1, 4], #S1 + E</p>
+<p>[2], #ES0</p>
+<p>[0, 5], #S0 + F</p>
+<p>[1, 5], #S1 + F</p>
+<p>[3] #FS1</p>
+<p>]</p>
+<p>species = [‘S0’, ‘S1’, ‘ES0’, ‘FS1’, ‘E’, ‘F’]</p>
+<p>partitions = [[‘ES0’, ‘FS1’, ‘S1P0’, ‘FP1’],</p>
+<p>[‘S0’, ‘S1’],</p>
+<p>[‘P0’, ‘P1’],</p>
+<p>[‘E’],</p>
+<p>[‘F’]]</p>
+</div></blockquote>
+<dl class="method">
 <dt id="messi.MESSINetworkBuilder.MESSINetwork.intermediates">
 <code class="descname">intermediates</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="headerlink" href="#messi.MESSINetworkBuilder.MESSINetwork.intermediates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves a list of the intermediate complexes</p>
 <p>Retrieves a list of the intermediate complexes,
-that is, the elements of the first partition of the MESSINetwork.</p>
+i.e., the elements of the first partition of the MESSINetwork.</p>
 <p>Args: None</p>
 <p>Returns: a list of the intermediate complexes</p>
 </dd></dl>

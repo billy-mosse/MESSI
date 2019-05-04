@@ -1,10 +1,10 @@
 import unittest
 
 import numpy as np
-from CircuitUtils import CircuitsInformation
-import Utils
+from utils import CircuitUtils
+from utils import Utils
 
-from messi import MESSIGraphUtils
+from utils import MatrixUtils
 import networkx as nx
 import numpy
 from messi import MESSINetworkBuilder
@@ -91,7 +91,7 @@ class Test1(unittest.TestCase):
             [0, 3]])
 
 
-        circuits_information_matrix_1 = CircuitsInformation(matrix_1)
+        circuits_information_matrix_1 = CircuitUtils.CircuitsInformation(matrix_1)
 
         #Supposedly, this is the output of lemma A.5
         self.assertTrue([0,-3] in circuits_information_matrix_1.circuits)
@@ -105,7 +105,7 @@ class Test1(unittest.TestCase):
             [2, 4, 1]])
 
 
-        circuits_information_matrix_2 = CircuitsInformation(matrix_2)
+        circuits_information_matrix_2 = CircuitUtils.CircuitsInformation(matrix_2)
 
         for c in [[0, 4, 5], [0, -4, -5], [-4, 0, 8], [4, 0, -8], [-5, -8, 0], [5, 8, 0]]:
             self.assertTrue(c in circuits_information_matrix_2.circuits)
@@ -116,7 +116,7 @@ class Test1(unittest.TestCase):
 
     def test_buildup_of_complexes_matrix_from_network(self):
         print("test_buildup_of_complexes_matrix_from_network...")
-        complexes_matrix = MESSIGraphUtils.build_complexes_matrix(messi_network)
+        complexes_matrix = MatrixUtils.build_complexes_matrix(messi_network)
         complexes_matrix_solution = np.array([
             [1, 0, 0, 0, 1, 0],
             [0, 1, 0, 0, 1, 0],
@@ -147,7 +147,7 @@ class Test1(unittest.TestCase):
 
         
         
-        incidence_matrix = MESSIGraphUtils.build_incidence_matrix(messi_network)
+        incidence_matrix = MatrixUtils.build_incidence_matrix(messi_network)
 
         """I_solution = np.array([
         [-1, 1, 0, 0, 0, 0],
@@ -204,7 +204,7 @@ class Test1(unittest.TestCase):
         F --> x5
         """
         
-        educt_complexes_matrix = MESSIGraphUtils.build_educt_complexes_matrix(messi_network)
+        educt_complexes_matrix = MatrixUtils.build_educt_complexes_matrix(messi_network)
 
 
         """
@@ -233,10 +233,10 @@ class Test1(unittest.TestCase):
     def test_buildup_of_stoichiometric_matrix_from_network(self):
 
         print("test_buildup_of_stoichiometric_matrix_from_network...")
-        incidence_matrix = MESSIGraphUtils.build_incidence_matrix(messi_network)
-        complexes_matrix = MESSIGraphUtils.build_complexes_matrix(messi_network)
+        incidence_matrix = MatrixUtils.build_incidence_matrix(messi_network)
+        complexes_matrix = MatrixUtils.build_complexes_matrix(messi_network)
 
-        stoichiometric_matrix = MESSIGraphUtils.build_stoichiometric_matrix(incidence_matrix, complexes_matrix)
+        stoichiometric_matrix = MatrixUtils.build_stoichiometric_matrix(incidence_matrix, complexes_matrix)
 
 
         #print("stoichiometric_matrix")
@@ -262,13 +262,13 @@ class Test1(unittest.TestCase):
 
         print("test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis...")
         #columns form generators of stoichiometric subspace
-        stoichiometric_matrix = MESSIGraphUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
+        stoichiometric_matrix = MatrixUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
 
         #Matriz alta...o larga? Creo que larga.
-        stoichiometric_matrix_column_basis = MESSIGraphUtils.extract_column_basis(stoichiometric_matrix)
+        stoichiometric_matrix_column_basis = MatrixUtils.extract_column_basis(stoichiometric_matrix)
 
         ortoghonal_complement_of_stoichiometric_matrix_column_basis = \
-            MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(stoichiometric_matrix_column_basis)
+            MatrixUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(stoichiometric_matrix_column_basis)
         
         #Quizas haya que transponer...
         
@@ -289,15 +289,15 @@ class Test1(unittest.TestCase):
 
         print("test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis...")
         #columns form generators of stoichiometric subspace
-        stoichiometric_matrix = MESSIGraphUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
+        stoichiometric_matrix = MatrixUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
 
 
         #Matriz alta
         #
-        stoichiometric_matrix_column_basis = MESSIGraphUtils.extract_column_basis(stoichiometric_matrix)
+        stoichiometric_matrix_column_basis = MatrixUtils.extract_column_basis(stoichiometric_matrix)
 
         ortoghonal_complement_of_stoichiometric_matrix_column_basis = \
-            MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(stoichiometric_matrix_column_basis)
+            MatrixUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(stoichiometric_matrix_column_basis)
         
         #Quizas haya que transponer...
         
@@ -316,7 +316,7 @@ class Test1(unittest.TestCase):
              [ 1,  1,  0,  0,  1,  0],
              [ 0,  0,  0,  1,  0,  1]])
 
-        M_orthogonal_complement = MESSIGraphUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(M)
+        M_orthogonal_complement = MatrixUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(M)
 
         product = M @ M_orthogonal_complement
         self.assertTrue(np.linalg.matrix_rank(product) == 0)
@@ -498,7 +498,7 @@ class Test1(unittest.TestCase):
         messi_network.partitions = partitions
         messi_network.species = species
 
-        binomial_matrix = MESSIGraphUtils.build_binomial_matrix(messi_network)
+        binomial_matrix = MatrixUtils.build_binomial_matrix(messi_network)
 
         binomial_matrix_result = np.array([
             [1, 0, 0, -1],

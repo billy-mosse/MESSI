@@ -9,13 +9,56 @@ Module Contents
 
 .. py:class:: MESSINetwork(G=None, complexes=[], species=[], partitions=[])
 
+   A class representing a MESSI network, including the derived graphs.
+
+   Parameters
+   ----------
+       G: DiGraph
+           the network digraphs (nodes, edges, and reaction constant names)        
+       complexes: list of list of ints
+           a list of complexes. Each complex a list of species indexes        
+       species: list of strings
+           a list of species names
+       partitions: list of list of ints
+           a list of the partitions of the messi network. Each partition is a list of species names
+
+       Example:
+
+       complexes = [
+
+       [0, 4], #S0+E
+
+       [1, 4], #S1 + E
+
+       [2], #ES0
+
+       [0, 5], #S0 + F
+
+       [1, 5], #S1 + F
+
+       [3] #FS1
+
+       ] 
+
+       species = ['S0', 'S1', 'ES0', 'FS1', 'E', 'F']
+
+       partitions = [['ES0', 'FS1', 'S1P0', 'FP1'],
+
+       ['S0', 'S1'],
+
+       ['P0', 'P1'],
+
+       ['E'],
+
+       ['F']]
+
    
    .. method:: intermediates(self)
 
       Retrieves a list of the intermediate complexes
 
       Retrieves a list of the intermediate complexes, 
-      that is, the elements of the first partition of the MESSINetwork.
+      i.e., the elements of the first partition of the MESSINetwork.
 
       Args: None
 

@@ -29,17 +29,64 @@ TODOs:
 
 
 class MESSINetwork:
+    """
+    A class representing a MESSI network, including the derived graphs.
+
+    Parameters
+    ----------
+        G: DiGraph
+            the network digraphs (nodes, edges, and reaction constant names)        
+        complexes: list of list of ints
+            a list of complexes. Each complex a list of species indexes        
+        species: list of strings
+            a list of species names
+        partitions: list of list of ints
+            a list of the partitions of the messi network. Each partition is a list of species names
+
+        Example:
+
+        complexes = [
+
+        [0, 4], #S0+E
+
+        [1, 4], #S1 + E
+
+        [2], #ES0
+
+        [0, 5], #S0 + F
+
+        [1, 5], #S1 + F
+
+        [3] #FS1
+
+        ] 
+
+        species = ['S0', 'S1', 'ES0', 'FS1', 'E', 'F']
+
+        partitions = [['ES0', 'FS1', 'S1P0', 'FP1'],
+
+        ['S0', 'S1'],
+
+        ['P0', 'P1'],
+
+        ['E'],
+
+        ['F']]
+
+    """
 
     def __init__(self, G=None, complexes=[], species=[], partitions=[]):
+        """
+        Builds a MESSINetwork and the derived graphs.
+
+        """
+
         self.G = G
 
-        #list of complexes
-        #example: [[0,1], [2], [3,1]]
-        #represents x0+x1, x2, x3+x1
         self.complexes = complexes
         self.species = species
-        #self.G = nx
 
+        #Nasty hack
         if partitions:
             self.partitions = partitions
             self.G1 = self.buildG1()
@@ -50,11 +97,12 @@ class MESSINetwork:
             self.G2_circle = None
             self.partitions = None
 
+
     def intermediates(self):
         """Retrieves a list of the intermediate complexes
 
         Retrieves a list of the intermediate complexes, 
-        that is, the elements of the first partition of the MESSINetwork.
+        i.e., the elements of the first partition of the MESSINetwork.
 
         Args: None
 

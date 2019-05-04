@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Utils &#8212; MESSI 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Utils">
+<span id="utils"></span><h1><a class="reference internal" href="#module-Utils" title="Utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">Utils</span></code></a><a class="headerlink" href="#module-Utils" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="Utils.debug">
+<code class="descclassname">Utils.</code><code class="descname">debug</code><em class="property"> = False</em><a class="headerlink" href="#Utils.debug" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Utils.combination_util">
+<code class="descclassname">Utils.</code><code class="descname">combination_util</code><span class="sig-paren">(</span><em>arr</em>, <em>n</em>, <em>r</em>, <em>index</em>, <em>data</em>, <em>i</em>, <em>L</em><span class="sig-paren">)</span><a class="headerlink" href="#Utils.combination_util" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Utils.get_r_subsets">
+<code class="descclassname">Utils.</code><code class="descname">get_r_subsets</code><span class="sig-paren">(</span><em>arr</em>, <em>r</em><span class="sig-paren">)</span><a class="headerlink" href="#Utils.get_r_subsets" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">The main function that</code></dt>
+<dt>
+<code class="descname">prints all combinations</code></dt>
+<dt>
+<code class="descname">of  size r in arr[] of</code></dt>
+<dt>
+<code class="descname">size n. This function</code></dt>
+<dt>
+<code class="descname">mainly uses combination_util()</code></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Utils.i">
+<code class="descclassname">Utils.</code><code class="descname">i</code><span class="sig-paren">(</span><em>cols</em><span class="sig-paren">)</span><a class="headerlink" href="#Utils.i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Utils.minor">
+<code class="descclassname">Utils.</code><code class="descname">minor</code><span class="sig-paren">(</span><em>A</em>, <em>cols</em><span class="sig-paren">)</span><a class="headerlink" href="#Utils.minor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Utils.is_conformal">
+<code class="descclassname">Utils.</code><code class="descname">is_conformal</code><span class="sig-paren">(</span><em>orthant</em>, <em>circuit</em><span class="sig-paren">)</span><a class="headerlink" href="#Utils.is_conformal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Utils.has_equal_sign">
+<code class="descclassname">Utils.</code><code class="descname">has_equal_sign</code><span class="sig-paren">(</span><em>orthant</em>, <em>circuit</em><span class="sig-paren">)</span><a class="headerlink" href="#Utils.has_equal_sign" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">returns true iff the circuit parameter has equal sign as the orthant</code></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Utils.union">
+<code class="descclassname">Utils.</code><code class="descname">union</code><span class="sig-paren">(</span><em>conformal_circuits</em><span class="sig-paren">)</span><a class="headerlink" href="#Utils.union" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">returns the sum of the conformal circuits list.</code></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Utils.orthant_has_conformal_circuit">
+<code class="descclassname">Utils.</code><code class="descname">orthant_has_conformal_circuit</code><span class="sig-paren">(</span><em>orthant</em>, <em>sign_information_M</em><span class="sig-paren">)</span><a class="headerlink" href="#Utils.orthant_has_conformal_circuit" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">unused function that checks if the orthant parameter is conformal</code></dt>
+<dt>
+<code class="descname">to any of M's circuits</code></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Utils.get_kappa">
+<code class="descclassname">Utils.</code><code class="descname">get_kappa</code><span class="sig-paren">(</span><em>x1</em>, <em>x2</em><span class="sig-paren">)</span><a class="headerlink" href="#Utils.get_kappa" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">M = matrix([</code></dt>
+<dt>
+<code class="descname">[-x1[0] * x1[8], x1[4], 0, 0, 0, 0, 0, 0, 0, -x1[3] * x1[0], -x1[7], 0],</code></dt>
+<dt>
+<code class="descname">[0, 0, x1[4], -x1[1] * x1[0],  x1[5], 0, -x1[2]*x1[1], x1[6], x1[6], 0, 0, 0],</code></dt>
+<dt>
+<code class="descname">[0, 0, 0, 0, 0, 0, -x1[2] * x1[1], x1[6], 0, 0, 0, -x1[7]],</code></dt>
+<dt>
+<code class="descname">[0, 0, 0, 0, 0, 0, 0, 0, x1[6], x1[3]*x1[0], x1[7], 0],</code></dt>
+<dt>
+<code class="descname">[x1[0]*x1[8], -x1[4], -x1[4], 0, 0, 0, 0, 0, 0, 0, 0, 0],</code></dt>
+<dt>
+<code class="descname">[0, 0, 0, x1[1]*x1[0], -x1[5], -x1[5], 0, 0, 0, 0, 0, 0],</code></dt>
+<dt>
+<code class="descname">[0, 0, 0, 0, 0, 0, x1[2]*x1[1], -x1[6], -x1[6], 0, 0, 0],</code></dt>
+<dt>
+<code class="descname">[0, 0, 0, 0, 0, 0, 0, 0, 0, x1[3]*x1[0], -x1[7], x1[7]],</code></dt>
+<dt>
+<code class="descname">[-x1[0]*x1[8], x1[4], x1[4], 0, 0, 0, 0, 0, 0, 0, 0, 0],</code></dt>
+<dt>
+<code class="descname">[0, 0, 0, -x1[1]*x1[0], x1[5], x1[5], 0, 0, 0, 0, 0, x1[7]]</code></dt>
+<dt>
+<code class="descname">])</code></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Utils.get_multistationarity_witnesses">
+<code class="descclassname">Utils.</code><code class="descname">get_multistationarity_witnesses</code><span class="sig-paren">(</span><em>v</em>, <em>w</em>, <em>s</em>, <em>d</em><span class="sig-paren">)</span><a class="headerlink" href="#Utils.get_multistationarity_witnesses" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">MESSI</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">API Reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Guillermo Mosse, Mercedes Perez Millan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/autoapi/Utils/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

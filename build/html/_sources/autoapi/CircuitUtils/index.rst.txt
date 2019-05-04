@@ -1,0 +1,35 @@
+:mod:`CircuitUtils`
+===================
+
+.. py:module:: CircuitUtils
+
+
+Module Contents
+---------------
+
+.. py:class:: CircuitsInformation(M)
+
+   
+   .. method:: get_circuits(self, M)
+
+      Gets all the circuits of matrix M
+              
+
+
+
+   
+   .. method:: get_conformal_circuits(self, orthant)
+
+      Gets all circuits that are conformal
+      to the orthant received as a parameter
+
+
+
+   
+   .. method:: mu(self, l, J)
+
+
+
+
+.. function:: get_equal_sign_vectors(s, circuits_information_Bperp, circuits_information_Mt)
+

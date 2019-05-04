@@ -1,0 +1,11 @@
+:mod:`HardcodedUtils`
+=====================
+
+.. py:module:: HardcodedUtils
+
+
+Module Contents
+---------------
+
+.. function:: get_hardcoded_matrices()
+

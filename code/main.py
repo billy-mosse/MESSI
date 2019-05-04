@@ -33,16 +33,6 @@ import CircuitUtils
 from messi import MESSINetworkBuilder
 import Utils
 
-############################################################
-#Old obsolete comments:
-#NICETOHAVE: GUI para ingresar un grafo y que se fije si admite estructura MESSI y haga todas las cuentitas.
-#Objetivo para hoy: hacer que calcule los circuitos.
-#Objetivo secundario: hacer la otra parte.
-#Pregunta: tengo que guardar la info de los circuitos, no? Para calcular los witnesses despues
-#Deberia hacer la union "circuital" de vectores
-############################################################
-
-Main function. It gets multistationarity witnesses::
 def main(debug):
     """
     gets multistationarity witnesses x^1, x^2, \\kappa or exits.
@@ -103,7 +93,7 @@ def main(debug):
             w = first_solution[1]
 
             #input("6) x^1, x^2, \\kappa")
-            x1https://pythonhosted.org/an_example_pypi_project/sphinx.html, x2 = Utils.get_multistationarity_witnesses(v, w, s, d)
+            x1, x2 = Utils.get_multistationarity_witnesses(v, w, s, d)
             print("x1 is %s" % x1)
             print("x2 is %s" % x2)
 

@@ -10,7 +10,6 @@ Welcome to MESSI's documentation!
    :maxdepth: 2
    :caption: Contents:
    
-   messi/MESSINetworkBuilder
 
 
 Indices and tables

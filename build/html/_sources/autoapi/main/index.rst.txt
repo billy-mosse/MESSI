@@ -1,0 +1,19 @@
+:mod:`main`
+===========
+
+.. py:module:: main
+
+
+Module Contents
+---------------
+
+.. function:: main(debug)
+   gets multistationarity witnesses x^1, x^2, \kappa or exits.
+   the debug flag is used for fast computation
+
+
+.. data:: debug
+   :annotation: = False
+
+   
+

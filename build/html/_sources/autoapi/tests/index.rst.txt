@@ -1,0 +1,103 @@
+:mod:`tests`
+============
+
+.. py:module:: tests
+
+
+Module Contents
+---------------
+
+.. function:: get_24_toric_graph()
+   S0+E   --> y0
+   S1+E   --> y1
+   ES0    --> y2
+   S0 + F --> y3
+   S1 + F --> y4
+   FS1    --> y5
+
+
+.. data:: G
+   
+
+   
+
+.. data:: complexes
+   :annotation: = [[0, 4], [1, 4], [2], [0, 5], [1, 5], [3]]
+
+   
+
+.. data:: species
+   :annotation: = ['S0', 'S1', 'ES0', 'FS1', 'E', 'F']
+
+   
+
+.. data:: partitions
+   :annotation: = [['ES0', 'FS1', 'S1P0', 'FP1'], ['S0', 'S1'], ['P0', 'P1'], ['E'], ['F']]
+
+   
+
+.. data:: messi_network
+   
+
+   
+
+.. py:class:: Test1
+
+   Bases: :class:`unittest.TestCase`
+
+   
+   .. method:: assert_same_columns(self, np_array_1, np_array_2)
+
+
+
+   
+   .. method:: test_buildup_of_conformal_circuit_to_matrix(self)
+
+
+
+   
+   .. method:: test_buildup_of_complexes_matrix_from_network(self)
+
+
+
+   
+   .. method:: test_buildup_of_incidence_matrix_from_network(self)
+
+
+
+   
+   .. method:: test_buildup_of_educt_complexes_matrix_from_network(self)
+
+
+
+   
+   .. method:: test_buildup_of_stoichiometric_matrix_from_network(self)
+
+
+
+   
+   .. method:: test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(self)
+
+
+
+   
+   .. method:: test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(self)
+
+
+
+   
+   .. method:: test_build_G1(self)
+
+
+
+   
+   .. method:: test_build_G2_circle(self)
+
+
+
+   
+   .. method:: test_build_binomial_matrix(self)
+
+
+
+
