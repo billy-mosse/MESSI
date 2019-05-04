@@ -8,5 +8,4 @@ scipy
 graphviz
 pygraphviz
 rinohtype
-python3-sphinx
 sphinx-autoapi
