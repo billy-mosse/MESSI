@@ -12,7 +12,16 @@ class CircuitsInformation:
         self.circuits = self.get_circuits(M)
 
     def get_circuits(self, M):
-        """Gets all the circuits of matrix M
+        """
+        Gets all the circuits of a matrix, as explained in Lemma 50 of the paper
+
+        Parameters
+        ----------
+        M: numpy.array
+            A matrix
+
+        returns: a list of circuits of the matrix 
+
         """
 
         d = np.shape(self.matrix)[0]
@@ -66,8 +75,10 @@ class CircuitsInformation:
 
 
     def get_conformal_circuits(self, orthant):
-        """Gets all circuits that are conformal
-        to the orthant received as a parameter"""
+        """
+        Gets all circuits that are conformal
+        to the orthant received as a parameter
+        """
 
         conformal_circuits = []
         for circuit in self.circuits:
@@ -78,10 +89,22 @@ class CircuitsInformation:
 
 
     def mu(self, l, J):
+        """
+        The mu function, as described in the MESSI paper
+        """
+
         ret = sum(1 for j in J if j < l) % 2
         return ret
 
-def get_equal_sign_vectors(s, circuits_information_Bperp, circuits_information_Mt):
+def get_equal_sign_vectors(s, circuits_information_M1, circuits_information_M2):
+    """
+    Gets 2 vectors with equal signs from the circuits information of M1 and M2
+
+    Brute-force searches through all orthants for 2 vectors we know exist with equal signs
+
+    TODO: optimize! This is an exponetial algorithm.
+    """
+
     equal_sign_vectors = []
 
     #TODO: create them dynamically
@@ -89,18 +112,19 @@ def get_equal_sign_vectors(s, circuits_information_Bperp, circuits_information_M
 
     #Steps 2,3,4
     for orthant in orthants:
-        conformal_circuits_Bperp = circuits_information_Bperp.get_conformal_circuits(orthant)
+        conformal_circuits_M1 = circuits_information_M1.get_conformal_circuits(orthant)
 
         #union of the circuits conformal to the orthant
-        U_Bperp = Utils.union(conformal_circuits_Bperp)
+        U_M1 = Utils.union(conformal_circuits_M1)
         
-        if U_Bperp != None and Utils.has_equal_sign(orthant, U_Bperp):
-            #Si el ortante tiene soporte igual a la union de los circuitos de Bperp, sigo con el paso 3 del algoritmo.
-            conformal_circuits_Mt = circuits_information_Mt.get_conformal_circuits(orthant)
-            U_Mt = Utils.union(conformal_circuits_Mt)
-            if U_Mt != None and Utils.has_equal_sign(orthant, U_Mt):
-                equal_sign_vectors.append([U_Bperp, U_Mt])
-                print("Two vectors with the same sign, corresponding to the orthant %s, are %s, from T^perp, and %s, from S." % (orthant, U_Bperp, U_Mt))
+        if U_M1 != None and Utils.has_equal_sign(orthant, U_M1):
+            #Si el ortante tiene soporte igual a la union de los circuitos de M1, sigo con el paso 3 del algoritmo.
+            conformal_circuits_M2 = circuits_information_M2.get_conformal_circuits(orthant)
+            U_M2 = Utils.union(conformal_circuits_M2)
+            if U_M2 != None and Utils.has_equal_sign(orthant, U_M2):
+                equal_sign_vectors.append([U_M1, U_Mt])
+
+                print("Two vectors with the same sign, corresponding to the orthant %s, are %s, from T^perp, and %s, from S." % (orthant, U_M1, U_Mt))
         else:
             continue
             #Isn't useful

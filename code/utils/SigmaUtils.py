@@ -1,7 +1,10 @@
+from utils import Utils
+
 #TODO: maybe we could use sets.
 #TODO: names of parameters could be nicer.
 #TODO: change so that we use SIGMA.
-def check_if_sigma_subperp_is_mixed(Bperp, Mt, s, d):
+def check_if_sigma_subperp_is_mixed(Mperp, Bt, s, d):
+
     """
     This function checks if SigmaSubperp is mixed.
     """
@@ -45,9 +48,6 @@ def check_if_sigma_subperp_is_mixed(Bperp, Mt, s, d):
             witnesses.append(['-', J, Jc])
         Sigma_subperp.append([JcL, mM, JL, mB, result])
 
-
-    Mperp = None
-    Bt = None
     Sigma_supraperp = [["J", "menor M^\\perp", "Jc", "menor B^t", "Result"]]
     for JList in L:
         J = set(JList)
@@ -61,7 +61,6 @@ def check_if_sigma_subperp_is_mixed(Bperp, Mt, s, d):
         JL.sort()
         JcL = list(Jc)
         JcL.sort()
-
 
         mB = Utils.minor(Mperp,JL)
         mM = Utils.minor(Bt, JcL)
