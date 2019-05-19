@@ -8,7 +8,6 @@ def isString(word):
 
 def indexOfSpecies(species_name, messi_network):
 
-    print(messi_network.species_names)
     #TODO reescribir los tests para evitar este hack
     if not isString(species_name):
         return species_name
@@ -67,7 +66,7 @@ def build_educt_complexes_matrix(messi_network):
     for educt, _ in G.edges():
         row = empty_row.copy()
 
-        for species in messi_network.complexes[educt]:
+        for species in messi_network.complexes_names[educt]:
             row[species] = 1
         rows.append(row)
 
@@ -81,7 +80,7 @@ def build_complexes_matrix(messi_network):
     n_columns = len(messi_network.species)
     empty_row = [0]*n_columns
     rows = []
-    for complex in messi_network.complexes:
+    for complex in messi_network.complexes_names:
         row = empty_row.copy()
         for species_index in complex:
             row[species_index] = 1
@@ -189,10 +188,9 @@ def build_integer_basis_of_orthogonal_complement_of_stoichiometric_matrix(messi_
 def get_unique_core_reacting_through_intermediates(messi_network, intermediate_index):
     #OJO que esto es distinto a lo que tiene G1.
 
+    intermediate_name = messi_network.complexes_names[intermediate_index]
     #TODO: probablemente el index no es la cosa correcta que tengo que agarrar
-    
-    assert(False) #Aca hay un TODO: hay que revisar G u otro? No me acuerdo...
-    possible_core = messi_network.G.predecessors(intermediate_index)[0]
+    possible_core = next(messi_network.G.predecessors(intermediate_name))
     found_complex = False
     while not found_complex:
 
@@ -202,8 +200,9 @@ def get_unique_core_reacting_through_intermediates(messi_network, intermediate_i
 
         #TODO: probablemente el indice esta mal.
         #pero la funcion predecessors() efectivamente existe.
-        possible_core = messi_network.G.predecessors(intermediate_index)[0]
-        if possible_core in messi_network.core_complexes():
+
+        possible_core = next(messi_network.G.predecessors(possible_core))
+        if messi_network.complexes_names.index(possible_core) in messi_network.core_complexes():
             found_complex = True
 
     return possible_core
@@ -216,7 +215,7 @@ def phi(messi_network, intermediate_index):
 
     #This should be the indices of the complex,
     #seen as a vector of species    
-    return messi_network.complexes[complex]
+    return messi_network.complexes_names[complex]
 
 def get_pairs_of_binomial_exponents_of_type_1(messi_network):
     L = []
