@@ -83,9 +83,10 @@ class MESSINetwork:
 
         self.G = G
 
-        #This list of ints that represent complexes shouldn't be necessary
         self.complexes = complexes
+
         self.species = species
+
         self.complexes_names = complexes_names
         self.species_names = species_names
 
@@ -125,9 +126,9 @@ class MESSINetwork:
 
     def core_complexes(self):
         core_complexes = []
-        for complex_index in self.complexes:
+        for complex_index, complex in enumerate(self.complexes):
             found = False 
-            species_vector = self.get_species_vector_from_complex_name(self.complexes_names[complex_index])
+            species_vector = self.get_species_vector_from_complex_name(complex)
             for species in species_vector:
                 if species in self.partitions_names[0]:
                     found = True
@@ -137,7 +138,7 @@ class MESSINetwork:
         return core_complexes
 
         """return [complex_index for complex_index in self.complexes\
-         if self.get_species_vector_from_complex_name(self.complexes_names[complex_index]) \
+         if self.get_species_vector_from_complex_name(self.complexes[complex_index]) \
           not in self.partitions_names[0]]"""
 
         """L = []
@@ -193,7 +194,7 @@ class MESSINetwork:
                     #Ignoramos las puntas
                     for index, c in enumerate(simple_path[1:-1]):
                         #print(self.complexes[c])
-                        for species_index in self.complexes_names[c]:
+                        for species_index in self.complexes[c]:
                             #print("species")
                             #print(self.species[species_index])
 
@@ -293,8 +294,8 @@ class MESSINetwork:
         #G2_nx.add_nodes_from(nodes)
 
         for edge in self.G1.edges():
-            complex1 = self.complexes_names[edge[0]]
-            complex2 = self.complexes_names[edge[1]]
+            complex1 = self.complexes[edge[0]]
+            complex2 = self.complexes[edge[1]]
             if self.monomolecular(complex1, complex2):
                 #I add it as is
 
@@ -606,7 +607,6 @@ def get_network(debug):
         for intermediate in P0_intermediates:
             #print("checking intermediate complex %s..." % intermediate)
 
-
             simple_o_paths_from_core_source = 0
             for source in sources:
 
@@ -653,13 +653,22 @@ def get_network(debug):
             var = input("Press ENTER to continue with the program.")
 
         #TODO: finish.
-        partitions_names = P0_intermediates + P_cores
+        partitions_names = []
+        partitions_names.append(P0_intermediates)
+        for core_partition in P_cores:
+            partitions_names.append(core_partition)
         partitions = []
         for partition_name in partitions_names:
             partition_indices = []
             for species_name in partition_name:
                 partition_indices.append(species_names.index(species_name))
             partitions.append(partition_indices)
+
+    #HACK. TODO: dejar de usar complexes, que no sirve para nada
+    temp = complexes
+    complexes = range(0, complexes)
+    complexes_names = temp
+
     return MESSINetwork(G, complexes, species, partitions, complexes_names, species_names, partitions_names)
 
 '''
