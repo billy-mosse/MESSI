@@ -12,6 +12,15 @@ from messi import MESSINetworkBuilder
 #TODO: write an integration test (when - some day - we write the main output in a file)
 
 
+def get_complexes_names(complexes, species_names):
+    complexes_names = []
+    for complex in complexes:
+        complex_name = []
+        for species_index in complex:
+            complex_name.append(species_names[species_index])
+        complexes_names.append(complex_name)
+    return complexes_names
+
 def get_24_toric_graph():
     #print("(2.4) of Toric paper")
 
@@ -51,25 +60,29 @@ def get_24_toric_graph():
 
 G = get_24_toric_graph()
 complexes = [
-        [0, 4], #x0+x1
-        [1, 4], #x2
-        [2], #x3+1
-        [0, 5], #x3 + x4
-        [1, 5], #x5
-        [3] #x0+x4
+        [0, 4], #S0 + E 
+        [1, 4], #S1 + E
+        [2], #ESO
+        [0, 5], #S0 + F
+        [1, 5], #S1 + F
+        [3] #FS1
         ]
+species_names = ['S0', 'S1', 'ES0', 'FS1', 'E', 'F']
+complexes_names = get_complexes_names(complexes, species_names)
+species = [0,1,2,3,4,5]
 
-species = ['S0', 'S1', 'ES0', 'FS1', 'E', 'F']
+partitions = [[2,3],
+[0,1],
+[4],
+[5]]
 
-
-partitions = [['ES0', 'FS1', 'S1P0', 'FP1'],
+partitions_names = [['ES0', 'FS1'],
 ['S0', 'S1'],
-['P0', 'P1'],
 ['E'],
 ['F']]
 
 
-messi_network = MESSINetworkBuilder.MESSINetwork(G, complexes, species, partitions)
+messi_network = MESSINetworkBuilder.MESSINetwork(G, complexes, species, partitions, complexes_names, species_names, partitions_names)
 
 class Test1(unittest.TestCase):
 
@@ -325,8 +338,11 @@ class Test1(unittest.TestCase):
     def test_build_G1(self):
         print("test_build_G1...")
 
-        species = ['S0', 'E', 'S1', 'P0', 'P1', 'F', 'ES0', 'S1', 'P0',
+        species_names = ['S0', 'E', 'S1', 'P0', 'P1', 'F', 'ES0', 'S1P0',
          'FS1', 'FP1']
+
+
+        species = range(0, len(species_names))
 
         complexes = [
         [0, 1], #1
@@ -342,6 +358,7 @@ class Test1(unittest.TestCase):
         [9], #10
         [3, 5]] #11
 
+        complexes_names = get_complexes_names(complexes, species_names)
         reactions = [
         [0, 1, 'k1'],
         [1, 0, 'k2'],
@@ -357,12 +374,22 @@ class Test1(unittest.TestCase):
         [10, 11, 'k12']]
 
         partitions = [
-        [6, 7, 8, 9],
+        [6, 7, 8, 9], #ES0, FS1, S1P0, FP1
         [0, 2],
         [3, 4],
         [1],
         [5]
         ]
+
+
+        partitions_names = [
+        ['ES0', 'S1P0', 'FS1', 'FP1'],
+        ['S0', 'S1'],
+        ['P0', 'P1'],
+        ['E'],
+        ['F']
+        ]
+
 
         G = nx.DiGraph(directed=True)
 
@@ -375,7 +402,7 @@ class Test1(unittest.TestCase):
         for reaction in reactions:
             G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
 
-        M = MESSINetworkBuilder.MESSINetwork(G, complexes, species, partitions)
+        M = MESSINetworkBuilder.MESSINetwork(G, complexes, species, partitions, complexes_names, species_names, partitions_names)
         
         nodes = M.G1.nodes()
         edges = M.G1.edges()
@@ -394,8 +421,9 @@ class Test1(unittest.TestCase):
     def test_build_G2_circle(self):
         print("test_build_G2_circle...")
 
-        species = ['S0', 'E', 'S1', 'P0', 'P1', 'F', 'ES0', 'S1', 'P0',
+        species_names = ['S0', 'E', 'S1', 'P0', 'P1', 'F', 'ES0', 'S1P0',
          'FS1', 'FP1']
+        species = range(0, len(species_names))
 
         complexes = [
         [0, 1], #1
@@ -410,6 +438,8 @@ class Test1(unittest.TestCase):
         [4, 5], #9
         [9], #10
         [3, 5]] #11
+
+        complexes_names = get_complexes_names(complexes, species_names)
 
         reactions = [
         [0, 1, 'k1'],
@@ -433,6 +463,14 @@ class Test1(unittest.TestCase):
         [5]
         ]
 
+        partitions_names = [
+        ['ES0', 'S1P0', 'FS1', 'FP1'],
+        ['S0', 'S1'],
+        ['P0', 'P1'],
+        ['E'],
+        ['F']
+        ]
+
         G = nx.DiGraph(directed=True)
 
         sources = set([reaction[0] for reaction in reactions])
@@ -444,11 +482,10 @@ class Test1(unittest.TestCase):
         for reaction in reactions:
             G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
 
-        M = MESSINetworkBuilder.MESSINetwork(G, complexes, species, partitions)
+        M = MESSINetworkBuilder.MESSINetwork(G, complexes, species, partitions, complexes_names, species_names, partitions_names)
 
         nodes = M.G2_circle.nodes()
         edges = M.G2_circle.edges()
-
 
         self.assertTrue(len(nodes) == 4)
 
@@ -466,8 +503,10 @@ class Test1(unittest.TestCase):
 
     def test_build_binomial_matrix(self):
         print("test_build_binomial_matrix...")
-        species = ['X1', 'X2', 'X3', 'X4']
+        species_names = ['X1', 'X2', 'X3', 'X4']
+        species = range(0,4)
         complexes = [0, 1, 2, 3]
+        complexes_names = complexes
         reactions = [
         [0, 3, None],
         [1, 2, None],
@@ -489,11 +528,14 @@ class Test1(unittest.TestCase):
 
 
         #So that it has no intermediates
-        partitions = [[]]
+        partitions = [[], [0, 1, 2, 3, 4]]
+        partitions_names = [[], species]
 
-        messi_network = MESSINetworkBuilder.MESSINetwork()
+        messi_network = MESSINetworkBuilder.MESSINetwork(test=True)
 
         messi_network.G2 = G2_circle
+        messi_network.partitions = partitions
+        messi_network.partitions_names = partitions_names
         messi_network.G2_circle = G2_circle
         messi_network.partitions = partitions
         messi_network.species = species

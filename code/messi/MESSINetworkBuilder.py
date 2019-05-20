@@ -177,7 +177,6 @@ class MESSINetwork:
         #print("intermediates")
         #print(intermediates)
 
-
         for source in core_complexes:
             for target in core_complexes:
                 #Deberia bastar solo los simple paths. Chequear
@@ -495,8 +494,9 @@ def get_network(debug):
         ['FP1','P0+F', 'k12']]
 
     species_index = 0
+    reactions_only_indices = []
     for reaction in reactions:
-
+        reaction_only_indices = []
         #[:2] So we don't get the coefficients
         for complex_name in reaction[:2]:
             complex_numbers = []
@@ -514,31 +514,53 @@ def get_network(debug):
                 complexes_names.append(complex_name)
                 complexes.append(complex_numbers)
 
+            #The reaction as [complex_origin_index, complex_target_index]
+            reaction_only_indices.append(complexes.index(complex_numbers))
+        #Coefficient                
+        reaction_only_indices.append(reaction[2])
+
+        reactions_only_indices.append(reaction_only_indices)
+
     #This part needs some work.
     #I think we should use a multigraph for (label) visualization but a digraph for computations
-    G = nx.DiGraph(directed=True)
+    G_to_show = nx.DiGraph(directed=True)
 
     sources = set([reaction[0] for reaction in reactions])
     targets = set([reaction[1] for reaction in reactions])
     nodes = sources.union(targets)
 
 
-    G.add_nodes_from(nodes)
+    G_to_show.add_nodes_from(nodes)
     for reaction in reactions:
-        G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
+        G_to_show.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
 
-    df = pd.DataFrame(index=G.nodes(), columns=G.nodes())
-    for row, data in nx.shortest_path_length(G):
+    df = pd.DataFrame(index=G_to_show.nodes(), columns=G_to_show.nodes())
+    for row, data in nx.shortest_path_length(G_to_show):
         for col, dist in data.items():
             df.loc[row,col] = dist
 
     df = df.fillna(df.max().max())  
 
-    layout = nx.kamada_kawai_layout(G, dist=df.to_dict())
+    layout = nx.kamada_kawai_layout(G_to_show, dist=df.to_dict())
 
     #pos = nx.spring_layout(G)
 
-    plot_as_multi_digraph(G)
+    plot_as_multi_digraph(G_to_show)
+
+
+
+
+    G = nx.DiGraph(directed=True)
+
+    sources_names = set([reaction[0] for reaction in reactions])
+    targets_names = set([reaction[1] for reaction in reactions])
+    nodes = sources.union(targets)
+
+    print(reactions_only_indices)
+    G.add_nodes_from(nodes)
+    for reaction in reactions_only_indices:
+        G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
+
     #exit(0)
 
     #nx.draw(G,layout,arrows=True, edge_color='black',width=1,linewidths=1,\
@@ -664,10 +686,6 @@ def get_network(debug):
                 partition_indices.append(species_names.index(species_name))
             partitions.append(partition_indices)
 
-    #HACK. TODO: dejar de usar complexes, que no sirve para nada
-    temp = complexes
-    complexes = range(0, complexes)
-    complexes_names = temp
 
     return MESSINetwork(G, complexes, species, partitions, complexes_names, species_names, partitions_names)
 
