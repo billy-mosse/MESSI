@@ -28,20 +28,24 @@ import texttable as tt
 
 
 #Custom libraries
-import SigmaUtils
-import CircuitUtils
+from utils import SigmaUtils, CircuitUtils, HardcodedUtils, MatrixUtils, Utils
+
 from messi import MESSINetworkBuilder
-import Utils
 
 def main(debug):
     """
     gets multistationarity witnesses x^1, x^2, \\kappa or exits.
     the debug flag is used for fast computation
     """
-    messi_network = MESSINetworkBuilder.get_network(False)
+    messi_network = MESSINetworkBuilder.get_network(True)
 
     #for easier reading
-    Bperp, Mt = HardcodedUtils.get_hardcoded_matrices()
+    #Bperp, Mt = HardcodedUtils.get_hardcoded_matrices()
+
+    Mperp = MatrixUtils.build_integer_basis_of_orthogonal_complement_of_stoichiometric_matrix(messi_network)
+
+
+    Bt = MatrixUtils.build_binomial_matrix(messi_network)
 
     #TODO: finish this MESSINetworkBuilder function instead of using hardcoded Bperp and Mt.
     #The function should return BPerp and Mt from user input of the MESSI system.
@@ -51,12 +55,13 @@ def main(debug):
     #From now on, almost everything is automated
 
     #Columns of B^\perp
-    s = np.shape(Bperp)[1]
+    #Poner asserts correctos...
+    """s = np.shape(Bperp)[1]
     assert s == np.shape(Mt)[1]
 
     d = np.shape(Bperp)[0]    
     assert np.shape(Mt)[0] == s-d
-    assert d<=s
+    assert d<=s"""
 
     print("We now compute Sigma_perp and check if it is mixed. Press ENTER to continue.")
     input()

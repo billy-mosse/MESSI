@@ -75,7 +75,7 @@ class MESSINetwork:
 
     """
 
-    def __init__(self, G=None, complexes=[], species=[], partitions=[]):
+    def __init__(self, G=None, complexes=[], species=[], partitions=[], complexes_names=[], species_names=[], partitions_names = [], test=False):
         """
         Builds a MESSINetwork and the derived graphs.
 
@@ -84,11 +84,16 @@ class MESSINetwork:
         self.G = G
 
         self.complexes = complexes
+
         self.species = species
 
+        self.complexes_names = complexes_names
+        self.species_names = species_names
+
         #Nasty hack
-        if partitions:
+        if not test:
             self.partitions = partitions
+            self.partitions_names = partitions_names
             self.G1 = self.buildG1()
             self.G2 = self.buildG2()
             self.G2_circle = self.buildG2_circle()
@@ -96,6 +101,7 @@ class MESSINetwork:
             self.G2 = None
             self.G2_circle = None
             self.partitions = None
+            self.partitions_names = None
 
 
     def intermediates(self):
@@ -110,27 +116,57 @@ class MESSINetwork:
 
         """
 
-        return self.partitions[0]
+        return self.partitions_names[0]
+
+    def get_species_vector_from_complex_name(self, complex_name):
+        ret = []
+        for species_index in complex_name:
+            ret.append(self.species_names[species_index])
+        return ret
 
     def core_complexes(self):
-        L = []
-        for partition in self.partitions[1:]:
+        core_complexes = []
+        for complex_index, complex in enumerate(self.complexes):
+            found = False 
+            species_vector = self.get_species_vector_from_complex_name(complex)
+            for species in species_vector:
+                if species in self.partitions_names[0]:
+                    found = True
+            if not found:
+                core_complexes.append(complex_index)
+
+        return core_complexes
+
+        """return [complex_index for complex_index in self.complexes\
+         if self.get_species_vector_from_complex_name(self.complexes[complex_index]) \
+          not in self.partitions_names[0]]"""
+
+        """L = []
+        for partition in self.partitions_names[1:]:
             L += partition
         #print("L")
         #print(L)
 
         L_indices = []
-        for index, complex_name in enumerate(self.complexes):
+        for index, complex_name in enumerate(self.complexes_names):
             #print(complex_name)
             found=True
             for i in complex_name:
                 #print("self.species[i]: ")
                 #print(self.species[i])
-                if i not in L:
+                print(self.species_names)
+                print(i)
+                print("L")
+                print(L)
+                if self.species_names[i] not in L:
                     found=False
             if found:
                 L_indices.append(index)
-        return L_indices
+                print("Core")
+                print(complex_name)
+        print("L indices")
+        print(L_indices)
+        return L_indices"""
 
     def complexes_reactions_by_intermediates(self, core_complexes, intermediates):
         new_edges = []
@@ -140,7 +176,6 @@ class MESSINetwork:
 
         #print("intermediates")
         #print(intermediates)
-
 
         for source in core_complexes:
             for target in core_complexes:
@@ -158,13 +193,13 @@ class MESSINetwork:
                     #Ignoramos las puntas
                     for index, c in enumerate(simple_path[1:-1]):
                         #print(self.complexes[c])
-                        for species in self.complexes[c]:
+                        for species_index in self.complexes[c]:
                             #print("species")
                             #print(self.species[species_index])
 
                             #TODO los intermediates deberian ser indices o nombres?
                             #Me parece que es mas facil que sean indices
-                            if species not in intermediates:
+                            if self.species_names[species_index] not in intermediates:
                                 #we could also break the loops here.
                                 only_goes_through_intermediates=False
 
@@ -172,15 +207,15 @@ class MESSINetwork:
                         new_edges.append([source, target])
         
         #print("new edges: ")
-        #print(new_edges)
+
         return new_edges
 
     def buildG1(self):
         vertices = self.core_complexes()
-        #print(vertices)
 
-        edges = self.complexes_reactions_by_intermediates(vertices, self.partitions[0])
+        edges = self.complexes_reactions_by_intermediates(vertices, self.partitions_names[0])
         
+
         G1_nx = nx.DiGraph(directed=True)
 
         sources = set([reaction[0] for reaction in edges])
@@ -196,8 +231,7 @@ class MESSINetwork:
         return G1_nx
 
     def monomolecular(self, complex1, complex2):
-        assert(len(complex1) == len(complex2))
-        return len(complex1) == 1
+        return len(complex1) == 1 and len(complex1) == 1
 
 
     def get_partition(self, complex):
@@ -302,6 +336,7 @@ class MESSINetwork:
         G2_nx.add_nodes_from(nodes)
         #G2_nx.add_nodes_from(nodes_vector)
         #print(G2_nx.nodes())
+
         return G2_nx
 
 
@@ -424,9 +459,11 @@ labels={node:node for node in G.nodes()},
 def get_network(debug):
 
     reactions = []
+    species_names = []
     species = []
+    complexes_names = []
     complexes = []
-    if True:
+    if not debug:
 
         print ("Welcome to an implementation of Algorithm 1 of the paper The structure of MESSI biological systems.")
         print ("Please, input the graph G corresponding to the reaction network you want to analyze.")
@@ -441,12 +478,7 @@ def get_network(debug):
             r = r_input[1:-1].split(',')
             r = [x.strip() for x in r]
             reactions.append(r)
-            r_input = input()
-            for complex in r:
-                complexes.append(complex)
-
-                for s in complex.split('+'):
-                    species.append(s.strip())
+            r_input = input()            
     else:
         reactions = [['S0+E', 'ES0','k1'],
         ['ES0', 'S0+E', 'k2'],
@@ -461,32 +493,74 @@ def get_network(debug):
         ['FP1','P1+F', 'k11'],
         ['FP1','P0+F', 'k12']]
 
+    species_index = 0
+    reactions_only_indices = []
+    for reaction in reactions:
+        reaction_only_indices = []
+        #[:2] So we don't get the coefficients
+        for complex_name in reaction[:2]:
+            complex_numbers = []
+            for s in complex_name.split('+'):
+                s = s.strip()
+                if s not in species_names:
+                    species_names.append(s)
+                    species.append(species_index)
+                    complex_numbers.append(species_index)
+                    species_index += 1
+                else:
+                    complex_numbers.append(species_names.index(s))
+            #the complex might not be new
+            if complex_name not in complexes_names:
+                complexes_names.append(complex_name)
+                complexes.append(complex_numbers)
+
+            #The reaction as [complex_origin_index, complex_target_index]
+            reaction_only_indices.append(complexes.index(complex_numbers))
+        #Coefficient                
+        reaction_only_indices.append(reaction[2])
+
+        reactions_only_indices.append(reaction_only_indices)
 
     #This part needs some work.
     #I think we should use a multigraph for (label) visualization but a digraph for computations
-    G = nx.DiGraph(directed=True)
+    G_to_show = nx.DiGraph(directed=True)
 
     sources = set([reaction[0] for reaction in reactions])
     targets = set([reaction[1] for reaction in reactions])
     nodes = sources.union(targets)
 
 
-    G.add_nodes_from(nodes)
+    G_to_show.add_nodes_from(nodes)
     for reaction in reactions:
-        G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
+        G_to_show.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
 
-    df = pd.DataFrame(index=G.nodes(), columns=G.nodes())
-    for row, data in nx.shortest_path_length(G):
+    df = pd.DataFrame(index=G_to_show.nodes(), columns=G_to_show.nodes())
+    for row, data in nx.shortest_path_length(G_to_show):
         for col, dist in data.items():
             df.loc[row,col] = dist
 
     df = df.fillna(df.max().max())  
 
-    layout = nx.kamada_kawai_layout(G, dist=df.to_dict())
+    layout = nx.kamada_kawai_layout(G_to_show, dist=df.to_dict())
 
     #pos = nx.spring_layout(G)
 
-    plot_as_multi_digraph(G)
+    plot_as_multi_digraph(G_to_show)
+
+
+
+
+    G = nx.DiGraph(directed=True)
+
+    sources_names = set([reaction[0] for reaction in reactions])
+    targets_names = set([reaction[1] for reaction in reactions])
+    nodes = sources.union(targets)
+
+    print(reactions_only_indices)
+    G.add_nodes_from(nodes)
+    for reaction in reactions_only_indices:
+        G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
+
     #exit(0)
 
     #nx.draw(G,layout,arrows=True, edge_color='black',width=1,linewidths=1,\
@@ -555,7 +629,6 @@ def get_network(debug):
         for intermediate in P0_intermediates:
             #print("checking intermediate complex %s..." % intermediate)
 
-
             simple_o_paths_from_core_source = 0
             for source in sources:
 
@@ -602,8 +675,19 @@ def get_network(debug):
             var = input("Press ENTER to continue with the program.")
 
         #TODO: finish.
-        partitions = P0_intermediates + P_cores
-    return MESSINetwork(G, complexes, species, partitions)
+        partitions_names = []
+        partitions_names.append(P0_intermediates)
+        for core_partition in P_cores:
+            partitions_names.append(core_partition)
+        partitions = []
+        for partition_name in partitions_names:
+            partition_indices = []
+            for species_name in partition_name:
+                partition_indices.append(species_names.index(species_name))
+            partitions.append(partition_indices)
+
+
+    return MESSINetwork(G, complexes, species, partitions, complexes_names, species_names, partitions_names)
 
 '''
 Para el primer mensaje:

@@ -1,3 +1,6 @@
+import numpy as np
+
+
 #Soon to be deprecated
 def get_hardcoded_matrices():
     Bperp = np.array([
