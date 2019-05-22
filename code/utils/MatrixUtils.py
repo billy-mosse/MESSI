@@ -1,6 +1,7 @@
 
 import numpy as np
 import networkx as nx
+from utils import CircuitUtils, Utils
 
 def isString(word):
     return type(word) == str
@@ -140,10 +141,22 @@ def extract_column_basis(matrix):
     return np.array(column_basis)
 
 
+def get_positive_matrix(matrix):
+    transposed_matrix = matrix.transpose()
+    positive_vector = CircuitUtils.get_positive_vector_in_matrix_rows(transposed_matrix)
+
+    for i in range(0, np.shape(transposed_matrix)[0]):
+        while not Utils.is_nonnegative(transposed_matrix[i]):
+            transposed_matrix[i] = np.add(transposed_matrix[i], positive_vector)
+
+
+    return transposed_matrix.transpose()
+
 
 #TODO test what happens if the basis isnt in the first columns
 #I think that situation ever arises, though
-def build_integer_basis_matrix_of_orthogonal_complement_of_matrix(matrix):
+#TODO also positive
+def build_integer_basis_matrix_of_orthogonal_complement_of_matrix(matrix, positive = False):
     column_basis, index_column_basis = get_basis_of_columns_and_index(matrix)
 
     column_basis_det = np.linalg.det(column_basis)
@@ -175,7 +188,12 @@ def build_integer_basis_matrix_of_orthogonal_complement_of_matrix(matrix):
             new_row[index] = 1
             result[column_index] = new_row
 
-    return np.dot(column_basis_det, np.array(result))
+
+    integer_matrix =  np.dot(column_basis_det, np.array(result))
+    if positive:
+        return get_positive_matrix(integer_matrix)
+
+    return integer_matrix
 
 
 def build_integer_basis_of_orthogonal_complement_of_stoichiometric_matrix(messi_network):

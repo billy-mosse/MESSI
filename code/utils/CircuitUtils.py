@@ -129,3 +129,70 @@ def get_equal_sign_vectors(s, circuits_information_M1, circuits_information_M2):
             continue
             #Isn't useful
     return equal_sign_vectors
+
+
+def get_positive_vector_in_matrix_rows(matrix):
+    circuit_information = CircuitsInformation(matrix)
+    nonnegative_circuit = [0] * np.shape(matrix)[1]
+    for circuit in circuit_information.circuits:
+        if Utils.is_nonnegative(circuit):
+            nonnegative_circuit = np.add(nonnegative_circuit, circuit)
+    return nonnegative_circuit
+
+"""
+def get_positive_vector_in_kernel(matrix):
+    #Los tiene en las columnas
+    kernel = MatrixUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(matrix)
+    d = shape(kernel)[0]
+    n = shape(kernel)[1]
+    J = Utils.nchoosek(range(1, n+1), d-1)
+    W = []
+    #We look for circuits of M:
+    for i in range(1, len(J)):
+        if numpy.matrix_rank(kernel[:][J[i]])==d-1:
+            w = []
+            for l in range(1, n+1):
+                w=[w,(-1)^(sum(j for j in J if j < l))*numpy.det(M[:][sort([J(i,:),l])])];
+            W = [W, w] #?
+
+
+
+for i=1:size(J,1)
+  if rank(M(:,J(i,:)))==d-1
+    w=[];
+    for l=1:n
+      w=[w,(-1)^(sum(J(i,:)<l))*det(M(:,sort([J(i,:),l])))];
+    endfor %l
+    W=[W;w];;%we keep the circiuts of M in each row of W
+  endif
+endfor
+%we make the first nonzero coordinate of each circuit positive:
+for i=1:size(W,1)
+  ww=find(W(i,:));
+  if length(ww)!=0
+    if W(i,ww(1))<0
+      W(i,:)=-W(i,:);
+    endif
+  endif
+endfor
+%we keep in W1 different circuits of M with first nonzero coordinate positive:
+W1=W(1,:);
+for i=2:size(W,1)
+  l=size(W1,1);
+  m1=[];
+  for k=1:l
+    m1(k)=prod(abs(W(i,:)-W1(k,:))<1e-14);
+  endfor
+  if sum(m1)==0
+    W1=[W1;W(i,:)];
+  endif
+endfor
+%we keep in W2 different circuits of M with all of its coordinates positive:
+W2=[];
+for i=1:size(W1,1)
+  if sum(W1(i,:)<-1e-14)==0
+    W2 = [W2;W1(i,:)];
+  endif   
+endfor
+v=sum(W2);
+Nv=N*v';"""

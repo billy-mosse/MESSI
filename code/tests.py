@@ -281,36 +281,7 @@ class Test1(unittest.TestCase):
         stoichiometric_matrix_column_basis = MatrixUtils.extract_column_basis(stoichiometric_matrix)
 
         ortoghonal_complement_of_stoichiometric_matrix_column_basis = \
-            MatrixUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(stoichiometric_matrix_column_basis)
-        
-        #Quizas haya que transponer...
-        
-        #Es el nucleo a derecha
-        #product1 = ortoghonal_complement_of_stoichiometric_matrix_column_basis @ stoichiometric_matrix_column_basis
-        product2 = stoichiometric_matrix_column_basis @ ortoghonal_complement_of_stoichiometric_matrix_column_basis
-
-        #self.assertTrue(np.linalg.matrix_rank(product1) == 0)
-        self.assertTrue(np.linalg.matrix_rank(product2) == 0)
-
-
-        stoch_shape = np.shape(stoichiometric_matrix)
-        complement_shape = np.shape(ortoghonal_complement_of_stoichiometric_matrix_column_basis)
-        print("OK")
-
-
-    def test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis(self):
-
-        print("test_buildup_of_integer_basis_matrix_of_orthogonal_complement_of_stoichiometric_matrix_column_basis...")
-        #columns form generators of stoichiometric subspace
-        stoichiometric_matrix = MatrixUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
-
-
-        #Matriz alta
-        #
-        stoichiometric_matrix_column_basis = MatrixUtils.extract_column_basis(stoichiometric_matrix)
-
-        ortoghonal_complement_of_stoichiometric_matrix_column_basis = \
-            MatrixUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(stoichiometric_matrix_column_basis)
+            MatrixUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(stoichiometric_matrix_column_basis, True)
         
         #Quizas haya que transponer...
         
@@ -324,16 +295,21 @@ class Test1(unittest.TestCase):
 
         stoch_shape = np.shape(stoichiometric_matrix)
         complement_shape = np.shape(ortoghonal_complement_of_stoichiometric_matrix_column_basis)
+        print("OK")
 
+        #NO ANDA, sera porque la matriz no es realista?
         M = np.array([[ 0,  0,  1,  0,  0,  0],
              [ 1,  1,  0,  0,  1,  0],
              [ 0,  0,  0,  1,  0,  1]])
 
-        M_orthogonal_complement = MatrixUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(M)
+        M_orthogonal_complement = MatrixUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(M, True)
 
         product = M @ M_orthogonal_complement
         self.assertTrue(np.linalg.matrix_rank(product) == 0)
-        print("test_build_G1 ")
+
+        print("OK")
+
+
 
     def test_build_G1(self):
         print("test_build_G1...")
