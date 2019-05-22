@@ -39,7 +39,7 @@ complex.
     G = messi_network.G
 
     rows = []
-    n_columns = len(G.nodes())
+    n_columns = len(messi_network.complexes)
 
     #an empty row with amount of columns equal to amount of nodes of the network
     empty_row = [0]*n_columns
@@ -105,6 +105,7 @@ def build_stoichiometric_matrix(incidence_matrix, complexes_matrix):
 
 def build_stoichiometric_matrix_from_messi_network(messi_network):
     incidence_matrix = build_incidence_matrix(messi_network)
+
     complexes_matrix = build_complexes_matrix(messi_network)
 
     return build_stoichiometric_matrix(incidence_matrix, complexes_matrix)
@@ -186,11 +187,15 @@ def build_integer_basis_of_orthogonal_complement_of_stoichiometric_matrix(messi_
         
 
 def get_unique_core_reacting_through_intermediates(messi_network, intermediate_index):
-    #OJO que esto es distinto a lo que tiene G1.
 
-    intermediate_name = messi_network.complexes[intermediate_index]
+    intermediate_name = messi_network.partitions[0][intermediate_index]
+
+    #It's monomolecular
+    intermediate_complex = [intermediate_name]
+    intermediate_complex_index = messi_network.complexes.index(intermediate_complex)
+
     #TODO: probablemente el index no es la cosa correcta que tengo que agarrar
-    possible_core = next(messi_network.G.predecessors(intermediate_name))
+    possible_core = next(messi_network.G.predecessors(intermediate_complex_index))
     found_complex = False
     while not found_complex:
 
@@ -202,7 +207,7 @@ def get_unique_core_reacting_through_intermediates(messi_network, intermediate_i
         #pero la funcion predecessors() efectivamente existe.
 
         possible_core = next(messi_network.G.predecessors(possible_core))
-        if messi_network.complexes_names.index(possible_core) in messi_network.core_complexes():
+        if possible_core in messi_network.core_complexes():
             found_complex = True
 
     return possible_core
@@ -215,15 +220,17 @@ def phi(messi_network, intermediate_index):
 
     #This should be the indices of the complex,
     #seen as a vector of species    
-    return messi_network.complexes[complex]
+    return messi_network.complexes[unique_core_reacting_through_intermediates]
 
 def get_pairs_of_binomial_exponents_of_type_1(messi_network):
     L = []
 
     #p es la cantidad de intermedios
     for intermediate_index, intermediate in enumerate(messi_network.intermediates()):
-        L.append([intermediate_index, phi(messi_network, intermediate_index)])
+        L.append([[intermediate_index], phi(messi_network, intermediate_index)])
 
+    print("L")
+    print(L)
     return L
 
 #TODO LLAMAR A ESTA FUNCION
@@ -249,6 +256,8 @@ def get_pairs_of_binomial_exponents_of_type_2(messi_network):
     #TODO chequear que estoy construyendo G2 y no MG2
     for origin, target, edge_data in messi_network.G2.edges(data=True):
         h = edge_data["reaction_constant"]
+        if origin == target:
+            continue
 
         for unique_simple_path in nx.all_simple_paths(messi_network.G2_circle, origin, target):
             first_edge_from_simple_path = [unique_simple_path[0], unique_simple_path[0]]
@@ -265,6 +274,8 @@ def get_pairs_of_binomial_exponents_of_type_2(messi_network):
             #Deberia haber uno solo
             break;
 
+    print("L2")
+    print(L)
     return L
 
 
@@ -273,18 +284,19 @@ def get_pairs_of_binomial_exponents(messi_network):
 
     #Phi
     L1 = get_pairs_of_binomial_exponents_of_type_1(messi_network)
-
    
     #Simple path
     L2 = get_pairs_of_binomial_exponents_of_type_2(messi_network)
-
 
     return L1 + L2
 
 def vec(messi_network, binomial):
     v = [0] * len(messi_network.species)
-
+    #print(binomial)
+    #print(messi_network.G.nodes())
     #binomial puede ser, por ejemplos, [2,3]
+
+    #TODO ARREGLAR.
     for var in binomial:
         if var != None:
             v[var] = 1
@@ -300,7 +312,7 @@ def get_binomial_basis(messi_network):
     #En el test esto se va a romper.
             
     for pair in pairs_of_binomial_exponents:
-
+        print(pair)
         vec1 = vec(messi_network, pair[0])
         vec2 = vec(messi_network, pair[1])
         res = list(map(lambda x, y: x - y, vec1, vec2))
