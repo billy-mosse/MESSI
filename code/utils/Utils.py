@@ -17,6 +17,7 @@ def combination_util(arr, n, r,
     # Current combination is  
     # ready to be printed, 
     # print it 
+
     if(index == r):
         L.append(list(data))
         return
@@ -254,3 +255,19 @@ def get_multistationarity_witnesses(v, w, s, d):
 
         x2.append(np.exp(v[i]) * x1[i])
     return x1,x2
+
+
+def nchoosek(n, k):
+    if k == 0:
+        r = 1
+    else:
+        r = n/k * nchoosek(n-1, k-1)
+    return round(r)
+
+
+
+def is_nonnegative(vec):
+    for v_i in vec:
+        if v_i < 0:
+            return False
+    return True
