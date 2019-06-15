@@ -302,7 +302,7 @@ class Test1(unittest.TestCase):
              [ 1,  1,  0,  0,  1,  0],
              [ 0,  0,  0,  1,  0,  1]])
 
-        M_orthogonal_complement = MatrixUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(M, True)
+        M_orthogonal_complement = MatrixUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(M, False)
 
         product = M @ M_orthogonal_complement
         self.assertTrue(np.linalg.matrix_rank(product) == 0)"""
