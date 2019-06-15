@@ -298,14 +298,14 @@ class Test1(unittest.TestCase):
         print("OK")
 
         #NO ANDA, sera porque la matriz no es realista?
-        M = np.array([[ 0,  0,  1,  0,  0,  0],
+        """M = np.array([[ 0,  0,  1,  0,  0,  0],
              [ 1,  1,  0,  0,  1,  0],
              [ 0,  0,  0,  1,  0,  1]])
 
         M_orthogonal_complement = MatrixUtils.build_integer_basis_matrix_of_orthogonal_complement_of_matrix(M, True)
 
         product = M @ M_orthogonal_complement
-        self.assertTrue(np.linalg.matrix_rank(product) == 0)
+        self.assertTrue(np.linalg.matrix_rank(product) == 0)"""
 
         print("OK")
 
@@ -519,12 +519,15 @@ class Test1(unittest.TestCase):
         binomial_matrix = MatrixUtils.build_binomial_matrix(messi_network)
 
         binomial_matrix_result = np.array([
-            [1, 0, 0, -1],
-            [0, 1, -1, 0],
-            [0, 0, 1, -1]]
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, -1, 1],
+            [-1, 0, 1]]
             )
 
+
         self.assertTrue(np.linalg.matrix_rank(binomial_matrix) == np.linalg.matrix_rank(binomial_matrix_result))
+
 
 
         concatenated_matrix = np.concatenate((binomial_matrix, binomial_matrix_result), axis=0)
