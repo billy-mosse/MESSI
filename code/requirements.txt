@@ -7,5 +7,7 @@ pytest
 scipy
 graphviz
 pygraphviz
+pylab
 rinohtype
 sphinx-autoapi
+
