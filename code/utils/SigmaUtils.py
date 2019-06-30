@@ -13,12 +13,13 @@ def check_if_sigma_subperp_is_mixed(Mperp, Bt, s, d):
     
     #Bperp has d rows and s columns.
     #Mt has s-d rows and s columns.
-    SList = range(1,s+1)
+    SList = range(1,s+1)    
 
     #First we get all subsets of size d.
     #TODO: an obvious optimization:
     #Don't store all subsets, but generate them dynamically.
     #Stop generathing them if we get mixed signs for a subset.
+
     L = Utils.get_r_subsets(SList,d)
 
     S = set(SList)
@@ -37,8 +38,10 @@ def check_if_sigma_subperp_is_mixed(Mperp, Bt, s, d):
         JcL.sort()
 
 
-        mB = Utils.minor(Bperp,JL)
-        mM = Utils.minor(Mt, JcL)
+        #print(JL)
+        #print(JcL)
+        mB = Utils.minor(Mperp,JL)
+        mM = Utils.minor(Bt, JcL)
         result = int(round(mB * mM * multiplier,0)) #son todos enteros, ver paper.
         if(result > 0): #and '+' not in signs:
             signs.append('+')
@@ -77,7 +80,7 @@ def check_if_sigma_subperp_is_mixed(Mperp, Bt, s, d):
     
     if len(signs) > 1:
         print("Sigma_perp is mixed! Great, then we can find v in T^perp and w in S with same sign.")
-        #print witnesses
+        #print(witnesses)
     else:
         print("Sigma_perp is NOT mixed")
         exit(0)

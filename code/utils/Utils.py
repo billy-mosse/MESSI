@@ -159,6 +159,102 @@ def orthant_has_conformal_circuit(orthant, sign_information_M):
     return False
 
 
+#La Phi parece estar bien
+def Phi(x, educt_complexes_matrix):
+    #print(educt_complexes_matrix)
+    #Educt complexes matrix itene a y_k en cada columna.
+    #phi(x1) deberia tener en la primera coordenada al producto de los momomios correspondientes
+    ret = []
+    for column in educt_complexes_matrix.transpose():
+        #print("column")
+        #print(column)
+        #print("x")
+        #print(x)
+        #Es 1 o 0?
+        num = 1
+        for index, x_i in enumerate(x):
+            if column[index]:
+                num = num*pow(x_i, column[index])
+        #print("num")
+        #print(num)
+        ret.append(num)
+    return ret
+
+
+#La educt complexes matrix tambien parece estar bien
+#Phi tambien parece estar bien
+def get_kappa2(x1, x2, positive_Mperp, educt_complexes_matrix, messi_network, toric_N):
+    #k = diag(Phi(x))\m M \lambda
+    #print("x1, x2:")
+    #print(x1)
+    #print(x2)
+
+    #positive M perp tiene un error...
+    #positive_Mperp = positive_Mperp.transpose()
+
+    p1 = Phi(x1, educt_complexes_matrix)
+
+    #No hace falta calcular los dos
+    p2 = Phi(x2, educt_complexes_matrix)
+
+    print("p1: ")
+    print(p1)
+    temp_matrix = np.linalg.inv(np.diag(p1))
+    size_l = np.shape(positive_Mperp)[1]
+    l = np.array([[1] * size_l]).transpose()
+
+    print(temp_matrix)
+    print(positive_Mperp)
+    print(l)
+
+    print("temp matrix")
+    print(np.shape(temp_matrix))
+
+    print("p1")
+    print(np.shape(p1))
+
+    print("positive m perp")
+    print(np.shape(positive_Mperp))
+
+    print("l")
+    print(np.shape(l))
+
+    k = temp_matrix @ positive_Mperp @ l
+
+    list_k = list(k)
+
+    print("k")
+    print(k)
+    #input("")
+
+    n = np.shape(p2)[0]
+    k_vec = []
+    for vec in list_k:
+        for j in vec:
+            k_vec.append(j)
+
+    matrix_k = np.diag(k_vec)
+
+    #print(matrix_k)
+
+    #La cuenta está bien, porque esto da cero
+    res1 = toric_N @ matrix_k @ p1
+
+    #Pero esto no da cero...
+    res2 = toric_N @ matrix_k @ p2
+
+
+    if np.linalg.norm(res1) < 0.0001 and\
+    np.linalg.norm(res2) < 0.0001:
+        print("We have found multistationarity witnesses:")
+        print(x1)
+        print(x2)
+        return k
+    else:
+        print("Error")
+        return None
+
+#deprecated
 def get_kappa(x1, x2):
     '''M = matrix([
     [-x1[0] * x1[8], x1[4], 0, 0, 0, 0, 0, 0, 0, -x1[3] * x1[0], -x1[7], 0],
@@ -192,7 +288,7 @@ def get_kappa(x1, x2):
     #https://arxiv.org/abs/1102.1590
     print("The kappas which are solution of f(x1, k) = 0 are (in columns):")
     ARR = scipy.linalg.null_space(M)
-    print(ARR)
+    #print(ARR)
 
     #print("Why should be the vectors in the nullspace positive?")
 
@@ -244,6 +340,7 @@ def get_kappa(x1, x2):
 
 
 #Theorem 5.8
+#Esto deberia andar porque ya andaba para el final de Alicia
 def get_multistationarity_witnesses(v, w, s, d):
     x1 = []
     x2 = []
@@ -255,6 +352,7 @@ def get_multistationarity_witnesses(v, w, s, d):
 
         x2.append(np.exp(v[i]) * x1[i])
     return x1,x2
+
 
 
 def nchoosek(n, k):

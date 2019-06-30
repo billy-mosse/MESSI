@@ -1,6 +1,7 @@
 from utils import Utils
 import numpy as np
 import copy
+import itertools
 
 
 class CircuitsInformation:
@@ -96,6 +97,7 @@ class CircuitsInformation:
         ret = sum(1 for j in J if j < l) % 2
         return ret
 
+#Esta función parece estar bien, ver tests.ipynb
 def get_equal_sign_vectors(s, circuits_information_M1, circuits_information_M2):
     """
     Gets 2 vectors with equal signs from the circuits information of M1 and M2
@@ -122,9 +124,9 @@ def get_equal_sign_vectors(s, circuits_information_M1, circuits_information_M2):
             conformal_circuits_M2 = circuits_information_M2.get_conformal_circuits(orthant)
             U_M2 = Utils.union(conformal_circuits_M2)
             if U_M2 != None and Utils.has_equal_sign(orthant, U_M2):
-                equal_sign_vectors.append([U_M1, U_Mt])
+                equal_sign_vectors.append([U_M1, U_M2])
 
-                print("Two vectors with the same sign, corresponding to the orthant %s, are %s, from T^perp, and %s, from S." % (orthant, U_M1, U_Mt))
+                print("Two vectors with the same sign, corresponding to the orthant %s, are %s, from M1, and %s, from M2." % (orthant, U_M1, U_M2))
         else:
             continue
             #Isn't useful
@@ -132,9 +134,12 @@ def get_equal_sign_vectors(s, circuits_information_M1, circuits_information_M2):
 
 
 def get_positive_vector_in_matrix_rows(matrix):
+    #print("supuetamente las filas con binomios")
+    #print(matrix)
     circuit_information = CircuitsInformation(matrix)
     nonnegative_circuit = [0] * np.shape(matrix)[1]
     for circuit in circuit_information.circuits:
+        #print(circuit)
         if Utils.is_nonnegative(circuit):
             nonnegative_circuit = np.add(nonnegative_circuit, circuit)
     return nonnegative_circuit

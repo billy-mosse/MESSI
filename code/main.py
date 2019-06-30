@@ -21,7 +21,6 @@ import numpy as np
 from numpy.linalg import det
 from numpy import shape
 import copy
-import itertools
 
 #For nice-printing of tables
 import texttable as tt
@@ -39,14 +38,39 @@ def main(debug):
     """
     messi_network = MESSINetworkBuilder.get_network(True)
 
-    #for easier reading
+
+    #print(messi_network.species_names)
+    #exit(0)
+
+    print("Complexes: ")
+    print(messi_network.complexes)
+
+    print("Complexes names:")
+    print(messi_network.complexes_names)
+    
+    print("Species:")
+    print(messi_network.species)
+
+    print("Species names:")
+    print(messi_network.species_names)
+    #for easier reading 
     #Bperp, Mt = HardcodedUtils.get_hardcoded_matrices()
 
     Mperp = MatrixUtils.build_integer_basis_of_orthogonal_complement_of_stoichiometric_matrix(messi_network)
 
+    Bt = MatrixUtils.build_binomial_matrix(messi_network).transpose()
+    #print("species names")
+    #print(messi_network.species_names)
+    #print("______________________")
 
-    Bt = MatrixUtils.build_binomial_matrix(messi_network)
+    toric_N = MatrixUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
 
+    M = MatrixUtils.build_integer_basis_of_stoichiometric_matrix(messi_network)
+    Bperp = MatrixUtils.build_integer_basis_of_orthogonal_complement_of_binomial_matrix(messi_network)
+    print("M")
+    print(M)
+    print("Bperp")
+    print(Bperp)
     #TODO: finish this MESSINetworkBuilder function instead of using hardcoded Bperp and Mt.
     #The function should return BPerp and Mt from user input of the MESSI system.
     #MESSINetworkBuilder.get_relevant_matrices(debug)
@@ -56,6 +80,41 @@ def main(debug):
 
     #Columns of B^\perp
     #Poner asserts correctos...
+
+    #s = #columnas Bperp
+    #s es la cantidad de columnas de Bt
+    #d es la cantidad de filas de Mperp
+
+    d = np.shape(Mperp)[0]
+    s = np.shape(Mperp)[1]
+
+
+    #toric M
+    positive_Mperp = MatrixUtils.build_positive_integer_basis_of_kernel_of_stoichiometric_matrix(messi_network)
+    educt_complexes_matrix = MatrixUtils.build_educt_complexes_matrix(messi_network)
+    print("positive M perp")
+    print(positive_Mperp)
+    print("M")
+    print(M)
+    print("educt complexes matrix")
+    print(educt_complexes_matrix)
+
+
+
+    print("Mperp")
+    print(Mperp)
+
+    print("Bt")
+    print(Bt)
+    #input("")
+    #print("d")
+    #print(d)
+    #print("s")
+    #print(s)
+
+
+
+
     """s = np.shape(Bperp)[1]
     assert s == np.shape(Mt)[1]
 
@@ -63,23 +122,30 @@ def main(debug):
     assert np.shape(Mt)[0] == s-d
     assert d<=s"""
 
-    print("We now compute Sigma_perp and check if it is mixed. Press ENTER to continue.")
-    input()
+    #print("We now compute Sigma_perp and check if it is mixed. Press ENTER to continue.")
+    #input()
     
     #exits if false
-    SigmaUtils.check_if_sigma_subperp_is_mixed(Bperp, Mt, s, d)
+    SigmaUtils.check_if_sigma_subperp_is_mixed(Mperp, Bt, s, d)
 
-    #circuits of matrices Bperp, Mt
+    circuits_information_M = CircuitUtils.CircuitsInformation(M)
+    #print(circuits_information_M.circuits)
+
     circuits_information_Bperp = CircuitUtils.CircuitsInformation(Bperp)
-    circuits_information_Mt = CircuitUtils.CircuitsInformation(Mt)
+    #print(circuits_information_Bperp.circuits)
 
     if not debug:
         input("Press ENTER to continue.")
 
     #Steps 2-5
-    equal_sign_vectors = CircuitUtils.get_equal_sign_vectors(s, circuits_information_Bperp, circuits_information_Mt)    
+    equal_sign_vectors = CircuitUtils.get_equal_sign_vectors(s, circuits_information_M, circuits_information_Bperp)
 
-    input("We now compute multistationarity witnesses.")
+    #print(M)
+    #print(Bperp)
+    #exit(0)
+
+    #input("We now compute multistationarity witnesses.")
+    input("")
     if len(equal_sign_vectors) == 0:
         print("No solutions were found. Was the system not s-toric?")
         print("TODO: this should be ckecked automatically")
@@ -98,13 +164,19 @@ def main(debug):
             w = first_solution[1]
 
             #input("6) x^1, x^2, \\kappa")
+
+
             x1, x2 = Utils.get_multistationarity_witnesses(v, w, s, d)
             print("x1 is %s" % x1)
             print("x2 is %s" % x2)
 
             #Step 6
             #TODO: there are some hardcoded stuff inside this function
-            Utils.get_kappa(x1,x2)
+            ret = Utils.get_kappa2(x1,x2, positive_Mperp, educt_complexes_matrix, messi_network, toric_N)
+            
+
+
+            print(ret)
             print("_______________________________________")
             input("Press ENTER to continue.")
 
