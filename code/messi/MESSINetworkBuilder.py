@@ -240,13 +240,17 @@ class MESSINetwork:
                 return partition
 
     def get_pairs_from_same_partition(self, complex1, complex2):
+        
+        #print("complexes: ")
+        #print(complex1)
+        #print(complex2)
         if self.get_partition(complex1[0]) == self.get_partition(complex2[0]):
             assert(self.get_partition(complex1[1]) == self.get_partition(complex2[1]))
             first_pair = [complex1[0], complex2[0]]
-            first_label = [complex1[1], complex2[1]]
+            first_label = complex1[1]
 
             second_pair = [complex1[1], complex2[1]]
-            second_label = [complex1[0], complex2[0]]
+            second_label = complex1[0]
 
         else:
             assert(self.get_partition(complex1[0]) == self.get_partition(complex2[1]))
@@ -255,13 +259,17 @@ class MESSINetwork:
 
             #Labels are the other origins
             first_pair = [complex1[0], complex2[1]]
-            first_label = [complex1[1]]
+            first_label = complex1[1]
 
             second_pair = [complex1[1], complex2[0]]
-            second_label = [complex1[0]]
+            second_label = complex1[0]
 
 
-        return [[first_pair, first_label], [second_pair, second_label]]
+        L = [[first_pair, first_label], [second_pair, second_label]]
+        #print("for G2:")
+        #print(L)
+
+        return L
         """complexes = complex1 + complex2
         pairs = []
         for partition in partitions:
@@ -320,6 +328,10 @@ class MESSINetwork:
                 #nodes.add(second[PAIR][1])
 
                 #Faltan los labels...
+                #print("first, second")
+                #print(first)
+                #print(second)
+
                 G2_nx.add_edge(first[PAIR][0], first[PAIR][1], reaction_constant=first[LABEL])
 
                 G2_nx.add_edge(second[PAIR][0], second[PAIR][1], reaction_constant=second[LABEL])
@@ -456,8 +468,7 @@ labels={node:node for node in G.nodes()},
     #dot = Digraph()
     #dot.render('multi', view=True)
 
-def get_network(debug):
-
+def get_network(debug = False):
     reactions = []
     species_names = []
     species = []
@@ -480,18 +491,42 @@ def get_network(debug):
             reactions.append(r)
             r_input = input()            
     else:
-        reactions = [['S0+E', 'ES0','k1'],
+        reactions = [
+        ['S0+E', 'ES0','k1'],
         ['ES0', 'S0+E', 'k2'],
         ['ES0', 'S1+E','k3'],
+
         ['S1+F', 'FS1', 'k4'],
         ['FS1', 'S1+F', 'k5'],
         ['FS1', 'S0+F', 'k6'],
+        
         ['P0+S1','S1P0', 'k7'],
         ['S1P0', 'P0+S1', 'k8'],
         ['S1P0','P1+S1', 'k9'],
+        
         ['P1+F','FP1', 'k10'],
         ['FP1','P1+F', 'k11'],
         ['FP1','P0+F', 'k12']]
+        """reactions = [
+        ['S01+E','Y01','k11'],
+        ['Y01','S01+E','k12'],
+        ['Y01','S11+E','k13'],
+        ['S11+F','Y11','t11'],
+        ['Y11','S11+F','t12'],
+        ['Y11','S01+F,t13'],
+        ['S02+S11','Y02','k21'],
+        ['Y02','S02+S11','k22'],
+        ['Y02','S12+S11','k23'],
+        ['S12+F','Y12','t21'],
+        ['Y12','S12+F','t22'],
+        ['Y12','S02+F','t23'],
+        ['S03+S12','Y03','k31'],
+        ['Y03','S03+S12','k32'],
+        ['Y03','S13+S12','k33'],
+        ['S13+F','Y13','t31'],
+        ['Y13','S13+F','t32'],
+        ['Y13','S03+F','t33']]"""
+
 
     species_index = 0
     reactions_only_indices = []
@@ -556,7 +591,7 @@ def get_network(debug):
     targets_names = set([reaction[1] for reaction in reactions])
     nodes = sources.union(targets)
 
-    print(reactions_only_indices)
+    #print(reactions_only_indices)
     G.add_nodes_from(nodes)
     for reaction in reactions_only_indices:
         G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
@@ -572,10 +607,10 @@ def get_network(debug):
     #edge_labels = nx.get_edge_attributes(G,'reaction_constant')
     #nx.draw_networkx_edge_labels(G, pos=layout, edge_labels = edge_labels)
 
-    if not debug:
+    if True:
         plt.show()
 
-    if not debug:
+    if True:
         answer = ""
         print("Does the network have a MESSI structure? Write YES or NO")
         while(answer!= "YES" and answer != "NO"):
@@ -588,7 +623,7 @@ def get_network(debug):
         P0_intermediates = []
         P_cores = []
         
-        if not debug:
+        if True:
             print("Great! Then if it's s-toric we will be able to check multistationarity.")
             print("Please introduce the species for S^(0). As usual, write END when finished:")
             node = ""
@@ -616,16 +651,18 @@ def get_network(debug):
             P0_intermediates=['ES0','FS1','S1P0','FP1']
             P_cores=[['S0','S1'],['P0','P1'],['E'],['F']]
 
-        #TODO: check it.
-        print("I'm trusting you that this is a MESSI structure...")
+            """P0_intermediates=  ['Y01','Y11','Y02','Y12','Y03','Y13']
+            P_cores = [['E', 'F'], []]"""
 
-        print("We would like to check that it is s-toric...")
+        #TODO: check it.
+        print("We are trusting you that this is an s-toric MESSI structure!")
 
         cores = [y for x in P_cores for y in x]
 
         is_s_toric = True
 
-        print("Checking condition C'...")
+        #Comentado hasta que lo arregle
+        """print("Checking condition C'...")
         for intermediate in P0_intermediates:
             #print("checking intermediate complex %s..." % intermediate)
 
@@ -661,15 +698,16 @@ def get_network(debug):
         if is_s_toric:
             print("Condition C' holds!")
         else:
-            print("Condition C' doesn't hold, so the network is not necessarily toric")
+            #TODO no me está dando!!
+            print("Condition C' doesn't hold, so the network is not necessarily toric")"""
 
         print("")
         #print("")
-        print("TODO: check other conditions.")
-        print("Assuming the network is s-toric, by Theorem 4.8, it's toric.")
-        print("Morover, if there is a unique simple path between each node of the graph G2, the exponents of the binomials can be explicitely computed:")
-        print("to be continued...")
-        print("")
+        #print("TODO: check other conditions.")
+        #print("Assuming the network is s-toric, by Theorem 4.8, it's toric.")
+        #print("Morover, if there is a unique simple path between each node of the graph G2, the exponents of the binomials can be explicitely computed:")
+        #print("to be continued...")
+        #print("")
 
         if not debug:
             var = input("Press ENTER to continue with the program.")
