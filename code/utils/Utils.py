@@ -161,6 +161,8 @@ def orthant_has_conformal_circuit(orthant, sign_information_M):
 
 #La Phi parece estar bien
 def Phi(x, educt_complexes_matrix):
+
+    #print("educt complexes matrix", educt_complexes_matrix)
     #print(educt_complexes_matrix)
     #Educt complexes matrix itene a y_k en cada columna.
     #phi(x1) deberia tener en la primera coordenada al producto de los momomios correspondientes
@@ -197,11 +199,21 @@ def get_kappa2(x1, x2, positive_Mperp, educt_complexes_matrix, messi_network, to
     #No hace falta calcular los dos
     p2 = Phi(x2, educt_complexes_matrix)
 
-    print("p1: ")
-    print(p1)
+    if False:
+        print("p1: ")
+        print(p1)
+
+        print("p2: ")
+        print(p2)
+
+
     temp_matrix = np.linalg.inv(np.diag(p1))
     size_l = np.shape(positive_Mperp)[1]
     l = np.array([[1] * size_l]).transpose()
+
+
+    """print("Experimento nuevo!")
+    print(positive_Mperp @ l)
 
     print(temp_matrix)
     print(positive_Mperp)
@@ -217,11 +229,20 @@ def get_kappa2(x1, x2, positive_Mperp, educt_complexes_matrix, messi_network, to
     print(np.shape(positive_Mperp))
 
     print("l")
-    print(np.shape(l))
+    print(np.shape(l))"""
+
+    if True:
+        print("temp matrix", temp_matrix)
+        print("positive M perp", positive_Mperp)
+        print("l", l)
 
     k = temp_matrix @ positive_Mperp @ l
 
     list_k = list(k)
+    #for k_i in list_k:
+    #    if k_i < 0:
+    #        #Alguno da cero
+    #        return False
 
     print("k")
     print(k)
@@ -246,13 +267,11 @@ def get_kappa2(x1, x2, positive_Mperp, educt_complexes_matrix, messi_network, to
 
     if np.linalg.norm(res1) < 0.0001 and\
     np.linalg.norm(res2) < 0.0001:
-        print("We have found multistationarity witnesses:")
-        print(x1)
-        print(x2)
-        return k
+        print("These are indeed multistationarity witnesses.")
+        return True
     else:
         print("Error")
-        return None
+        return False
 
 #deprecated
 def get_kappa(x1, x2):
@@ -341,16 +360,30 @@ def get_kappa(x1, x2):
 
 #Theorem 5.8
 #Esto deberia andar porque ya andaba para el final de Alicia
-def get_multistationarity_witnesses(v, w, s, d):
+def get_multistationarity_witnesses(w, v, s, d):
+    print("w", w)
+    print("v", v)
     x1 = []
     x2 = []
     for i in range (0, s):
         if v[i] != 0:
-            x1.append(w[i] * 1.0 / (np.exp(v[i])-1))
+            x1.append(
+                (w[i] * 1.0) / (np.exp(v[i])-1.0))
         else:
             x1.append(1)
 
         x2.append(np.exp(v[i]) * x1[i])
+    
+    """print("Hola")
+    print("v", v)
+    print("Hola2")
+    print("w", w)
+
+    print("x1",x1)
+    
+    print("x2", x2)
+    exit(0)"""
+
     return x1,x2
 
 

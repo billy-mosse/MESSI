@@ -102,6 +102,7 @@ def build_stoichiometric_matrix(incidence_matrix, complexes_matrix):
 
     #print("complexes matrix")
 
+    #This is matrix N in toric paper
     return complexes_matrix.transpose() @ incidence_matrix
 
 
@@ -172,18 +173,20 @@ def build_integer_basis_of_stoichiometric_matrix(messi_network):
     return stoichiometric_matrix_column_basis
 
 
+#Construye la matriz M de toric, que es el nucleo de la martiz N.
+#
 def build_positive_integer_basis_of_kernel_of_stoichiometric_matrix(messi_network):
     #en sus columnas tiene a las reacciones
     
     #Es de SxR, asi que deberia tener R columnas, o sea, 12.
     stoichiometric_matrix = build_stoichiometric_matrix_from_messi_network(messi_network)
-    print("stoichiometric_matrix")
-    print(stoichiometric_matrix)
+    #print("stoichiometric_matrix")
+    #print(stoichiometric_matrix)
 
     #Esto, lamentablemente, esta bien segun el paper de toric...
     row_basis = extract_row_basis(stoichiometric_matrix)
-    print("row basis")
-    print(row_basis)
+    #print("row basis")
+    #print(row_basis)
 
     return build_integer_basis_matrix_of_orthogonal_complement_of_matrix(row_basis, positive = True)
 

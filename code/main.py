@@ -36,23 +36,24 @@ def main(debug):
     gets multistationarity witnesses x^1, x^2, \\kappa or exits.
     the debug flag is used for fast computation
     """
-    messi_network = MESSINetworkBuilder.get_network(True)
+    messi_network = MESSINetworkBuilder.get_network(debug)
 
 
     #print(messi_network.species_names)
     #exit(0)
 
-    print("Complexes: ")
-    print(messi_network.complexes)
+    if debug:
+        print("Complexes: ")
+        print(messi_network.complexes)
 
-    print("Complexes names:")
-    print(messi_network.complexes_names)
-    
-    print("Species:")
-    print(messi_network.species)
+        print("Complexes names:")
+        print(messi_network.complexes_names)
+        
+        print("Species:")
+        print(messi_network.species)
 
-    print("Species names:")
-    print(messi_network.species_names)
+        print("Species names:")
+        print(messi_network.species_names)
     #for easier reading 
     #Bperp, Mt = HardcodedUtils.get_hardcoded_matrices()
 
@@ -67,10 +68,18 @@ def main(debug):
 
     M = MatrixUtils.build_integer_basis_of_stoichiometric_matrix(messi_network)
     Bperp = MatrixUtils.build_integer_basis_of_orthogonal_complement_of_binomial_matrix(messi_network)
-    print("M")
-    print(M)
-    print("Bperp")
-    print(Bperp)
+    #print("M - sus filas son una base de S")
+    #print(M)
+
+    #print("Stochiometric matrix - las filas generan S")
+    stochiometric_matrix2 = MatrixUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
+
+    #print(stochiometric_matrix2.transpose())
+
+
+    if debug and False:
+        print("Bperp")
+        print(Bperp)
     #TODO: finish this MESSINetworkBuilder function instead of using hardcoded Bperp and Mt.
     #The function should return BPerp and Mt from user input of the MESSI system.
     #MESSINetworkBuilder.get_relevant_matrices(debug)
@@ -92,20 +101,22 @@ def main(debug):
     #toric M
     positive_Mperp = MatrixUtils.build_positive_integer_basis_of_kernel_of_stoichiometric_matrix(messi_network)
     educt_complexes_matrix = MatrixUtils.build_educt_complexes_matrix(messi_network)
-    print("positive M perp")
-    print(positive_Mperp)
-    print("M")
-    print(M)
-    print("educt complexes matrix")
-    print(educt_complexes_matrix)
+    if debug and False:
+        print("positive M perp")
+        print(positive_Mperp)
+        print("M")
+        print(M)
+        print("educt complexes matrix")
+        print(educt_complexes_matrix)
 
 
 
-    print("Mperp")
-    print(Mperp)
+        print("Mperp")
+        print(Mperp)
 
-    print("Bt")
-    print(Bt)
+
+        print("Bt transpose")
+        print(Bt.transpose())
     #input("")
     #print("d")
     #print(d)
@@ -157,27 +168,24 @@ def main(debug):
         for index, L in enumerate(equal_sign_vectors):
 
             #Here, %d is replaced by index+1.
-            print("Producing witness N° %d" % (index+1))
 
             first_solution = L
-            v = first_solution[0]
-            w = first_solution[1]
+            w = first_solution[0] #viene de Stoc
+            v = first_solution[1] #Viene de binomios
 
             #input("6) x^1, x^2, \\kappa")
 
 
-            x1, x2 = Utils.get_multistationarity_witnesses(v, w, s, d)
-            print("x1 is %s" % x1)
-            print("x2 is %s" % x2)
+            x1, x2 = Utils.get_multistationarity_witnesses(w, v, s, d)
 
             #Step 6
             #TODO: there are some hardcoded stuff inside this function
             ret = Utils.get_kappa2(x1,x2, positive_Mperp, educt_complexes_matrix, messi_network, toric_N)
-            
 
-
-            print(ret)
-            print("_______________________________________")
+            if ret:            
+                print("x1 is %s" % x1)
+                print("x2 is %s" % x2)
+                print("_______________________________________")
             input("Press ENTER to continue.")
 
 
