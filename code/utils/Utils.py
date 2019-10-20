@@ -12,57 +12,57 @@ debug=False
 
 #This function is not mine! I stole it.
 #Billy.
-def combination_util(arr, n, r,  
-                    index, data, i, L): 
-    # Current combination is  
-    # ready to be printed, 
-    # print it 
+def combination_util(arr, n, r,
+                    index, data, i, L):
+    # Current combination is
+    # ready to be printed,
+    # print it
 
     if(index == r):
         L.append(list(data))
         return
-  
-    # When no more elements  
-    # are there to put in data[] 
+
+    # When no more elements
+    # are there to put in data[]
     if(i >= n):
         return
-  
-    # current is included,  
-    # put next at next 
-    # location  
-    data[index] = arr[i] 
-    combination_util(arr, n, r,  
-                    index + 1, data, i + 1, L) 
-      
-    # current is excluded,  
-    # replace it with 
-    # next (Note that i+1  
-    # is passed, but index  
-    # is not changed) 
-    combination_util(arr, n, r, index,  
-                    data, i + 1, L) 
-  
+
+    # current is included,
+    # put next at next
+    # location
+    data[index] = arr[i]
+    combination_util(arr, n, r,
+                    index + 1, data, i + 1, L)
+
+    # current is excluded,
+    # replace it with
+    # next (Note that i+1
+    # is passed, but index
+    # is not changed)
+    combination_util(arr, n, r, index,
+                    data, i + 1, L)
+
 #This function is also not mine!
 #Billy.
 def get_r_subsets(arr, r):
-    """The main function that 
-    prints all combinations 
-    of  size r in arr[] of 
-    size n. This function  
-    mainly uses combination_util() 
+    """The main function that
+    prints all combinations
+    of  size r in arr[] of
+    size n. This function
+    mainly uses combination_util()
     """
-    n = len(arr) 
+    n = len(arr)
     L = []
-    # A temporary array to 
-    # store all combination 
-    # one by one 
-    data = list(range(r)) 
-      
-    # Print all combination  
-    # using temporary  
-    # array 'data[]' 
-    combination_util(arr, n, r,  
-                    0, data, 0, L) 
+    # A temporary array to
+    # store all combination
+    # one by one
+    data = list(range(r))
+
+    # Print all combination
+    # using temporary
+    # array 'data[]'
+    combination_util(arr, n, r,
+                    0, data, 0, L)
 
     #print L
     return L
@@ -73,7 +73,7 @@ def i(cols):
     return [col-1 for col in cols]
 
 
-#La cantidad de columnas es tal que cuando sliceamos, obtenemos una matriz cuadrada 
+#La cantidad de columnas es tal que cuando sliceamos, obtenemos una matriz cuadrada
 #OJO que los indices empiezan en cero
 def minor(A, cols):
 
@@ -85,7 +85,7 @@ def minor(A, cols):
 #Asume que son del mismo tamaño
 def is_conformal(orthant, circuit):
     for i in range(0, len(orthant)):
-        
+
         #No son conformes si tienen signos opuestos, distintos de cero, en alguna coordenada.
         if orthant[i] * circuit[i] < 0:
             return False
@@ -99,7 +99,7 @@ def has_equal_sign(orthant, circuit):
     returns true iff the circuit parameter has equal sign as the orthant
     """
     for i in range(0, len(orthant)):
-        
+
         #They DON'T have equal sign if they have opposite nonzero signs, or if XOR is false
         #
 
@@ -120,7 +120,7 @@ def union(conformal_circuits):
     """
     if len(conformal_circuits) == 0:
         return None
-    
+
     #No se si se deberia llamar s o distinto...
     s = len(conformal_circuits[0])
     U = [0 for i in range(s)]
@@ -198,43 +198,10 @@ def get_kappa2(x1, x2, positive_Mperp, educt_complexes_matrix, messi_network, to
 
     #No hace falta calcular los dos
     p2 = Phi(x2, educt_complexes_matrix)
-
-    if False:
-        print("p1: ")
-        print(p1)
-
-        print("p2: ")
-        print(p2)
-
-
     temp_matrix = np.linalg.inv(np.diag(p1))
     size_l = np.shape(positive_Mperp)[1]
     l = np.array([[1] * size_l]).transpose()
 
-
-    """print("Experimento nuevo!")
-    print(positive_Mperp @ l)
-
-    print(temp_matrix)
-    print(positive_Mperp)
-    print(l)
-
-    print("temp matrix")
-    print(np.shape(temp_matrix))
-
-    print("p1")
-    print(np.shape(p1))
-
-    print("positive m perp")
-    print(np.shape(positive_Mperp))
-
-    print("l")
-    print(np.shape(l))"""
-
-    if True:
-        print("temp matrix", temp_matrix)
-        print("positive M perp", positive_Mperp)
-        print("l", l)
 
     k = temp_matrix @ positive_Mperp @ l
 
@@ -301,7 +268,7 @@ def get_kappa(x1, x2):
     [0, 0, 0, 0, 0, 0, 0, 0, 0, x1[3]*x1[9], -x1[7], -x1[7]], #8
     [-x1[0]*x1[8], x1[4], x1[4], 0, 0, 0, 0, 0, 0, 0, 0, 0], #9
     [0, 0, 0, -x1[1]*x1[9], x1[5], x1[5], 0, 0, 0, -x1[3]*x1[9], x1[7], x1[7]]])#10
-    
+
 
     #HAY QUE ASEGURAR QUE SEAN POSITIVOS.
     #https://arxiv.org/abs/1102.1590
@@ -340,7 +307,7 @@ def get_kappa(x1, x2):
     #var = input("The following matrix A was calculated by hand.")
     #var = input("The condition f(x2,k)=0 is equivalent to A k^t=0")
     #print(A)
-    
+
     #var = input("kappa is:")
     #print(nk)
 
@@ -373,14 +340,14 @@ def get_multistationarity_witnesses(w, v, s, d):
             x1.append(1)
 
         x2.append(np.exp(v[i]) * x1[i])
-    
+
     """print("Hola")
     print("v", v)
     print("Hola2")
     print("w", w)
 
     print("x1",x1)
-    
+
     print("x2", x2)
     exit(0)"""
 
