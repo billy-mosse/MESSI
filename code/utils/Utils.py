@@ -211,8 +211,6 @@ def get_kappa2(x1, x2, positive_Mperp, educt_complexes_matrix, messi_network, to
     #        #Alguno da cero
     #        return False
 
-    print("k")
-    print(k)
     #input("")
 
     n = np.shape(p2)[0]
@@ -328,8 +326,6 @@ def get_kappa(x1, x2):
 #Theorem 5.8
 #Esto deberia andar porque ya andaba para el final de Alicia
 def get_multistationarity_witnesses(w, v, s, d):
-    print("w", w)
-    print("v", v)
     x1 = []
     x2 = []
     for i in range (0, s):
