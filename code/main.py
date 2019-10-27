@@ -150,7 +150,8 @@ def main(debug=False):
 
     #Steps 2-5
 
-    only_one_string = input("Write YES if you want to fastly have only 1 multistationarity witness (instead of the many)")
+    print("Write YES if you want to fastly have only 1 multistationarity witness (instead of the many)")
+    only_one_string = input()
 
     only_one = False
     equal_sign_vectors = []
