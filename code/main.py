@@ -171,7 +171,10 @@ def main(debug=False):
         print("TODO: this should be ckecked automatically")
     else:
         #input("Step 5) Conformal vectors v and w")
-        print("For each solution orthanth, we will now produce the steady states x1 and x2, and the reaction constants kappa")
+        if len(equal_sign_vectors) > 1:
+            print("For each solution orthanth, we will now produce the steady states x1 and x2, and the reaction constants kappa...")
+        else:
+            print("We will not produce the steady states x1 and x2, and the reaction constants kappa, for the pair of equal sign vectors found...")
 
         #We iterate the list equal_sign_vectors, while simultaneously generating counter "index"
         for index, L in enumerate(equal_sign_vectors):
