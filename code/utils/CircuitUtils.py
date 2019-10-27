@@ -8,7 +8,7 @@ class CircuitsInformation:
 
     def __init__(self, M):
         #TODO assert rank M is max
-        
+
         self.matrix = M
         self.circuits = self.get_circuits(M)
 
@@ -21,7 +21,7 @@ class CircuitsInformation:
         M: numpy.array
             A matrix
 
-        returns: a list of circuits of the matrix 
+        returns: a list of circuits of the matrix
 
         """
 
@@ -45,7 +45,7 @@ class CircuitsInformation:
 
                     Jl.sort()
 
-                    fl =(-1)**self.mu(l,J) * Utils.minor(self.matrix, Jl) 
+                    fl =(-1)**self.mu(l,J) * Utils.minor(self.matrix, Jl)
 
                     '''if 4 in J and l==2:
                         print Jl
@@ -85,7 +85,7 @@ class CircuitsInformation:
         for circuit in self.circuits:
             if Utils.is_conformal(orthant, circuit):
                 conformal_circuits.append(circuit)
-        
+
         return conformal_circuits
 
 
@@ -96,6 +96,50 @@ class CircuitsInformation:
 
         ret = sum(1 for j in J if j < l) % 2
         return ret
+
+
+def get_only_one_equal_sign_vector(s, circuits_information_M1, circuits_information_M2):
+    """
+    Gets 2 vectors with equal signs from the circuits information of M1 and M2
+
+    Brute-force searches through all orthants for 2 vectors we know exist with equal signs and returns the first one
+
+    TODO: optimize! This is an exponetial algorithm.
+    """
+
+    equal_sign_vectors = []
+
+    #TODO: create them dynamically
+    orthants = list(itertools.product([-1,0,1],repeat=s))
+
+    #Steps 2,3,4
+    for orthant in orthants:
+        conformal_circuits_M1 = circuits_information_M1.get_conformal_circuits(orthant)
+
+        #union of the circuits conformal to the orthant
+        U_M1 = Utils.union(conformal_circuits_M1)
+        is_zero = True
+        for elt in U_M1:
+            if elt != 0:
+                is_zero = False
+
+        if U_M1 != None and Utils.has_equal_sign(orthant, U_M1) and not is_zero:
+            #Si el ortante tiene soporte igual a la union de los circuitos de M1, sigo con el paso 3 del algoritmo.
+            conformal_circuits_M2 = circuits_information_M2.get_conformal_circuits(orthant)
+            U_M2 = Utils.union(conformal_circuits_M2)
+            if U_M2 != None and Utils.has_equal_sign(orthant, U_M2):
+                equal_sign_vectors.append([U_M1, U_M2])
+
+                print("Two vectors with the same sign, corresponding to the orthant %s, are %s, from M1, and %s, from M2." % (orthant, U_M1, U_M2))
+                print("As requested, now stopping.")
+
+                return equal_sign_vectors
+
+        else:
+            continue
+            #Isn't useful
+    return equal_sign_vectors
+
 
 #Esta función parece estar bien, ver tests.ipynb
 def get_equal_sign_vectors(s, circuits_information_M1, circuits_information_M2):
@@ -118,7 +162,7 @@ def get_equal_sign_vectors(s, circuits_information_M1, circuits_information_M2):
 
         #union of the circuits conformal to the orthant
         U_M1 = Utils.union(conformal_circuits_M1)
-        
+
         if U_M1 != None and Utils.has_equal_sign(orthant, U_M1):
             #Si el ortante tiene soporte igual a la union de los circuitos de M1, sigo con el paso 3 del algoritmo.
             conformal_circuits_M2 = circuits_information_M2.get_conformal_circuits(orthant)
@@ -197,7 +241,7 @@ W2=[];
 for i=1:size(W1,1)
   if sum(W1(i,:)<-1e-14)==0
     W2 = [W2;W1(i,:)];
-  endif   
+  endif
 endfor
 v=sum(W2);
 Nv=N*v';"""

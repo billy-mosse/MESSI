@@ -149,7 +149,15 @@ def main(debug=False):
         input("Press ENTER to continue.")
 
     #Steps 2-5
-    equal_sign_vectors = CircuitUtils.get_equal_sign_vectors(s, circuits_information_M, circuits_information_Bperp)
+
+    only_one_string = input("Write YES if you want to fastly have only 1 multistationarity witness (instead of the many)")
+
+    only_one = False
+    equal_sign_vectors = []
+    if only_one_string == 'YES' or 'yes':
+        equal_sign_vectors = CircuitUtils.get_only_one_equal_sign_vector(s, circuits_information_M, circuits_information_Bperp)
+    else:
+        equal_sign_vectors = CircuitUtils.get_equal_sign_vectors(s, circuits_information_M, circuits_information_Bperp)
 
     #print(M)
     #print(Bperp)
