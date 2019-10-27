@@ -152,7 +152,7 @@ def main(debug=False):
 
     print("Write YES if you want to fastly have only 1 multistationarity witness (instead of the many)")
     only_one_string = input()
-
+    print("Getting equal sign vectors...")
     only_one = False
     equal_sign_vectors = []
     if only_one_string == 'YES' or 'yes':
@@ -164,7 +164,7 @@ def main(debug=False):
     #print(Bperp)
     #exit(0)
 
-    input("We now compute multistationarity witnesses.")
+    input("We now compute multistationarity witnesses...")
 
     if len(equal_sign_vectors) == 0:
         print("No solutions were found. Was the system not s-toric?")
