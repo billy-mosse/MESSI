@@ -117,7 +117,12 @@ def build_stoichiometric_matrix_from_messi_network(messi_network):
 
 #Creo que a esta no la tengo que llamar con la stoichiometric matrix....
 def get_basis_of_columns_and_index(long_matrix):
+    #print("matrix", long_matrix)
+    #print("type matrix", type(long_matrix))
+    #print("shape", np.shape(long_matrix))
+
     nrows, ncolumns = np.shape(long_matrix)
+
     column_basis = []
     index_column_basis = []
     for index, column in enumerate(long_matrix.transpose()):
@@ -177,7 +182,7 @@ def build_integer_basis_of_stoichiometric_matrix(messi_network):
 #
 def build_positive_integer_basis_of_kernel_of_stoichiometric_matrix(messi_network):
     #en sus columnas tiene a las reacciones
-    
+
     #Es de SxR, asi que deberia tener R columnas, o sea, 12.
     stoichiometric_matrix = build_stoichiometric_matrix_from_messi_network(messi_network)
     #print("stoichiometric_matrix")
@@ -199,11 +204,12 @@ def build_positive_integer_basis_of_ortogonal_complement_of_stoichiometric_matri
 #I think that situation ever arises, though
 #TODO also positive
 def build_integer_basis_matrix_of_orthogonal_complement_of_matrix(matrix, positive = False):
+    print("get_basis_of_columns_and_index")
     column_basis, index_column_basis = get_basis_of_columns_and_index(matrix)
 
     column_basis_det = np.linalg.det(column_basis)
     inverse_of_columns = np.linalg.inv(column_basis)
-    
+
     #Tiene la identidad en las columnas index_column_basis, y M' en el resto
     IdAndMPrime = inverse_of_columns @ matrix
 
@@ -224,7 +230,7 @@ def build_integer_basis_matrix_of_orthogonal_complement_of_matrix(matrix, positi
     for index, column_index in enumerate(index_column_basis):
         new_row = np.dot(-1, only_Mp[index])
         result[column_index] = new_row
-    
+
     for index, column_index in enumerate(index_column_basis_complement):
             new_row = empty_row.copy()
             new_row[index] = 1
@@ -240,12 +246,13 @@ def build_integer_basis_matrix_of_orthogonal_complement_of_matrix(matrix, positi
 
 def build_integer_basis_of_orthogonal_complement_of_stoichiometric_matrix(messi_network):
     stoichiometric_matrix = build_stoichiometric_matrix_from_messi_network(messi_network)
-    
+
     stoichiometric_matrix_column_basis = extract_column_basis(stoichiometric_matrix)
-    
+
     #print(stoichiometric_matrix_column_basis)
 
     #HACK: transponemos porque stoichiometric_matrix_column_basis esta transpuesto
+    print("build_integer_basis_of_orthogonal_complement_of_stoichiometric_matrix")
     ret = build_integer_basis_matrix_of_orthogonal_complement_of_matrix(stoichiometric_matrix_column_basis, positive=False).transpose()
     #M = stoichiometric_matrix_column_basis
     #M_ort = ret.transpose()
@@ -285,7 +292,7 @@ def phi(messi_network, intermediate_index):
     = get_unique_core_reacting_through_intermediates(messi_network, intermediate_index)
 
     #This should be the indices of the complex,
-    #seen as a vector of species    
+    #seen as a vector of species
     return messi_network.complexes[unique_core_reacting_through_intermediates]
 
 def get_pairs_of_binomial_exponents_of_type_1(messi_network):
@@ -324,6 +331,8 @@ def get_label_from_edge(G, edge, label):
         #print(target)
         #print(data)
         if origin == edge[0] and target == edge[1]:
+            #print(origin, target, data)
+            #print('hallado')
             return data[label]
 
 def get_pairs_of_binomial_exponents_of_type_2(messi_network):
@@ -332,29 +341,61 @@ def get_pairs_of_binomial_exponents_of_type_2(messi_network):
     #TODO chequear que estoy construyendo G2 y no MG2
     for origin, target, edge_data in messi_network.G2.edges(data=True):
         h = edge_data["reaction_constant"]
+
+        #El eje era monomolecular originalmente en G1
+        if 't' in str(h):
+            continue
+
         #print("h")
         #print(h)
         if origin == target:
+            #Es un loop y no pertenece a G2o
             continue
 
-
+        #print("origin", origin)
+        #print("target", target)
         #print("origin: %s, target: %s" % (origin, target))
         #print("G2 circle edges:")
         #print(messi_network.G2_circle.edges())
 
+        #print("G1")
+        #print(messi_network.G1.edges(data=True))
+
+        #print("G2")
+        #print(messi_network.G2_circle.edges(data=True))
+
         for unique_simple_path in nx.all_simple_paths(messi_network.G2_circle, target, origin):
+            #print("unique simple path", unique_simple_path)
             first_edge_from_simple_path = [unique_simple_path[0], unique_simple_path[1]]
+
+            #Origin y taget son especies, no complejos
             i = origin
-            m = get_label_from_edge(messi_network.G2_circle, first_edge_from_simple_path, "reaction_constant")
-            j = target   
+            j = target
 
-            item = [[h, i], [m, j]]
-            #print("Item2")
+            #Xl = Xi, me habia equivocado
+            if True or unique_simple_path[1] != origin:
+                #Es directamente la especie...
+                m = get_label_from_edge(messi_network.G2_circle, first_edge_from_simple_path, "reaction_constant")
+
+                #nasty hack
+                if "reaction_constant" in str(m):
+                    m = m["reaction_constant"]
+
+                #Another nasty hack
+                if 't' in str(m):
+                    m = None
+
+                #Son todas especies...
+                item = [[h, i], [m, j]]
+
+            else:
+                #La etiqueta estaba bien...
+                item = [[h, i], [None, j]]
+
+
+            #print("[[h, i], [m, j]]")
             #print(item)
-            
             L.append(item)
-
-
             #Deberia haber uno solo
             break;
 
@@ -367,10 +408,14 @@ def get_pairs_of_binomial_exponents(messi_network):
     #We assume system is s-toric
 
     #Phi
+    #print("Getting pairs of exponents of type 1...")
     L1 = get_pairs_of_binomial_exponents_of_type_1(messi_network)
-   
+    #print("L1", L1)
+
     #Simple path
+    #print("Getting pairs of exponents of type 2")
     L2 = get_pairs_of_binomial_exponents_of_type_2(messi_network)
+    #print("L2", len(L2), L2)
 
     #print("L2")
     #print(L2)
@@ -399,7 +444,7 @@ def get_binomial_basis(messi_network):
     pairs_of_binomial_exponents = get_pairs_of_binomial_exponents(messi_network)
 
     #En el test esto se va a romper.
-            
+
     #
     for pair in pairs_of_binomial_exponents:
         #print("pair:")
@@ -435,8 +480,17 @@ def build_integer_basis_of_orthogonal_complement_of_binomial_matrix(messi_networ
     builds orthogonal complement of the binomial matrix - needed for Sigma_perp
     """
     binomial_matrix = build_binomial_matrix(messi_network)
+
+
+    #print("G1", messi_network.G1.edges())
+    #print("G2", messi_network.G2.edges())
+    #print("G2 circle", messi_network.G2_circle.edges())
+    #print("B", binomial_matrix)
+
+
     #print("binomial matrix")
     #print(binomial_matrix)
+    #print("build_integer_basis_of_orthogonal_complement_of_binomial_matrix")
     ret =  build_integer_basis_matrix_of_orthogonal_complement_of_matrix(binomial_matrix.transpose(), positive=False).transpose()
     #M = binomial_matrix.transpose()
     #M_ort = ret.transpose()

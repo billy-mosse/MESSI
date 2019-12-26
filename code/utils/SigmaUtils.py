@@ -3,17 +3,17 @@ from utils import Utils
 #TODO: maybe we could use sets.
 #TODO: names of parameters could be nicer.
 #TODO: change so that we use SIGMA.
-def check_if_sigma_subperp_is_mixed(Mperp, Bt, s, d):
+def check_if_sigma_subperp_is_mixed(M, Bperp, s, d):
 
     """
     This function checks if SigmaSubperp is mixed.
     """
-    signs = []
+    signs = set()
     witnesses = []
-    
+
     #Bperp has d rows and s columns.
     #Mt has s-d rows and s columns.
-    SList = range(1,s+1)    
+    SList = range(1,s+1)
 
     #First we get all subsets of size d.
     #TODO: an obvious optimization:
@@ -22,36 +22,45 @@ def check_if_sigma_subperp_is_mixed(Mperp, Bt, s, d):
 
     L = Utils.get_r_subsets(SList,d)
 
+    #print("Hola!")
+    #M = Mt.transpose()
+    #print("M", M)
+    #print("Bperp", Bperp)
+    #print("s", s)
+    #print("d", d)
     S = set(SList)
-    Sigma_subperp = [["J^c", "menor M^t", "J", "menor B^\\perp", "Result"]]
+
+    Sigma_subperp = [["J^c", "menor M", "J", "menor B^\\perp", "Result"]]
     for JList in L:
         J = set(JList)
+
         #Jc = set(S)[x for x in S if x not in J]
         Jc = S - J
         multiplier = (-1)**sum(J)
 
         #No hay nada mas horrible que transformar una lista a un set y luego de nuevo a una lista :-)
-        
+
         JL = list(J)
         JL.sort()
         JcL = list(Jc)
         JcL.sort()
 
-
+        #print("JL", JL)
+        #print("JcL", JcL)
         #print(JL)
         #print(JcL)
-        mB = Utils.minor(Mperp,JL)
-        mM = Utils.minor(Bt, JcL)
+        mM = Utils.minor(M,JcL)
+        mB = Utils.minor(Bperp, JL)
         result = int(round(mB * mM * multiplier,0)) #son todos enteros, ver paper.
         if(result > 0): #and '+' not in signs:
-            signs.append('+')
+            signs.add('+')
             witnesses.append(['+', J, Jc])
         elif(result < 0):# and '-' not in signs:
-            signs.append('-')
+            signs.add('-')
             witnesses.append(['-', J, Jc])
         Sigma_subperp.append([JcL, mM, JL, mB, result])
 
-    Sigma_supraperp = [["J", "menor M^\\perp", "Jc", "menor B^t", "Result"]]
+    """Sigma_supraperp = [["J", "menor M^\\perp", "Jc", "menor B^t", "Result"]]
     for JList in L:
         J = set(JList)
         #Jc = set(S)[x for x in S if x not in J]
@@ -59,7 +68,7 @@ def check_if_sigma_subperp_is_mixed(Mperp, Bt, s, d):
         multiplier = (-1)**sum(J)
 
         #No hay nada mas horrible que transformar una lista a un set y luego de nuevo a una lista :-)
-        
+
         JL = list(J)
         JL.sort()
         JcL = list(Jc)
@@ -69,18 +78,21 @@ def check_if_sigma_subperp_is_mixed(Mperp, Bt, s, d):
         mM = Utils.minor(Bt, JcL)
         result = int(round(mB * mM * multiplier,0)) #son todos enteros, ver paper.
         if(result > 0): #and '+' not in signs:
-            signs.append('+')
+            signs.add('+')
             witnesses.append(['+', J, Jc])
         elif(result < 0):# and '-' not in signs:
-            signs.append('-')
+            signs.add('-')
             witnesses.append(['-', J, Jc])
-        Sigma_supraperp.append([JL, mM, JcL, mB, result])
+        Sigma_supraperp.append([JL, mM, JcL, mB, result])"""
 
     #print_Sigma_subperp_table(Sigma_subperp)
-    
+
+    #print("signs", signs)
+    #print_Sigma_subperp_table(Sigma_subperp)
     if len(signs) > 1:
-        print("Sigma_perp is mixed! Great, then we can find v in T^perp and w in S with same sign.")
+        #print("Sigma_perp is mixed! Great, then we can find v in T^perp and w in S with same sign.")
         #print(witnesses)
+        return True
     else:
         print("Sigma_perp is NOT mixed")
         exit(0)
@@ -90,7 +102,8 @@ def check_if_sigma_subperp_is_mixed(Mperp, Bt, s, d):
 
     #for i in range(1, 2**d):
 
-
+import numpy as np
+import texttable as tt
 def print_Sigma_subperp_table(table):
     """
     Prints the Sigma_subperp table.
@@ -99,9 +112,9 @@ def print_Sigma_subperp_table(table):
 
     table2 = []
     map(table2, zip(*table))
-    
+
     table2 = list(map(list, np.transpose(table)))
-    
+
     tab = tt.Texttable()
     tab.header(headings)
     Jc = table2[0]

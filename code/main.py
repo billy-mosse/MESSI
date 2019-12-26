@@ -38,11 +38,10 @@ def main(debug=False):
     """
     messi_network = MESSINetworkBuilder.get_network(debug)
 
-
     #print(messi_network.species_names)
     #exit(0)
 
-    if debug:
+    if debug and False:
         print("Complexes: ")
         print(messi_network.complexes)
 
@@ -60,6 +59,11 @@ def main(debug=False):
     Mperp = MatrixUtils.build_integer_basis_of_orthogonal_complement_of_stoichiometric_matrix(messi_network)
 
     Bt = MatrixUtils.build_binomial_matrix(messi_network).transpose()
+
+
+    #print("Mperp", Mperp)
+    #print("Bt", Bt)
+
     #print("species names")
     #print(messi_network.species_names)
     #print("______________________")
@@ -124,7 +128,7 @@ def main(debug=False):
     #print(s)
 
 
-
+    Mt = M.transpose()
 
     """s = np.shape(Bperp)[1]
     assert s == np.shape(Mt)[1]
@@ -137,7 +141,7 @@ def main(debug=False):
     #input()
 
     #exits if false
-    SigmaUtils.check_if_sigma_subperp_is_mixed(Mperp, Bt, s, d)
+    SigmaUtils.check_if_sigma_subperp_is_mixed(M, Bperp, s, d)
 
     circuits_information_M = CircuitUtils.CircuitsInformation(M)
     #print(circuits_information_M.circuits)
@@ -145,17 +149,14 @@ def main(debug=False):
     circuits_information_Bperp = CircuitUtils.CircuitsInformation(Bperp)
     #print(circuits_information_Bperp.circuits)
 
-    if not debug:
-        input("Press ENTER to continue.")
-
     #Steps 2-5
 
-    print("Write YES if you want to fastly have only 1 multistationarity witness (instead of the many)")
-    only_one_string = input()
+    #print("Write YES if you want to fastly have only 1 multistationarity witness (instead of the many)")
+    #only_one_string = input()
     print("Getting equal sign vectors...")
-    only_one = False
+    #only_one = False
     equal_sign_vectors = []
-    if only_one_string == 'YES' or 'yes':
+    if False:#only_one_string == 'YES' or 'yes':
         equal_sign_vectors = CircuitUtils.get_only_one_equal_sign_vector(s, circuits_information_M, circuits_information_Bperp)
     else:
         equal_sign_vectors = CircuitUtils.get_equal_sign_vectors(s, circuits_information_M, circuits_information_Bperp)
@@ -192,11 +193,12 @@ def main(debug=False):
 
             #Step 6
             #TODO: there are some hardcoded stuff inside this function
-            ret = Utils.get_kappa2(x1,x2, positive_Mperp, educt_complexes_matrix, messi_network, toric_N)
+            kappa = Utils.get_kappa2(x1,x2, positive_Mperp, educt_complexes_matrix, messi_network, toric_N)
 
-            if ret:
+            if kappa:
                 print("x1 is %s" % x1)
                 print("x2 is %s" % x2)
+                print("kappa is " + kappa)
                 print("_______________________________________")
             input("Press ENTER to continue.")
 

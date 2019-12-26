@@ -35,9 +35,9 @@ class MESSINetwork:
     Parameters
     ----------
         G: DiGraph
-            the network digraphs (nodes, edges, and reaction constant names)        
+            the network digraphs (nodes, edges, and reaction constant names)
         complexes: list of list of ints
-            a list of complexes. Each complex a list of species indexes        
+            a list of complexes. Each complex a list of species indexes
         species: list of strings
             a list of species names
         partitions: list of list of ints
@@ -59,7 +59,7 @@ class MESSINetwork:
 
         [3] #FS1
 
-        ] 
+        ]
 
         species = ['S0', 'S1', 'ES0', 'FS1', 'E', 'F']
 
@@ -82,6 +82,9 @@ class MESSINetwork:
         """
 
         self.G = G
+
+        #print("G")
+        #print(G.edges(data=True))
 
         self.complexes = complexes
 
@@ -107,12 +110,12 @@ class MESSINetwork:
     def intermediates(self):
         """Retrieves a list of the intermediate complexes
 
-        Retrieves a list of the intermediate complexes, 
+        Retrieves a list of the intermediate complexes,
         i.e., the elements of the first partition of the MESSINetwork.
 
         Args: None
 
-        Returns: a list of the intermediate complexes 
+        Returns: a list of the intermediate complexes
 
         """
 
@@ -127,7 +130,7 @@ class MESSINetwork:
     def core_complexes(self):
         core_complexes = []
         for complex_index, complex in enumerate(self.complexes):
-            found = False 
+            found = False
             species_vector = self.get_species_vector_from_complex_name(complex)
             for species in species_vector:
                 if species in self.partitions_names[0]:
@@ -205,7 +208,7 @@ class MESSINetwork:
 
                     if only_goes_through_intermediates:
                         new_edges.append([source, target])
-        
+
         #print("new edges: ")
 
         return new_edges
@@ -214,7 +217,7 @@ class MESSINetwork:
         vertices = self.core_complexes()
 
         edges = self.complexes_reactions_by_intermediates(vertices, self.partitions_names[0])
-        
+
 
         G1_nx = nx.DiGraph(directed=True)
 
@@ -225,22 +228,22 @@ class MESSINetwork:
         nodes = sources.union(targets)
         G1_nx.add_nodes_from(nodes)
         for index, reaction in enumerate(edges):
-            label = ("k%d" % index)
+            label = ("t%d" % index)
             G1_nx.add_edge(reaction[0], reaction[1], reaction_constant=label)
 
         return G1_nx
 
     def monomolecular(self, complex1, complex2):
-        return len(complex1) == 1 and len(complex1) == 1
+        return len(complex1) == 1 and len(complex2) == 1
 
 
-    def get_partition(self, complex):
+    def get_partition(self, species):
         for partition in self.partitions:
-            if complex in partition:
+            if species in partition:
                 return partition
 
     def get_pairs_from_same_partition(self, complex1, complex2):
-        
+
         #print("complexes: ")
         #print(complex1)
         #print(complex2)
@@ -295,28 +298,29 @@ class MESSINetwork:
         #nodes = self.core_complexes()
 
         #nodes = set()
-        new_edges = []
         G2_nx = None
         G2_nx = nx.DiGraph(directed=True)
         #G2_nx.add_nodes_from(nodes)
 
-        for edge in self.G1.edges():
+        for edge in self.G1.edges(data=True):
             complex1 = self.complexes[edge[0]]
             complex2 = self.complexes[edge[1]]
+
             if self.monomolecular(complex1, complex2):
                 #I add it as is
 
-                #TODO no creo que esto este bien
-                new_edges.append(edge)
-                
+                #Guardamos las especies directamente en G2
+                G2_nx.add_edge(self.complexes[edge[0]][0],
+                               self.complexes[edge[1]][0], reaction_constant=edge[2])
+
                 #nodes.add(edge[0])
-                 
+
                 #nodes.add(edge[1])
             else:
                 #If X1 + X2 -> X3 + X4, with X1 and X3 in the same partition,
                 #and the same for X2 and X4,
                 #we build edges X1-> X4
-                
+
                 PAIR=0
                 LABEL=1
                 first, second = \
@@ -332,9 +336,23 @@ class MESSINetwork:
                 #print(first)
                 #print(second)
 
-                G2_nx.add_edge(first[PAIR][0], first[PAIR][1], reaction_constant=first[LABEL])
+                species1 = first[PAIR][0]
+                species2 = first[PAIR][1]
+                species3 = second[PAIR][0]
+                species4 = second[PAIR][1]
 
-                G2_nx.add_edge(second[PAIR][0], second[PAIR][1], reaction_constant=second[LABEL])
+                """new_complexes = []
+
+                for species in [species1, species2, species3, species4]:
+                    if [species] not in self.complexes:
+                        self.complexes.append([species])
+                        self.complexes_names.append([self.species_names[species]])
+                    new_complexes.append(self.complexes.index([species]))"""
+
+
+                G2_nx.add_edge(species1, species2, reaction_constant=first[LABEL])
+
+                G2_nx.add_edge(species3, species4, reaction_constant=second[LABEL])
 
 
         nodes = []
@@ -346,9 +364,9 @@ class MESSINetwork:
                 nodes.append(edge[1])
 
         G2_nx.add_nodes_from(nodes)
+
         #G2_nx.add_nodes_from(nodes_vector)
         #print(G2_nx.nodes())
-
         return G2_nx
 
 
@@ -383,13 +401,13 @@ def plot_as_multi_digraph(G):
         for col, dist in data.items():
             df.loc[row,col] = dist
 
-    df = df.fillna(df.max().max())  
+    df = df.fillna(df.max().max())
 
-    layout = nx.kamada_kawai_layout(Gm, dist=df.to_dict())   
+    layout = nx.kamada_kawai_layout(Gm, dist=df.to_dict())
     nx.draw(G,layout,arrows=True, edge_color='black',width=1,linewidths=1,\
 node_size=500,node_color='pink',alpha=0.9,arrowsize=12,arrowstyle='-|>',\
 labels={node:node for node in G.nodes()},
-) 
+)
 
     edge_labels = nx.get_edge_attributes(Gm,'reaction_constant')
 
@@ -404,7 +422,7 @@ labels={node:node for node in G.nodes()},
     G.graph['edges']={'arrowsize':'4.0'}
 
 
-    
+
 
     """for edge in G.edges():
         #print(edge[0])
@@ -441,12 +459,12 @@ labels={node:node for node in G.nodes()},
     #See also https://www.contentful.com/blog/2018/05/04/using-graphviz-to-visualize-structured-content-from-contentful-spaces/
     """A.node_attr.update(color='red')
     A.edge_attr.update(len='2.0',color='blue')
-    A.graph_attr.update(label= '(Expanded) Phosphorylation cascade', 
+    A.graph_attr.update(label= '(Expanded) Phosphorylation cascade',
         decorate=True, dim=3
         )"""
 
     A.node_attr.update(
-        shape='circle', width=0.3, fixedsize='shape', margin=0, style='filled', fontname='Helvetica', color='#23a6db66', fontsize=8  
+        shape='circle', width=0.3, fixedsize='shape', margin=0, style='filled', fontname='Helvetica', color='#23a6db66', fontsize=8
         )
 
     A.edge_attr.update(
@@ -489,7 +507,7 @@ def get_network(debug = False):
             r = r_input[1:-1].split(',')
             r = [x.strip() for x in r]
             reactions.append(r)
-            r_input = input()            
+            r_input = input()
     else:
         reactions = [
         ['S0+E', 'ES0','k1'],
@@ -499,11 +517,11 @@ def get_network(debug = False):
         ['S1+F', 'FS1', 'k4'],
         ['FS1', 'S1+F', 'k5'],
         ['FS1', 'S0+F', 'k6'],
-        
+
         ['P0+S1','S1P0', 'k7'],
         ['S1P0', 'P0+S1', 'k8'],
         ['S1P0','P1+S1', 'k9'],
-        
+
         ['P1+F','FP1', 'k10'],
         ['FP1','P1+F', 'k11'],
         ['FP1','P0+F', 'k12']]
@@ -551,7 +569,7 @@ def get_network(debug = False):
 
             #The reaction as [complex_origin_index, complex_target_index]
             reaction_only_indices.append(complexes.index(complex_numbers))
-        #Coefficient                
+        #Coefficient
         reaction_only_indices.append(reaction[2])
 
         reactions_only_indices.append(reaction_only_indices)
@@ -574,16 +592,13 @@ def get_network(debug = False):
         for col, dist in data.items():
             df.loc[row,col] = dist
 
-    df = df.fillna(df.max().max())  
+    df = df.fillna(df.max().max())
 
     layout = nx.kamada_kawai_layout(G_to_show, dist=df.to_dict())
 
     #pos = nx.spring_layout(G)
 
     plot_as_multi_digraph(G_to_show)
-
-
-
 
     G = nx.DiGraph(directed=True)
 
@@ -617,12 +632,12 @@ def get_network(debug = False):
             answer = input()
     else:
         answer = "YES"
-        
+
     if answer == "YES":
 
         P0_intermediates = []
         P_cores = []
-        
+
         if True:
             print("Great! Then if it's s-toric we will be able to check multistationarity.")
             print("Please introduce the species for S^(0). As usual, write END when finished:")
@@ -631,7 +646,7 @@ def get_network(debug = False):
                 node = input()
                 if node != "END":
                     P0_intermediates.append(node)
-            
+
             i = 1
             #TODO: falta chequear que no sean vacios y hay al menos 1.
             node = ""
@@ -723,7 +738,6 @@ def get_network(debug = False):
             for species_name in partition_name:
                 partition_indices.append(species_names.index(species_name))
             partitions.append(partition_indices)
-
 
     return MESSINetwork(G, complexes, species, partitions, complexes_names, species_names, partitions_names)
 
