@@ -162,7 +162,7 @@ def main(debug=False):
     #print(Bperp)
     #exit(0)
 
-    input("We now compute multistationarity witnesses...")
+    print("We now compute multistationarity witnesses...")
 
     if len(equal_sign_vectors) == 0:
         print("No solutions were found. Was the system not s-toric?")
