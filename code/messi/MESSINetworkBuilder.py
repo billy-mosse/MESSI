@@ -311,7 +311,7 @@ class MESSINetwork:
 
                 #Guardamos las especies directamente en G2
                 G2_nx.add_edge(self.complexes[edge[0]][0],
-                               self.complexes[edge[1]][0], reaction_constant=edge[2])
+                               self.complexes[edge[1]][0], reaction_constant=edge[2]['reaction_constant'])
 
                 #nodes.add(edge[0])
 
@@ -501,9 +501,9 @@ def get_network(debug = False):
 
 
         if 'y' in from_file.lower() or len(from_file) == 0:
-            filename = input ("Please input the name of the file. Default name: network.txt\n")
+            filename = input ("Please input the name of the file. Default name: data/network.txt\n")
             if len(filename) == 0:
-                filename = 'network.txt'
+                filename = 'data/network.txt'
             with  open(filename, "r") as file:
                 lines = [line.rstrip('\n') for line in file]
                 for line in lines:
@@ -654,13 +654,18 @@ def get_network(debug = False):
         P_cores = []
 
         if True:
+            print('.'*30)
             print("Great! Then if it's s-toric we will be able to check multistationarity.")
+            print('.'*30)
+            print('')
             print('Please write down the partitions of this messi network.')
+
             from_file = input("Do you prefer to input them from a file instead of using the command line? (YES/NO. Default: YES)\n")
+
             if 'y' in from_file.lower() or len(from_file) == 0:
-                filename = input ("Please input the name of the file. Default name: partitions.txt\n")
+                filename = input ("Please input the name of the file. Default name: data/partitions.txt\n")
                 if filename == '':
-                    filename = 'partitions.txt'
+                    filename = 'data/partitions.txt'
                 with  open(filename, "r") as file:
                     lines = [line.rstrip('\n') for line in file]
                     core_nodes = False

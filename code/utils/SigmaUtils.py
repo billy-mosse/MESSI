@@ -190,10 +190,10 @@ def check_if_sigma_subperp_is_mixed(M, Bperp, s, d):
     if len(signs) > 1:
         #print("Sigma_perp is mixed! Great, then we can find v in T^perp and w in S with same sign.")
         #print(witnesses)
-        print("Sigma_perp is mixed!")
+        print("Sigma is mixed! This system is multistationary.")
         return True
     else:
-        print("Sigma_perp is NOT mixed")
+        print("Sigma is NOT mixed. This system is monostationary.")
         exit(0)
 
     #Faltaria armar la tabla, que es bastante grande, no? No se si la voy a armar

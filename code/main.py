@@ -80,10 +80,6 @@ def main(debug=False):
 
     #print(stochiometric_matrix2.transpose())
 
-
-    if debug and False:
-        print("Bperp")
-        print(Bperp)
     #TODO: finish this MESSINetworkBuilder function instead of using hardcoded Bperp and Mt.
     #The function should return BPerp and Mt from user input of the MESSI system.
     #MESSINetworkBuilder.get_relevant_matrices(debug)
@@ -141,6 +137,7 @@ def main(debug=False):
     #input()
 
     #exits if false
+    print("Checking if the system is multisatationary by checking Sigma's signs...")
     SigmaUtils.check_if_sigma_subperp_is_mixed(M, Bperp, s, d)
 
     circuits_information_M = CircuitUtils.CircuitsInformation(M)
@@ -175,7 +172,7 @@ def main(debug=False):
         if len(equal_sign_vectors) > 1:
             print("For each solution orthant, we will now produce the steady states x1 and x2, and the reaction constants kappa...")
         else:
-            print("We will not produce the steady states x1 and x2, and the reaction constants kappa, for the pair of equal sign vectors found...")
+            print("We will now produce the steady states x1 and x2, and the reaction constants kappa, for the pair of equal sign vectors found...")
 
         #We iterate the list equal_sign_vectors, while simultaneously generating counter "index"
         for index, L in enumerate(equal_sign_vectors):

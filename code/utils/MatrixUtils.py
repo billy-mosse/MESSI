@@ -333,74 +333,123 @@ def get_label_from_edge(G, edge, label):
             #print('hallado')
             return data[label]
 
+
+def add_only_if_linear(L, origin, target, messi_network):
+    for unique_simple_path in nx.all_simple_paths(messi_network.G2_circle, target, origin):
+
+        for i in range(len(unique_simple_path)-1):
+            edge_from_simple_path = [unique_simple_path[i], unique_simple_path[i+1]]
+            m = get_label_from_edge(messi_network.G2_circle, edge_from_simple_path, "reaction_constant")
+
+            #Chequeo que sea completamente lineal...
+            if 't' not in str(m):
+                return
+
+
+        #print("unique simple path", unique_simple_path)
+        first_edge_from_simple_path = [unique_simple_path[0], unique_simple_path[1]]
+
+        #Origin y taget son especies, no complejos
+        i = origin
+        j = target
+
+        #Xl = Xi, me habia equivocado
+        if unique_simple_path[1] != origin:
+            #Es directamente la especie...
+            m = get_label_from_edge(messi_network.G2_circle, first_edge_from_simple_path, "reaction_constant")
+
+            #nasty hack
+            if "reaction_constant" in str(m):
+                m = m["reaction_constant"]
+
+            #Another nasty hack
+            if 't' in str(m):
+                m = None
+
+            #Son todas especies...
+            item = [[None, i], [m, j]]
+
+        else:
+            #La etiqueta estaba bien...
+            item = [[None, i], [None, j]]
+
+
+        #print("[[h, i], [m, j]]")
+        #print(item)
+        L.append(item)
+        #Deberia haber uno solo
+        break;
+
 def get_pairs_of_binomial_exponents_of_type_2(messi_network):
     L = []
+
 
     #TODO chequear que estoy construyendo G2 y no MG2
     for origin, target, edge_data in messi_network.G2.edges(data=True):
         h = edge_data["reaction_constant"]
 
-        #El eje era monomolecular originalmente en G1
-        if 't' in str(h):
-            continue
-
-
-        #print("h")
-        #print(h)
+        #nasty hack
         if origin == target:
             #Es un loop y no pertenece a G2o
             continue
 
-        #print("origin", origin)
-        #print("target", target)
-        #print("origin: %s, target: %s" % (origin, target))
-        #print("G2 circle edges:")
-        #print(messi_network.G2_circle.edges())
-
-        #print("G1")
-        #print(messi_network.G1.edges(data=True))
-
-        #print("G2")
-        #print(messi_network.G2_circle.edges(data=True))
-
-        for unique_simple_path in nx.all_simple_paths(messi_network.G2_circle, target, origin):
-
-            #print("unique simple path", unique_simple_path)
-            first_edge_from_simple_path = [unique_simple_path[0], unique_simple_path[1]]
-
-            #Origin y taget son especies, no complejos
-            i = origin
-            j = target
-
-            #Xl = Xi, me habia equivocado
-            if True or unique_simple_path[1] != origin:
-                #Es directamente la especie...
-                m = get_label_from_edge(messi_network.G2_circle, first_edge_from_simple_path, "reaction_constant")
-
-                #nasty hack
-                if "reaction_constant" in str(m):
-                    m = m["reaction_constant"]
-
-                #Another nasty hack
-                if 't' in str(m):
-                    m = None
-
-                #Son todas especies...
-                item = [[h, i], [m, j]]
-
-            else:
-                #La etiqueta estaba bien...
-                item = [[h, i], [None, j]]
+        #El eje era monomolecular originalmente en G1
+        if 't' in str(h):
+            add_only_if_linear(L, origin, target, messi_network)
+        else:
 
 
-            #print("[[h, i], [m, j]]")
-            #print(item)
-            L.append(item)
-            #Deberia haber uno solo
-            break;
+            #print("origin", origin)
+            #print("target", target)
+            #print("origin: %s, target: %s" % (origin, target))
+            #print("G2 circle edges:")
+            #print(messi_network.G2_circle.edges())
 
-    #print("L2")
-    #print(L)
+            #print("G1")
+            #print(messi_network.G1.edges(data=True))
+
+            #print("G2")
+            #print(messi_network.G2_circle.edges(data=True))
+
+            for unique_simple_path in nx.all_simple_paths(messi_network.G2_circle, target, origin):
+
+                #print("unique simple path", unique_simple_path)
+                first_edge_from_simple_path = [unique_simple_path[0], unique_simple_path[1]]
+
+                #Origin y taget son especies, no complejos
+                i = origin
+                j = target
+
+                #Xl = Xi, me habia equivocado
+                if True or unique_simple_path[1] != origin:
+                    #Es directamente la especie...
+                    m = get_label_from_edge(messi_network.G2_circle, first_edge_from_simple_path, "reaction_constant")
+
+                    #nasty hack
+                    if "reaction_constant" in str(m):
+                        m = m["reaction_constant"]
+
+                    #Another nasty hack
+                    if 't' in str(m):
+                        m = None
+
+                    #Son todas especies...
+                    item = [[h, i], [m, j]]
+
+                else:
+                    #La etiqueta estaba bien...
+                    item = [[h, i], [None, j]]
+
+
+                #print("[[h, i], [m, j]]")
+                #print(item)
+                L.append(item)
+                #Deberia haber uno solo
+                break;
+
+        #print("L2")
+        #print(L)
+
     return L
 
 
@@ -417,9 +466,11 @@ def get_pairs_of_binomial_exponents(messi_network):
     L2 = get_pairs_of_binomial_exponents_of_type_2(messi_network)
     #print("L2", len(L2), L2)
 
+    exponents = L1 + L2
+
     #print("L2")
     #print(L2)
-    return L1 + L2
+    return exponents
 
 def vec(messi_network, binomial):
     v = [0] * len(messi_network.species)
@@ -470,6 +521,7 @@ def build_binomial_matrix(messi_network):
 
     #print("Column basis: ")
     #print(column_basis)
+
     return column_basis.transpose()
     #return get_positive_matrix(column_basis.transpose())
 
