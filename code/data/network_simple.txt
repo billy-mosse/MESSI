@@ -1,0 +1,5 @@
+(E+S,Y,k1)
+(Y,E+S, k2)
+(Y, E+P, k3)
+(P,S,k4)
+END

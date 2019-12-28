@@ -1,0 +1,10 @@
+(X, XT, k1)
+(XT, X, k2)
+(XT, Xp, k3)
+(Xp + Y, XpY, k4)
+(XpY, Xp + Y, k5)
+(XpY, X + Yp, k6)
+(XT + Yp, XTYp, k4)
+(XTYp, XT + Yp, k5)
+(XTYp, XT + Y, k6)
+END

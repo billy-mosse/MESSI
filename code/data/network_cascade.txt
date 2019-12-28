@@ -1,0 +1,13 @@
+(S0+E, ES0, k1)
+(ES0, S0+E, k2)
+(ES0, S1+E,k3)
+(S1+F, FS1, k4)
+(FS1, S1+F, k5)
+(FS1, S0+F, k6)
+(P0+S1,S1P0, k7)
+(S1P0, P0+S1, k8)
+(S1P0,P1+S1, k9)
+(P1+F,FP1, k10)
+(FP1,P1+F, k11)
+(FP1,P0+F, k12)
+END

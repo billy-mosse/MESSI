@@ -1,0 +1,10 @@
+XpY
+XTYp
+END
+X
+XT
+Xp
+END
+Y
+Yp
+END_CORES
