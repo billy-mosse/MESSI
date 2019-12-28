@@ -151,12 +151,12 @@ def main(debug=False):
 
     #Steps 2-5
 
-    #print("Write YES if you want to fastly have only 1 multistationarity witness (instead of the many)")
-    #only_one_string = input()
+    print("Do you prefer to get only 1 multistationarity witness instead of all of them? It's faster this way. (YES/NO. Default: YES)")
+    only_one_string = input()
     print("Getting equal sign vectors...")
     #only_one = False
     equal_sign_vectors = []
-    if False:#only_one_string == 'YES' or 'yes':
+    if 'y' in only_one_string.lower() or len(only_one_string) == 0:
         equal_sign_vectors = CircuitUtils.get_only_one_equal_sign_vector(s, circuits_information_M, circuits_information_Bperp)
     else:
         equal_sign_vectors = CircuitUtils.get_equal_sign_vectors(s, circuits_information_M, circuits_information_Bperp)
@@ -173,7 +173,7 @@ def main(debug=False):
     else:
         #input("Step 5) Conformal vectors v and w")
         if len(equal_sign_vectors) > 1:
-            print("For each solution orthanth, we will now produce the steady states x1 and x2, and the reaction constants kappa...")
+            print("For each solution orthant, we will now produce the steady states x1 and x2, and the reaction constants kappa...")
         else:
             print("We will not produce the steady states x1 and x2, and the reaction constants kappa, for the pair of equal sign vectors found...")
 

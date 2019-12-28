@@ -195,6 +195,56 @@ def get_all_equal_sign_orthants(s, circuits_information_M1, circuits_information
             #Isn't useful
     return equal_sign_vectors
 
+def get_count_equal_sign_orthants(s, circuits_information_M1, circuits_information_M2):
+    """
+    Gets 2 vectors with equal signs from the circuits information of M1 and M2
+
+    Brute-force searches through all orthants for 2 vectors we know exist with equal signs
+
+    TODO: optimize! This is an exponetial algorithm.
+    """
+
+    equal_sign_vectors = []
+
+    #TODO: create them dynamically
+    orthants = list(itertools.product([-1,0,1],repeat=s))
+
+    solution_orthants = 0
+    #Steps 2,3,4
+    for orthant in orthants:
+        conformal_circuits_M1 = circuits_information_M1.get_conformal_circuits(orthant)
+
+        #union of the circuits conformal to the orthant
+        U_M1 = Utils.union(conformal_circuits_M1)
+
+        is_zero_or_invalid = True
+        if U_M1 != None:
+            for elt in U_M1:
+                if elt != 0:
+                    is_zero_or_invalid = False
+
+
+        #print(U_M1)
+
+        if U_M1 != None and not is_zero_or_invalid and Utils.has_equal_sign(orthant, U_M1):
+            #Si el ortante tiene soporte igual a la union de los circuitos de M1, sigo con el paso 3 del algoritmo.
+            conformal_circuits_M2 = circuits_information_M2.get_conformal_circuits(orthant)
+            U_M2 = Utils.union(conformal_circuits_M2)
+            if U_M2 != None and Utils.has_equal_sign(orthant, U_M2):
+                #equal_sign_vectors.append([U_M1, U_M2])
+                solution_orthants += 1
+                #equal_sign_vectors.append([U_M1, U_M2])
+
+                #Stop searching in this orthant
+                continue
+
+                print("Two vectors with the same sign, corresponding to the orthant %s, are %s, from M1, and %s, from M2." % (orthant, U_M1, U_M2))
+        else:
+            continue
+            #Isn't useful
+    return solution_orthants
+
+
 #Esta función parece estar bien, ver tests.ipynb
 def get_unique_equal_sign_vector(s, circuits_information_M1, circuits_information_M2):
     """
@@ -275,7 +325,6 @@ def get_equal_sign_vectors(s, circuits_information_M1, circuits_information_M2):
             for elt in U_M1:
                 if elt != 0:
                     is_zero_or_invalid = False
-
 
         #print(U_M1)
 

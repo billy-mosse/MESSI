@@ -495,19 +495,38 @@ def get_network(debug = False):
     if not debug:
 
         print ("Welcome to an implementation of Algorithm 1 of the paper The structure of MESSI biological systems.")
+
         print ("Please, input the graph G corresponding to the reaction network you want to analyze.")
-        print ("Input each reaction with the following format: (SOURCE COMPLEX, TARGET COMPLEX, REACTION_CONSTANT)")
-        print ("One example would be: (S0 + E, ES0, k1).")
-        print ("When finished, enter the command END")
+        from_file = input("Do you prefer to input the graph from a txt file instead of using the command line? (YES/NO. Default: YES)\n")
 
-    #Descomentar para Alicia
 
-        r_input = input()
-        while r_input != 'END':
-            r = r_input[1:-1].split(',')
-            r = [x.strip() for x in r]
-            reactions.append(r)
+        if 'y' in from_file.lower() or len(from_file) == 0:
+            filename = input ("Please input the name of the file. Default name: network.txt\n")
+            if len(filename) == 0:
+                filename = 'network.txt'
+            with  open(filename, "r") as file:
+                lines = [line.rstrip('\n') for line in file]
+                for line in lines:
+                    if ',' not in line:
+                        continue
+                    r = line[1:-1].split(',')
+                    r = [x.strip() for x in r]
+                    reactions.append(r)
+        else:
+            print ('Please input the graph via the command line.')
+            print ("Input each reaction with the following format: (SOURCE COMPLEX, TARGET COMPLEX, REACTION_CONSTANT)")
+            print ("One example would be: (S0 + E, ES0, k1).")
+            print ("When finished, enter the command END")
+
+        #Descomentar para Alicia
+
             r_input = input()
+            while r_input != 'END':
+                if ',' in r_input:
+                    r = r_input[1:-1].split(',')
+                    r = [x.strip() for x in r]
+                    reactions.append(r)
+                    r_input = input()
     else:
         reactions = [
         ['S0+E', 'ES0','k1'],
@@ -627,41 +646,66 @@ def get_network(debug = False):
 
     if True:
         answer = ""
-        print("Does the network have a MESSI structure? Write YES or NO")
-        while(answer!= "YES" and answer != "NO"):
-            answer = input()
-    else:
-        answer = "YES"
+    answer = input("Does the network have a MESSI structure? (YES/NO. Default: YES)\n").lower()
 
-    if answer == "YES":
+    if 'y' in answer.lower() or len(answer) == 0:
 
         P0_intermediates = []
         P_cores = []
 
         if True:
             print("Great! Then if it's s-toric we will be able to check multistationarity.")
-            print("Please introduce the species for S^(0). As usual, write END when finished:")
-            node = ""
-            while(node != "END"):
-                node = input()
-                if node != "END":
-                    P0_intermediates.append(node)
+            print('Please write down the partitions of this messi network.')
+            from_file = input("Do you prefer to input them from a file instead of using the command line? (YES/NO. Default: YES)\n")
+            if 'y' in from_file.lower() or len(from_file) == 0:
+                filename = input ("Please input the name of the file. Default name: partitions.txt\n")
+                if filename == '':
+                    filename = 'partitions.txt'
+                with  open(filename, "r") as file:
+                    lines = [line.rstrip('\n') for line in file]
+                    core_nodes = False
+                    i = 1
+                    P = []
+                    for line in lines:
+                        node = line.strip()
+                        if node == 'END':
+                            core_nodes = True
+                            continue
 
-            i = 1
-            #TODO: falta chequear que no sean vacios y hay al menos 1.
-            node = ""
-            while(node != "END_CORES"):
-                print("Please introduce the species for S^(%d). Press END to advance to the next set of species and END_CORES to let us know this was the last set." % i)
-
+                        if not core_nodes:
+                            P0_intermediates.append(node)
+                        else:
+                            if 'END' in node:
+                                i = i+1
+                                P_cores.append(P.copy())
+                                P = []
+                            else:
+                                P.append(node)
+                #print(P0_intermediates)
+                #print(P_cores)
+            else:
+                print("Please introduce the species for S^(0) using the command line. Write END and press ENTER when finished:")
                 node = ""
-                i = i+1
-                P = []
-                while(node != "END" and node != "END_CORES"):
+                while(node != "END"):
                     node = input()
-                    if node != "END" and node != "END_CORES":
-                        P.append(node)
+                    if node != "END":
+                        P0_intermediates.append(node)
 
-                P_cores.append(P)
+                i = 1
+                #TODO: falta chequear que no sean vacios y hay al menos 1.
+                node = ""
+                while(node != "END_CORES"):
+                    print("Please introduce the species for S^(%d). Press END to advance to the next set of species and END_CORES to let us know this was the last set." % i)
+
+                    node = ""
+                    i = i+1
+                    P = []
+                    while(node != "END" and node != "END_CORES"):
+                        node = input()
+                        if node != "END" and node != "END_CORES":
+                            P.append(node)
+
+                    P_cores.append(P)
         else:
             P0_intermediates=['ES0','FS1','S1P0','FP1']
             P_cores=[['S0','S1'],['P0','P1'],['E'],['F']]

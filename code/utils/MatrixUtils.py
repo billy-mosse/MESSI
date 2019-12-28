@@ -204,7 +204,6 @@ def build_positive_integer_basis_of_ortogonal_complement_of_stoichiometric_matri
 #I think that situation ever arises, though
 #TODO also positive
 def build_integer_basis_matrix_of_orthogonal_complement_of_matrix(matrix, positive = False):
-    print("get_basis_of_columns_and_index")
     column_basis, index_column_basis = get_basis_of_columns_and_index(matrix)
 
     column_basis_det = np.linalg.det(column_basis)
@@ -252,7 +251,6 @@ def build_integer_basis_of_orthogonal_complement_of_stoichiometric_matrix(messi_
     #print(stoichiometric_matrix_column_basis)
 
     #HACK: transponemos porque stoichiometric_matrix_column_basis esta transpuesto
-    print("build_integer_basis_of_orthogonal_complement_of_stoichiometric_matrix")
     ret = build_integer_basis_matrix_of_orthogonal_complement_of_matrix(stoichiometric_matrix_column_basis, positive=False).transpose()
     #M = stoichiometric_matrix_column_basis
     #M_ort = ret.transpose()
@@ -346,6 +344,7 @@ def get_pairs_of_binomial_exponents_of_type_2(messi_network):
         if 't' in str(h):
             continue
 
+
         #print("h")
         #print(h)
         if origin == target:
@@ -365,6 +364,7 @@ def get_pairs_of_binomial_exponents_of_type_2(messi_network):
         #print(messi_network.G2_circle.edges(data=True))
 
         for unique_simple_path in nx.all_simple_paths(messi_network.G2_circle, target, origin):
+
             #print("unique simple path", unique_simple_path)
             first_edge_from_simple_path = [unique_simple_path[0], unique_simple_path[1]]
 
