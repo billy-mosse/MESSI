@@ -39,9 +39,9 @@ def main(debug=False):
     messi_network = MESSINetworkBuilder.get_network(debug)
 
 
-    show_matrices = input('Do you want the program to show debug info? (YES/NO. Default: NO)')
+    show_matrices = input('Do you want the program to show debug info? (YES/NO. Default: NO)\n')
 
-    if 'Y' in show_matrices:
+    if 'y' in show_matrices.lower():
         show_matrices = True
     else:
         show_matrices = False
@@ -106,6 +106,7 @@ def main(debug=False):
         print("Complexes: ")
         print(messi_network.complexes)
 
+
         print("Complexes names:")
         print(messi_network.complexes_names)
 
@@ -115,6 +116,9 @@ def main(debug=False):
         print("Species names:")
         print(messi_network.species_names)
 
+        print('Partitions')
+        print(messi_network.partitions_names)
+
         print("Mperp")
         print(Mperp)
 
@@ -123,6 +127,8 @@ def main(debug=False):
 
         print("M")
         print(M)
+
+
 
         print("educt complexes matrix")
         print(educt_complexes_matrix)
@@ -190,7 +196,6 @@ def main(debug=False):
     #print(Bperp)
     #exit(0)
 
-    print("Mperp", Mperp)
 
     print("We now compute multistationarity witnesses...")
     found_kappa = False
@@ -241,13 +246,46 @@ def main(debug=False):
 
 
                 print('')
-                print('Reaction constants')
+                print('Reaction constants:')
                 Ck = ''
                 for index, val in enumerate(kappa):
-                    print(index, val)
                     Ck +='%s: %s | ' % (messi_network.constants_names[index], str(val))
                 Ck = Ck[:-3]
                 print(Ck)
+
+
+                print('')
+                print('Total Amounts:')
+
+                total_amounts_vec = []
+                for relation in messi_network.linear_relations:
+                    species_text = ''
+                    total_value = 0
+                    for species in relation:
+                        total_value += x1[species]
+                        species_text += messi_network.species_names[species] + ' + '
+                    total_amounts_vec.append(total_value)
+                    species_text = species_text[:-3]
+                    print('%s = ' % species_text, "{:.6f}".format(total_value))
+
+                all_OK = True
+                for index, relation in enumerate(messi_network.linear_relations):
+                    species_text = ''
+                    total_value = 0
+                    for species in relation:
+                        total_value += x2[species]
+                        species_text += messi_network.species_names[species] + ' + '
+                    species_text = species_text[:-3]
+
+                    if abs(total_value - total_amounts_vec[index]) > 1e-3:
+                        print('WARNING', species_text, 'got a different result with x2.')
+                        print('Value:', "{:.6f}".format(total_value))
+                        all_OK = False
+                    #print('%s = ' % species_text, "{:.6f}".format(total_value))
+                if all_OK:
+                    print('Total Amounts were calculated with both x1 and x2 and the result did not change.')
+
+
                 print("_______________________________________")
             input("Press ENTER to continue.")
         return found_kappa

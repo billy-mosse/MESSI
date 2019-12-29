@@ -108,6 +108,74 @@ class MESSINetwork:
             self.partitions = None
             self.partitions_names = None
 
+        self.linear_relations = self.buildLinearRelations()
+
+
+
+    def reacts_via_intermediates_starting_from_partitions(self, alpha, intermediate):
+
+       #print("complexes", self.complexes)
+       #print("complexes_names", self.complexes_names)
+       intermediates = self.partitions[0]
+       intermediate_index = self.complexes.index([intermediate])
+
+       P = self.partitions[alpha]
+       for complex_index, complex in enumerate(self.complexes):
+           found_complex = False
+           for species in complex:
+               if species in P:
+
+                   #Deberia parar si ya entre una vez...
+                   found_complex = True
+                   #print("G", self.G.edges())
+                   #print(complex)
+                   #print(intermediate)
+                   simple_paths = nx.all_simple_paths(self.G, complex_index, intermediate_index)
+
+                   L = list(simple_paths)
+
+                   for simple_path in L:
+
+                       only_goes_through_intermediates=True
+                       #print("simple path")
+                       #print(simple_path)
+
+                       #Ignoramos las puntas
+                       for index, c in enumerate(simple_path[1:-1]):
+                           #print(self.complexes[c])
+                           for species_index in self.complexes[c]:
+                               #print("species")
+                               #print(self.species[species_index])
+
+                               #TODO los intermediates deberian ser indices o nombres?
+                               #Me parece que es mas facil que sean indices
+                               if species_index not in intermediates:
+                                   #we could also break the loops here.
+                                   only_goes_through_intermediates=False
+
+                       if only_goes_through_intermediates:
+                           return True
+       return False
+
+
+
+    def buildLinearRelations(self):
+        '''builds linear relations as described in Notation 11 in the arxiv paper'''
+
+        relations = []
+        for alpha in range(1, len(self.partitions)):
+            ks = []
+            for intermediate in self.partitions[0]:
+                if self.reacts_via_intermediates_starting_from_partitions(alpha, intermediate):
+                    ks.append(intermediate)
+
+
+            for species in self.partitions[alpha]:
+                ks.append(species)
+
+            relations.append(ks)
+
+        return relations
 
     def intermediates(self):
         """Retrieves a list of the intermediate complexes
@@ -677,7 +745,8 @@ def get_network(debug = False):
                     P = []
                     for line in lines:
                         node = line.strip()
-                        if node == 'END':
+
+                        if node == 'END' and not core_nodes:
                             core_nodes = True
                             continue
 
@@ -686,7 +755,8 @@ def get_network(debug = False):
                         else:
                             if 'END' in node:
                                 i = i+1
-                                P_cores.append(P.copy())
+                                new_P = P.copy()
+                                P_cores.append(new_P)
                                 P = []
                             else:
                                 P.append(node)
@@ -781,6 +851,7 @@ def get_network(debug = False):
             var = input("Press ENTER to continue with the program.")
 
         #TODO: finish.
+
         partitions_names = []
         partitions_names.append(P0_intermediates)
         for core_partition in P_cores:

@@ -194,7 +194,7 @@ def check_if_sigma_subperp_is_mixed(M, Bperp, s, d):
         return True
     else:
         print("Sigma is NOT mixed. This system is monostationary.")
-        exit(0)
+        return False
 
     #Faltaria armar la tabla, que es bastante grande, no? No se si la voy a armar
     #Pero si voy  devolver
