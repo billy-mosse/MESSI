@@ -24,6 +24,9 @@ import copy
 
 #For nice-printing of tables
 import texttable as tt
+import os, os.path
+
+
 
 
 #Custom libraries
@@ -187,7 +190,9 @@ def main(debug=False):
     print("Getting equal sign vectors...")
     #only_one = False
     equal_sign_vectors = []
+    only_one = False
     if 'y' in only_one_string.lower() or len(only_one_string) == 0:
+        only_one = True
         equal_sign_vectors = CircuitUtils.get_only_one_equal_sign_vector(s, circuits_information_M, circuits_information_Bperp)
     else:
         equal_sign_vectors = CircuitUtils.get_equal_sign_vectors(s, circuits_information_M, circuits_information_Bperp)
@@ -203,91 +208,133 @@ def main(debug=False):
         print("No solutions were found. Was the system not s-toric?")
         print("TODO: this should be ckecked automatically")
     else:
-        #input("Step 5) Conformal vectors v and w")
-        if len(equal_sign_vectors) > 1:
-            print("For each solution orthant, we will now produce the steady states x1 and x2, and the reaction constants kappa...")
-        else:
-            print("We will now produce the steady states x1 and x2, and the reaction constants kappa, for the pair of equal sign vectors found...")
 
-        #We iterate the list equal_sign_vectors, while simultaneously generating counter "index"
-        for index, L in enumerate(equal_sign_vectors):
-
-            #Here, %d is replaced by index+1.
-
-            first_solution = L
-            w = first_solution[0] #viene de Stoc
-            v = first_solution[1] #Viene de binomios
-
-            #input("6) x^1, x^2, \\kappa")
+        amount_files =  len([name for name in os.listdir('outputs') if os.path.isfile(name)])
+        output_filename = 'outputs/output_%d.log' % amount_files
+        with open(output_filename, 'w') as f:
+            #input("Step 5) Conformal vectors v and w")
+            if not only_one:
+                print("For each solution orthant, we will now produce the steady states x1 and x2, and the reaction constants kappa...")
+            else:
+                print("We will now produce the steady states x1 and x2, and the reaction constants kappa, for the pair of equal sign vectors found...")
+                f.write('(Only 1 pair of steady states was searched for)\n')
 
 
-            x1, x2 = Utils.get_multistationarity_witnesses(w, v, s, d)
 
-            #Step 6
-            #TODO: there are some hardcoded stuff inside this function
-            kappa = Utils.get_kappa2(x1,x2, positive_Mperp, educt_complexes_matrix, messi_network, toric_N)
-
-            if isinstance(kappa, list):
-                found_kappa = True
-                print('Concentrations for x1:')
-                CX1 = ''
-                for index, val in enumerate(x1):
-                    CX1 +='%s: %s | ' % (messi_network.species_names[index], str(val))
-                CX1 = CX1[:-3]
-                print(CX1)
-
-                print('')
-                print('Concentrations for x2:')
-                CX2 = ''
-                for index, val in enumerate(x2):
-                    CX2 +='%s: %s | ' % (messi_network.species_names[index], str(val))
-                CX2 = CX2[:-3]
-                print(CX2)
+            f.write('Species'  + '\n')
+            f.write(str(messi_network.species_names) + '\n\n' )
+            f.write('Partitions'  + '\n')
+            f.write(str(messi_network.partitions_names)  + '\n\n')
+            f.write('G'  + '\n')
+            f.write(str(messi_network.G.edges(data=True))  + '\n\n')
+            #f.write('G1', messi_network.G1.edges(data=True))
+            #f.write('G1', messi_network.G2.edges(data=True))
+            #f.write('G2_circle', messi_network.G2_circle.edges(data=True))
 
 
-                print('')
-                print('Reaction constants:')
-                Ck = ''
-                for index, val in enumerate(kappa):
-                    Ck +='%s: %s | ' % (messi_network.constants_names[index], str(val))
-                Ck = Ck[:-3]
-                print(Ck)
+            #We iterate the list equal_sign_vectors, while simultaneously generating counter "index"
+            for index, L in enumerate(equal_sign_vectors):
+
+                #Here, %d is replaced by index+1.
+
+                first_solution = L
+                w = first_solution[0] #viene de Stoc
+                v = first_solution[1] #Viene de binomios
+
+                #input("6) x^1, x^2, \\kappa")
 
 
-                print('')
-                print('Total Amounts:')
+                x1, x2 = Utils.get_multistationarity_witnesses(w, v, s, d)
 
-                total_amounts_vec = []
-                for relation in messi_network.linear_relations:
-                    species_text = ''
-                    total_value = 0
-                    for species in relation:
-                        total_value += x1[species]
-                        species_text += messi_network.species_names[species] + ' + '
-                    total_amounts_vec.append(total_value)
-                    species_text = species_text[:-3]
-                    print('%s = ' % species_text, "{:.6f}".format(total_value))
-
-                all_OK = True
-                for index, relation in enumerate(messi_network.linear_relations):
-                    species_text = ''
-                    total_value = 0
-                    for species in relation:
-                        total_value += x2[species]
-                        species_text += messi_network.species_names[species] + ' + '
-                    species_text = species_text[:-3]
-
-                    if abs(total_value - total_amounts_vec[index]) > 1e-3:
-                        print('WARNING', species_text, 'got a different result with x2.')
-                        print('Value:', "{:.6f}".format(total_value))
-                        all_OK = False
-                    #print('%s = ' % species_text, "{:.6f}".format(total_value))
-                if all_OK:
-                    print('Total Amounts were calculated with both x1 and x2 and the result did not change.')
+                #Step 6
+                #TODO: there are some hardcoded stuff inside this function
+                kappa = Utils.get_kappa2(x1,x2, positive_Mperp, educt_complexes_matrix, messi_network, toric_N)
 
 
-                print("_______________________________________")
-            input("Press ENTER to continue.")
+                if isinstance(kappa, list):
+                    found_kappa = True
+                    print('Concentrations for x1:')
+                    CX1 = ''
+                    for index, val in enumerate(x1):
+                        CX1 +='%s: %s | ' % (messi_network.species_names[index], str(val))
+                    CX1 = CX1[:-3]
+                    print(CX1)
+
+                    print('')
+                    print('Concentrations for x2:')
+                    CX2 = ''
+                    for index, val in enumerate(x2):
+                        CX2 +='%s: %s | ' % (messi_network.species_names[index], str(val))
+                    CX2 = CX2[:-3]
+                    print(CX2)
+
+
+                    print('')
+                    print('Reaction constants:')
+                    Ck = ''
+                    for index, val in enumerate(kappa):
+                        Ck +='%s: %s | ' % (messi_network.constants_names[index], str(val))
+                    Ck = Ck[:-3]
+                    print(Ck)
+
+
+                    print('')
+                    print('Total Amounts:')
+
+                    total_amounts_vec = []
+                    TA_toprint = ''
+                    for relation in messi_network.linear_relations:
+                        species_text = ''
+                        total_value = 0
+                        for species in relation:
+                            total_value += x1[species]
+                            species_text += messi_network.species_names[species] + ' + '
+                        total_amounts_vec.append(total_value)
+                        species_text = species_text[:-3]
+                        TA_toprint += ('%s = ' % species_text +  "{:.6f}".format(total_value) + '\n')
+                        print('%s = ' % species_text, "{:.6f}".format(total_value))
+
+                    all_OK = True
+                    for index, relation in enumerate(messi_network.linear_relations):
+                        species_text = ''
+                        total_value = 0
+                        for species in relation:
+                            total_value += x2[species]
+                            species_text += messi_network.species_names[species] + ' + '
+                        species_text = species_text[:-3]
+
+                        if abs(total_value - total_amounts_vec[index]) > 1e-3:
+                            print('WARNING', species_text, 'got a different result with x2.')
+                            print('Value:', "{:.6f}".format(total_value))
+                            all_OK = False
+                        #print('%s = ' % species_text, "{:.6f}".format(total_value))
+                    if all_OK:
+                        print('Total Amounts were calculated with both x1 and x2 and the result did not change.')
+
+
+
+
+                    f.write('Concentrations for x1:'  + '\n')
+                    f.write(CX1  + '\n\n')
+
+
+                    f.write('Concentrations for x2:' + '\n')
+                    f.write(CX2 + '\n\n')
+
+
+                    f.write('Reaction constants:' + '\n')
+                    f.write(Ck  + '\n\n')
+
+
+                    f.write('Total Amounts:'  + '\n')
+                    f.write(TA_toprint  + '\n')
+                    f.write("_______________________________________\n\n\n")
+
+                    print("_______________________________________")
+                input("Press ENTER to continue.\n")
+
+
+
         return found_kappa
 
 
