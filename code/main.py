@@ -209,8 +209,11 @@ def main(debug=False):
         print("TODO: this should be ckecked automatically")
     else:
 
-        amount_files =  len([name for name in os.listdir('outputs') if os.path.isfile(name)])
+        amount_files =  len([name for name in os.listdir('./outputs') if os.path.isfile('./outputs/' + name)])
+
         output_filename = 'outputs/output_%d.log' % amount_files
+
+
         with open(output_filename, 'w') as f:
             #input("Step 5) Conformal vectors v and w")
             if not only_one:
