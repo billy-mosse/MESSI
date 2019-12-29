@@ -72,6 +72,7 @@ def main(debug=False):
 
     M = MatrixUtils.build_integer_basis_of_stoichiometric_matrix(messi_network)
     Bperp = MatrixUtils.build_integer_basis_of_orthogonal_complement_of_binomial_matrix(messi_network)
+
     #print("M - sus filas son una base de S")
     #print(M)
 
@@ -193,9 +194,29 @@ def main(debug=False):
             kappa = Utils.get_kappa2(x1,x2, positive_Mperp, educt_complexes_matrix, messi_network, toric_N)
 
             if kappa:
-                print("x1 is %s" % x1)
-                print("x2 is %s" % x2)
-                print("kappa is " + kappa)
+                print('Concentrations for x1:')
+                CX1 = ''
+                for index, val in enumerate(x1):
+                    CX1 +='%s: %s | ' % (messi_network.species_names[index], str(val))
+                CX1 = CX1[:-3]
+                print(CX1)
+
+                print('')
+                print('Concentrations for x2:')
+                CX2 = ''
+                for index, val in enumerate(x2):
+                    CX2 +='%s: %s | ' % (messi_network.species_names[index], str(val))
+                CX2 = CX2[:-3]
+                print(CX2)
+
+
+                print('')
+                print('Reaction constants')
+                Ck = ''
+                for index, val in enumerate(x2):
+                    Ck +='%s: %s | ' % (messi_network.constants_names[index], str(val))
+                Ck = Ck[:-3]
+                print(Ck)
                 print("_______________________________________")
             input("Press ENTER to continue.")
 

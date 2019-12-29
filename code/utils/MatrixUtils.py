@@ -464,7 +464,6 @@ def get_pairs_of_binomial_exponents(messi_network):
     #Simple path
     #print("Getting pairs of exponents of type 2")
     L2 = get_pairs_of_binomial_exponents_of_type_2(messi_network)
-    #print("L2", len(L2), L2)
 
     exponents = L1 + L2
 

@@ -58,7 +58,7 @@ def check_if_sigma_subperp_is_mixed_model(M, Bperp, s, d):
         elif(result < 0):# and '-' not in signs:
             signs.add('-')
             witnesses_minus += 1#.append(['-', J, Jc])
-        Sigma_subperp.append([multiplier, mM, mB, result])
+        Sigma_subperp.append(result)
 
     """Sigma_supraperp = [["J", "menor M^\\perp", "Jc", "menor B^t", "Result"]]
     for JList in L:
@@ -95,7 +95,7 @@ def check_if_sigma_subperp_is_mixed_model(M, Bperp, s, d):
         return True, witnesses_plus, witnesses_minus, Sigma_subperp
     else:
         print("Sigma_perp is NOT mixed")
-        return False, None, None
+        return False, None, None, None
 
 
 #TODO: maybe we could use sets.

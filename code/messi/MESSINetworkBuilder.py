@@ -75,7 +75,7 @@ class MESSINetwork:
 
     """
 
-    def __init__(self, G=None, complexes=[], species=[], partitions=[], complexes_names=[], species_names=[], partitions_names = [], test=False):
+    def __init__(self, G=None, complexes=[], species=[], partitions=[], complexes_names=[], species_names=[], partitions_names = [], constants_names = [], test=False):
         """
         Builds a MESSINetwork and the derived graphs.
 
@@ -92,6 +92,8 @@ class MESSINetwork:
 
         self.complexes_names = complexes_names
         self.species_names = species_names
+
+        self.constants_names = constants_names
 
         #Nasty hack
         if not test:
@@ -567,8 +569,10 @@ def get_network(debug = False):
 
     species_index = 0
     reactions_only_indices = []
+    constants_names = []
     for reaction in reactions:
         reaction_only_indices = []
+        constants_names.append(reaction[2])
         #[:2] So we don't get the coefficients
         for complex_name in reaction[:2]:
             complex_numbers = []
@@ -788,7 +792,7 @@ def get_network(debug = False):
                 partition_indices.append(species_names.index(species_name))
             partitions.append(partition_indices)
 
-    return MESSINetwork(G, complexes, species, partitions, complexes_names, species_names, partitions_names)
+    return MESSINetwork(G, complexes, species, partitions, complexes_names, species_names, partitions_names, constants_names)
 
 '''
 Para el primer mensaje:
