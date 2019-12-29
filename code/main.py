@@ -139,7 +139,9 @@ def main(debug=False):
 
     #exits if false
     print("Checking if the system is multisatationary by checking Sigma's signs...")
-    SigmaUtils.check_if_sigma_subperp_is_mixed(M, Bperp, s, d)
+    is_mixed = SigmaUtils.check_if_sigma_subperp_is_mixed(M, Bperp, s, d)
+    if not is_mixed:
+        return False
 
     circuits_information_M = CircuitUtils.CircuitsInformation(M)
     #print(circuits_information_M.circuits)
@@ -163,8 +165,10 @@ def main(debug=False):
     #print(Bperp)
     #exit(0)
 
-    print("We now compute multistationarity witnesses...")
+    print("Mperp", Mperp)
 
+    print("We now compute multistationarity witnesses...")
+    found_kappa = False
     if len(equal_sign_vectors) == 0:
         print("No solutions were found. Was the system not s-toric?")
         print("TODO: this should be ckecked automatically")
@@ -193,7 +197,8 @@ def main(debug=False):
             #TODO: there are some hardcoded stuff inside this function
             kappa = Utils.get_kappa2(x1,x2, positive_Mperp, educt_complexes_matrix, messi_network, toric_N)
 
-            if kappa:
+            if isinstance(kappa, list):
+                found_kappa = True
                 print('Concentrations for x1:')
                 CX1 = ''
                 for index, val in enumerate(x1):
@@ -213,12 +218,14 @@ def main(debug=False):
                 print('')
                 print('Reaction constants')
                 Ck = ''
-                for index, val in enumerate(x2):
+                for index, val in enumerate(kappa):
+                    print(index, val)
                     Ck +='%s: %s | ' % (messi_network.constants_names[index], str(val))
                 Ck = Ck[:-3]
                 print(Ck)
                 print("_______________________________________")
             input("Press ENTER to continue.")
+        return found_kappa
 
 
 

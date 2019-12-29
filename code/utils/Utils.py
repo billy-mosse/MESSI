@@ -233,7 +233,7 @@ def get_kappa2(x1, x2, positive_Mperp, educt_complexes_matrix, messi_network, to
     if np.linalg.norm(res1) < 0.0001 and\
     np.linalg.norm(res2) < 0.0001:
         print("We have found multistationarity witnesses.")
-        return str(k_vec)
+        return k_vec
     else:
         print("Error")
         return False
