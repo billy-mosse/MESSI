@@ -38,21 +38,17 @@ def main(debug=False):
     """
     messi_network = MESSINetworkBuilder.get_network(debug)
 
+
+    show_matrices = input('Do you want the program to show debug info? (YES/NO. Default: NO)')
+
+    if 'Y' in show_matrices:
+        show_matrices = True
+    else:
+        show_matrices = False
     #print(messi_network.species_names)
     #exit(0)
 
-    if debug and False:
-        print("Complexes: ")
-        print(messi_network.complexes)
 
-        print("Complexes names:")
-        print(messi_network.complexes_names)
-
-        print("Species:")
-        print(messi_network.species)
-
-        print("Species names:")
-        print(messi_network.species_names)
     #for easier reading
     #Bperp, Mt = HardcodedUtils.get_hardcoded_matrices()
 
@@ -102,22 +98,51 @@ def main(debug=False):
     #toric M
     positive_Mperp = MatrixUtils.build_positive_integer_basis_of_kernel_of_stoichiometric_matrix(messi_network)
     educt_complexes_matrix = MatrixUtils.build_educt_complexes_matrix(messi_network)
-    if debug and False:
-        print("positive M perp")
-        print(positive_Mperp)
-        print("M")
-        print(M)
-        print("educt complexes matrix")
-        print(educt_complexes_matrix)
 
 
+    if show_matrices:
+        print('.' * 30)
+        print('.' * 30)
+        print("Complexes: ")
+        print(messi_network.complexes)
+
+        print("Complexes names:")
+        print(messi_network.complexes_names)
+
+        print("Species:")
+        print(messi_network.species)
+
+        print("Species names:")
+        print(messi_network.species_names)
 
         print("Mperp")
         print(Mperp)
 
+        print("positive M perp")
+        print(positive_Mperp)
+
+        print("M")
+        print(M)
+
+        print("educt complexes matrix")
+        print(educt_complexes_matrix)
 
         print("Bt transpose")
         print(Bt.transpose())
+
+        print("d", d)
+
+        print("s", s)
+
+        print("stoichiometric matrix", stochiometric_matrix2)
+
+        print("Bperp", Bperp)
+
+        print("toric N", toric_N)
+
+        print('.' * 30)
+        print('.' * 30)
+
     #input("")
     #print("d")
     #print(d)
