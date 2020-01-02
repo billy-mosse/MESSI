@@ -42,7 +42,7 @@ def main(debug=False):
     messi_network = MESSINetworkBuilder.get_network(debug)
 
 
-    show_matrices = input('Do you want the program to show debug info? (YES/NO. Default: NO)\n')
+    show_matrices = input('Do you want the program to show debug info, i.e., additional information computed by the program? (YES/NO. Default: NO)\n')
 
     if 'y' in show_matrices.lower():
         show_matrices = True
@@ -103,6 +103,7 @@ def main(debug=False):
     educt_complexes_matrix = MatrixUtils.build_educt_complexes_matrix(messi_network)
 
 
+    #alternative_Mperp = MatrixUtils.build_alternative_positive_integer_basis_of_ortogonal_complement_of_stoichiometric_matrix(messi_network)
     if show_matrices:
         print('.' * 30)
         print('.' * 30)
@@ -148,6 +149,10 @@ def main(debug=False):
         print("Bperp", Bperp)
 
         print("toric N", toric_N)
+
+        print('alternative Mperp')
+
+        #print(alternative_Mperp)
 
         print('.' * 30)
         print('.' * 30)
@@ -209,11 +214,18 @@ def main(debug=False):
         print("TODO: this should be ckecked automatically")
     else:
 
-        amount_files =  len([name for name in os.listdir('./outputs') if os.path.isfile('./outputs/' + name)])
+        max_number = 0
+        files =  [name for name in os.listdir('./outputs') if os.path.isfile('./outputs/' + name)]
+        for filename in files:
+            try:
+                dot_index = filename.index('.')
+                number = int(filename[7:dot_index])
+                max_number = max(max_number, number)
+            except ValueError:
+                continue
+        output_filename = 'outputs/output_%d.log' % (max_number + 1)
 
-        output_filename = 'outputs/output_%d.log' % amount_files
-
-
+        print('Saving the output in ' + output_filename + '\n')
         with open(output_filename, 'w') as f:
             #input("Step 5) Conformal vectors v and w")
             if not only_one:
