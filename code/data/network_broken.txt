@@ -1,0 +1,6 @@
+(S0+E,Y,k1)
+(Y,S1+E,k2)
+(S1+E,S2+E,k3)
+(S2+F,S1+F,k4)
+(S1+F,S0+F,k5)
+END

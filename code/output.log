@@ -1,0 +1,129 @@
+Welcome to an implementation of Algorithm 1 of the paper The structure of MESSI biological systems.
+Please, input the graph G corresponding to the reaction network you want to analyze.
+Input each reaction with the following format: (SOURCE COMPLEX, TARGET COMPLEX, REACTION_CONSTANT)
+One example would be: (S0 + E, ES0, k1).
+When finished, enter the command END
+Does the network have a MESSI structure? Write YES or NO
+Great! Then if it's s-toric we will be able to check multistationarity.
+Please introduce the species for S^(0). As usual, write END when finished:
+Please introduce the species for S^(1). Press END to advance to the next set of species and END_CORES to let us know this was the last set.
+Please introduce the species for S^(2). Press END to advance to the next set of species and END_CORES to let us know this was the last set.
+Please introduce the species for S^(3). Press END to advance to the next set of species and END_CORES to let us know this was the last set.
+Please introduce the species for S^(4). Press END to advance to the next set of species and END_CORES to let us know this was the last set.
+Please introduce the species for S^(5). Press END to advance to the next set of species and END_CORES to let us know this was the last set.
+I'm trusting you that this is a MESSI structure...
+We would like to check that it is s-toric...
+
+TODO: check other conditions.
+Assuming the network is s-toric, by Theorem 4.8, it's toric.
+Morover, if there is a unique simple path between each node of the graph G2, the exponents of the binomials can be explicitely computed:
+to be continued...
+
+Press ENTER to continue with the program.Complexes: 
+[[0, 1], [2], [3, 1], [3, 4], [5], [0, 4], [6, 3], [7], [8, 3], [8, 4], [9], [6, 4], [10, 8], [11], [12, 8], [12, 4], [13], [10, 4]]
+Complexes names:
+['S01+E', 'Y01', 'S11+E', 'S11+F', 'Y11', 'S01+F', 'S02+S11', 'Y02', 'S12+S11', 'S12+F', 'Y12', 'S02+F', 'S03+S12', 'Y03', 'S13+S12', 'S13+F', 'Y13', 'S03+F']
+Species:
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+Species names:
+['S01', 'E', 'Y01', 'S11', 'F', 'Y11', 'S02', 'Y02', 'S12', 'Y12', 'S03', 'Y03', 'S13', 'Y13']
+M
+[[-1 -1  1  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  1 -1  1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1 -1  1  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0 -1  1  0  0  0  0  0  0]
+ [ 0  0  0  1  0  0  0 -1  1  0  0  0  0  0]
+ [ 0  0  0  0 -1  0  0  0 -1  1  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0 -1  0 -1  1  0  0]
+ [ 0  0  0  0  0  0  0  0  1  0  0 -1  1  0]
+ [ 0  0  0  0 -1  0  0  0  0  0  0  0 -1  1]]
+Bperp
+[[-1.  1.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.]
+ [-1.  0. -1. -1.  0. -1.  1.  0.  0.  0.  0.  0.  0.  0.]
+ [-1.  0. -1. -1.  0. -1.  0. -1. -1. -1.  1.  0.  0.  0.]
+ [-2.  0. -2. -1. -1. -2.  0. -1.  0. -1.  0.  0.  1.  0.]
+ [ 3.  0.  3.  2.  1.  3.  0.  2.  1.  2.  0.  1.  0.  1.]]
+positive M perp
+[[1. 2. 1. 2. 2. 2. 2. 2. 2.]
+ [0. 1. 1. 1. 1. 1. 1. 1. 1.]
+ [1. 1. 0. 1. 1. 1. 1. 1. 1.]
+ [2. 1. 1. 2. 2. 2. 2. 2. 2.]
+ [1. 0. 1. 1. 1. 1. 1. 1. 1.]
+ [1. 1. 0. 1. 1. 1. 1. 1. 1.]
+ [2. 2. 2. 1. 2. 1. 2. 2. 2.]
+ [1. 1. 1. 0. 1. 1. 1. 1. 1.]
+ [1. 1. 1. 1. 1. 0. 1. 1. 1.]
+ [2. 2. 2. 2. 1. 1. 2. 2. 2.]
+ [1. 1. 1. 1. 0. 1. 1. 1. 1.]
+ [1. 1. 1. 1. 1. 0. 1. 1. 1.]
+ [2. 2. 2. 2. 2. 2. 1. 2. 1.]
+ [1. 1. 1. 1. 1. 1. 0. 1. 1.]
+ [1. 1. 1. 1. 1. 1. 1. 1. 0.]
+ [2. 2. 2. 2. 2. 2. 2. 1. 1.]
+ [1. 1. 1. 1. 1. 1. 1. 0. 1.]
+ [1. 1. 1. 1. 1. 1. 1. 1. 0.]]
+M
+[[-1 -1  1  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  1 -1  1  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1 -1  1  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0 -1  1  0  0  0  0  0  0]
+ [ 0  0  0  1  0  0  0 -1  1  0  0  0  0  0]
+ [ 0  0  0  0 -1  0  0  0 -1  1  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0 -1  0 -1  1  0  0]
+ [ 0  0  0  0  0  0  0  0  1  0  0 -1  1  0]
+ [ 0  0  0  0 -1  0  0  0  0  0  0  0 -1  1]]
+educt complexes matrix
+[[1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0]
+ [0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0]
+ [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1]]
+Mperp
+[[ 0. -1. -1.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.  0.]
+ [-1.  1.  0. -1.  0. -1.  0. -1.  0.  0.  0.  0.  0.  0.]
+ [ 1. -1.  0.  1.  0.  1. -1.  0. -1. -1.  0. -1.  0.  0.]
+ [-1.  1.  0. -1.  1.  0.  1.  0.  1.  2. -1.  0. -1.  0.]
+ [ 0.  0.  0.  0. -1. -1.  0.  0.  0. -1.  0.  0.  0. -1.]]
+Bt
+[[-1 -1  1  0  0  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1 -1  1  0  0  0  0  0  0  0  0]
+ [ 0  0  0 -1  0  0 -1  1  0  0  0  0  0  0]
+ [ 0  0  0  0 -1  0  0  0 -1  1  0  0  0  0]
+ [ 0  0  0  0  0  0  0  0 -1  0 -1  1  0  0]
+ [ 0  0  0  0 -1  0  0  0  0  0  0  0 -1  1]
+ [ 1  1  0 -1 -1  0  0  0  0  0  0  0  0  0]
+ [ 0  0  0  1 -1  0  1  0 -1  0  0  0  0  0]
+ [ 0  0  0  0 -1  0  0  0  1  0  1  0 -1  0]]
+Sigma_perp is mixed! Great, then we can find v in T^perp and w in S with same sign.
+Press ENTER to continue.Two vectors with the same sign, corresponding to the orthant (-1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1), are [-1, 1, -1, -1, -1, -1, 1, 4, 1, 3, -3, -9, 13, -1], from M1, and [-11, 6, -5, -3, -2, -5, 4, 1, 3, 1, -4, -1, 1, -1], from M2.
+Two vectors with the same sign, corresponding to the orthant (-1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1, -1, -1, -1), are [-2, 2, -2, -2, 3, -4, 2, 10, -8, 4, 14, -8, -3, -3], from M1, and [-9, 6, -3, -6, 3, -3, 7, 1, -2, 1, 1, -1, -4, -1], from M2.
+Two vectors with the same sign, corresponding to the orthant (-1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1, 1, -1, 1), are [-1, 1, -1, -1, 1, -3, 1, 6, -9, 1, 3, 1, -5, 1], from M1, and [-9, 6, -3, -7, 4, -3, 9, 2, -2, 2, 4, 2, -2, 2], from M2.
+Two vectors with the same sign, corresponding to the orthant (-1, 1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, 1, 1), are [-3, 3, -3, 9, -1, -1, -2, -2, 3, -2, -10, 3, 3, 4], from M1, and [-9, 6, -3, 3, -6, -3, -5, -2, 4, -2, -2, 2, 8, 2], from M2.
+Two vectors with the same sign, corresponding to the orthant (-1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, -1, 1, -1), are [-5, 5, -5, 8, -2, -4, -8, 6, 2, 8, -3, -8, 13, -2], from M1, and [-8, 6, -2, 4, -6, -2, -2, 2, 8, 2, -11, -3, 3, -3], from M2.
+Two vectors with the same sign, corresponding to the orthant (-1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, 1, 1), are [-4, 4, -4, 8, -2, -4, -9, 4, 1, 3, -7, 1, 3, 3], from M1, and [-8, 6, -2, 4, -6, -2, -2, 2, 8, 2, -4, 4, 10, 4], from M2.
+Two vectors with the same sign, corresponding to the orthant (-1, 1, -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1), are [-4, 4, -4, 7, -1, -2, 1, 3, 1, 4, -3, -9, 13, -1], from M1, and [-8, 6, -2, 2, -4, -2, 1, 3, 7, 3, -9, -2, 2, -2], from M2.
+Two vectors with the same sign, corresponding to the orthant (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), are [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], from M1, and [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], from M2.
+Two vectors with the same sign, corresponding to the orthant (1, -1, 1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, 1), are [4, -4, 4, -7, 1, 2, -1, -3, -1, -4, 3, 9, -13, 1], from M1, and [8, -6, 2, -2, 4, 2, -1, -3, -7, -3, 9, 2, -2, 2], from M2.
+Two vectors with the same sign, corresponding to the orthant (1, -1, 1, -1, 1, 1, 1, -1, -1, -1, 1, -1, -1, -1), are [4, -4, 4, -8, 2, 4, 9, -4, -1, -3, 7, -1, -3, -3], from M1, and [8, -6, 2, -4, 6, 2, 2, -2, -8, -2, 4, -4, -10, -4], from M2.
+Two vectors with the same sign, corresponding to the orthant (1, -1, 1, -1, 1, 1, 1, -1, -1, -1, 1, 1, -1, 1), are [5, -5, 5, -8, 2, 4, 8, -6, -2, -8, 3, 8, -13, 2], from M1, and [8, -6, 2, -4, 6, 2, 2, -2, -8, -2, 11, 3, -3, 3], from M2.
+Two vectors with the same sign, corresponding to the orthant (1, -1, 1, -1, 1, 1, 1, 1, -1, 1, 1, -1, -1, -1), are [3, -3, 3, -9, 1, 1, 2, 2, -3, 2, 10, -3, -3, -4], from M1, and [9, -6, 3, -3, 6, 3, 5, 2, -4, 2, 2, -2, -8, -2], from M2.
+Two vectors with the same sign, corresponding to the orthant (1, -1, 1, 1, -1, 1, -1, -1, 1, -1, -1, -1, 1, -1), are [1, -1, 1, 1, -1, 3, -1, -6, 9, -1, -3, -1, 5, -1], from M1, and [9, -6, 3, 7, -4, 3, -9, -2, 2, -2, -4, -2, 2, -2], from M2.
+Two vectors with the same sign, corresponding to the orthant (1, -1, 1, 1, -1, 1, -1, -1, 1, -1, -1, 1, 1, 1), are [2, -2, 2, 2, -3, 4, -2, -10, 8, -4, -14, 8, 3, 3], from M1, and [9, -6, 3, 6, -3, 3, -7, -1, 2, -1, -1, 1, 4, 1], from M2.
+Two vectors with the same sign, corresponding to the orthant (1, -1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1, -1, 1), are [1, -1, 1, 1, 1, 1, -1, -4, -1, -3, 3, 9, -13, 1], from M1, and [11, -6, 5, 3, 2, 5, -4, -1, -3, -1, 4, 1, -1, 1], from M2.
+For each solution orthanth, we will now produce the steady states x1 and x2, and the reaction constants kappa
+Producing witness N° 1
+x1 is [17.40174377556259, 3.4918602412159587, 7.9098835343466325, 4.745930120607979, 3.163953413738653, 7.9098835343466325, 2.327906827477306, 0.01865736036377405, 1.7459301206079794, 0.05239569649125595, 4.209582785965024, 1.000123425035946, 2.2603345160816307e-06, 1.5819767068693265]
+x2 is [6.401743775562591, 9.491860241215958, 2.9098835343466325, 1.7459301206079794, 1.163953413738653, 2.9098835343466325, 6.327906827477306, 1.018657360363774, 4.745930120607979, 1.052395696491256, 0.2095827859650238, 0.00012342503594618505, 1.000002260334516, 0.5819767068693265]
+Error
+None
+_______________________________________
+Press ENTER to continue.

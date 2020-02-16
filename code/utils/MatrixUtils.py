@@ -193,8 +193,26 @@ def build_positive_integer_basis_of_kernel_of_stoichiometric_matrix(messi_networ
     #print("row basis")
     #print(row_basis)
 
+
     return build_integer_basis_matrix_of_orthogonal_complement_of_matrix(row_basis, positive = True)
 
+
+def build_alternative_positive_integer_basis_of_ortogonal_complement_of_stoichiometric_matrix(messi_network):
+    #don't forget to extract column basis
+    try:
+        L = []
+        empty_row = [0] * len(messi_network.species)
+        for linear_relation in messi_network.linear_relations:
+            row = empty_row.copy()
+            for number in linear_relation:
+                row[number] = 1
+            L.append(row)
+
+
+        M = np.array(L)
+        return extract_row_basis(M)
+    except ValueError:
+        return 'FAILED COMPUTATION'
 
 def build_positive_integer_basis_of_ortogonal_complement_of_stoichiometric_matrix(messi_network):
     integer_basis_of_orthogonal_complement_of_stoichiometric_matrix = build_integer_basis_of_orthogonal_complement_of_stoichiometric_matrix(messi_network)
@@ -237,6 +255,7 @@ def build_integer_basis_matrix_of_orthogonal_complement_of_matrix(matrix, positi
 
 
     integer_matrix =  np.dot(column_basis_det, np.array(result))
+
     if positive:
         return get_positive_matrix(integer_matrix)
 
@@ -277,15 +296,18 @@ def get_unique_core_reacting_through_intermediates(messi_network, intermediate_i
         #TODO: probablemente el indice esta mal.
         #pero la funcion predecessors() efectivamente existe.
 
-        possible_core = next(messi_network.G.predecessors(possible_core))
+
         if possible_core in messi_network.core_complexes():
             found_complex = True
+        else:
+            possible_core = next(messi_network.G.predecessors(possible_core))
 
     return possible_core
 
 
 
 def phi(messi_network, intermediate_index):
+
     unique_core_reacting_through_intermediates \
     = get_unique_core_reacting_through_intermediates(messi_network, intermediate_index)
 
@@ -493,6 +515,7 @@ def get_binomial_basis(messi_network):
     L = []
     pairs_of_binomial_exponents = get_pairs_of_binomial_exponents(messi_network)
 
+
     #En el test esto se va a romper.
 
     #
@@ -512,6 +535,7 @@ def build_binomial_matrix(messi_network):
     builds the binomial matrix B, as described in the MESSI paper
     """
     binomial_basis = get_binomial_basis(messi_network)
+
     #print("Binomial basis: ")
     #print(binomial_basis)
 

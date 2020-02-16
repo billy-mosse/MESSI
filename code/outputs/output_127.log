@@ -1,0 +1,26 @@
+(Only 1 pair of steady states was searched for)
+Species
+['S0', 'E', 'Y', 'S1', 'S2', 'F']
+
+Partitions
+[['Y'], ['S0', 'S1', 'S2'], ['E']]
+
+G
+[(0, 1, {'reaction_constant': 'k1'}), (1, 2, {'reaction_constant': 'k2'}), (2, 3, {'reaction_constant': 'k3'}), (4, 5, {'reaction_constant': 'k4'}), (5, 6, {'reaction_constant': 'k5'})]
+
+Concentrations for x1:
+S0: 1.052395696491256 | E: 0.15651764274966565 | Y: 1.5819767068693265 | S1: 1.5819767068693265 | S2: 1.7459301206079794 | F: 1
+
+Concentrations for x2:
+S0: 0.05239569649125595 | E: 1.1565176427496657 | Y: 0.5819767068693265 | S1: 0.5819767068693265 | S2: 4.745930120607979 | F: 1.0
+
+Reaction constants:
+k1: 6.070963726127072 | k2: 0.6321205588285577 | k3: 4.038653711643048 | k4: 0.5727606094863484 | k5: 0.6321205588285577
+
+Total Amounts:
+Y + S0 + S1 + S2 = 5.962279
+Y + E = 1.738494
+
+_______________________________________
+
+

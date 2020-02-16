@@ -57,7 +57,11 @@ def main(debug=False):
 
     Mperp = MatrixUtils.build_integer_basis_of_orthogonal_complement_of_stoichiometric_matrix(messi_network)
 
+    #rint('Mperp', Mperp)
+
     Bt = MatrixUtils.build_binomial_matrix(messi_network).transpose()
+
+    #print('Bt', Bt)
 
 
     #print("Mperp", Mperp)
@@ -69,14 +73,23 @@ def main(debug=False):
 
     toric_N = MatrixUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
 
+    #print('toric_N', toric_N)
+
     M = MatrixUtils.build_integer_basis_of_stoichiometric_matrix(messi_network)
+
+    #print('M', M)
+
+
     Bperp = MatrixUtils.build_integer_basis_of_orthogonal_complement_of_binomial_matrix(messi_network)
+    #print('Bperp', Bperp)
 
     #print("M - sus filas son una base de S")
     #print(M)
 
     #print("Stochiometric matrix - las filas generan S")
     stochiometric_matrix2 = MatrixUtils.build_stoichiometric_matrix_from_messi_network(messi_network)
+
+    #print('stoichiometrix matrix', stochiometric_matrix2)
 
     #print(stochiometric_matrix2.transpose())
 
@@ -183,10 +196,8 @@ def main(debug=False):
         return False
 
     circuits_information_M = CircuitUtils.CircuitsInformation(M)
-    #print(circuits_information_M.circuits)
 
     circuits_information_Bperp = CircuitUtils.CircuitsInformation(Bperp)
-    #print(circuits_information_Bperp.circuits)
 
     #Steps 2-5
 
@@ -198,9 +209,9 @@ def main(debug=False):
     only_one = False
     if 'y' in only_one_string.lower() or len(only_one_string) == 0:
         only_one = True
-        equal_sign_vectors = CircuitUtils.get_only_one_equal_sign_vector(s, circuits_information_M, circuits_information_Bperp)
+        equal_sign_vectors = CircuitUtils.get_only_one_equal_sign_vector(s, circuits_information_Bperp, circuits_information_M)
     else:
-        equal_sign_vectors = CircuitUtils.get_equal_sign_vectors(s, circuits_information_M, circuits_information_Bperp)
+        equal_sign_vectors = CircuitUtils.get_equal_sign_vectors(s, circuits_information_Bperp, circuits_information_M)
 
     #print(M)
     #print(Bperp)
@@ -253,8 +264,8 @@ def main(debug=False):
                 #Here, %d is replaced by index+1.
 
                 first_solution = L
-                w = first_solution[0] #viene de Stoc
-                v = first_solution[1] #Viene de binomios
+                v = first_solution[0] #viene de Stoc
+                w = first_solution[1] #Viene de binomios
 
                 #input("6) x^1, x^2, \\kappa")
 

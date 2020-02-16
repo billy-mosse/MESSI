@@ -87,8 +87,14 @@ def is_conformal(orthant, circuit):
     for i in range(0, len(orthant)):
 
         #No son conformes si tienen signos opuestos, distintos de cero, en alguna coordenada.
+
+        if orthant[i] == 0 and circuit[i] != 0:
+            return False
+
         if orthant[i] * circuit[i] < 0:
             return False
+
+    #Either the circuit is zero or they have the same sign
     return True
 
 #def sign(x):

@@ -120,6 +120,8 @@ def get_only_one_equal_sign_vector(s, circuits_information_M1, circuits_informat
         is_zero_or_invalid = True
         #union of the circuits conformal to the orthant
         U_M1 = Utils.union(conformal_circuits_M1)
+
+
         is_zero_or_invalid = True
         if U_M1 != None:
             for elt in U_M1:
@@ -128,10 +130,16 @@ def get_only_one_equal_sign_vector(s, circuits_information_M1, circuits_informat
 
         #print(U_M1)
 
+
         if U_M1 != None and Utils.has_equal_sign(orthant, U_M1) and not is_zero_or_invalid:
+
             #Si el ortante tiene soporte igual a la union de los circuitos de M1, sigo con el paso 3 del algoritmo.
             conformal_circuits_M2 = circuits_information_M2.get_conformal_circuits(orthant)
+
+
             U_M2 = Utils.union(conformal_circuits_M2)
+
+
             if U_M2 != None and Utils.has_equal_sign(orthant, U_M2):
                 equal_sign_vectors.append([U_M1, U_M2])
 
@@ -263,6 +271,7 @@ def get_equal_sign_orthants(s, circuits_information_M1, circuits_information_M2)
     solution_orthants = []
     #Steps 2,3,4
     for orthant in orthants:
+        print(orthant)
         conformal_circuits_M1 = circuits_information_M1.get_conformal_circuits(orthant)
 
         #union of the circuits conformal to the orthant

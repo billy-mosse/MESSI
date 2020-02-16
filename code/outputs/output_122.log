@@ -1,0 +1,10 @@
+(Only 1 pair of steady states was searched for)
+Species
+['S0', 'E', 'ES0', 'S1', 'F', 'FS1', 'P0', 'S1P0', 'P1', 'FP1']
+
+Partitions
+[['ES0', 'FS1', 'S1P0', 'FP1'], ['S0', 'S1'], ['P0', 'P1'], ['E'], ['F']]
+
+G
+[(0, 1, {'reaction_constant': 'k1'}), (1, 0, {'reaction_constant': 'k2'}), (1, 2, {'reaction_constant': 'k3'}), (3, 4, {'reaction_constant': 'k4'}), (4, 3, {'reaction_constant': 'k5'}), (4, 5, {'reaction_constant': 'k6'}), (6, 7, {'reaction_constant': 'k7'}), (7, 6, {'reaction_constant': 'k8'}), (7, 8, {'reaction_constant': 'k9'}), (9, 10, {'reaction_constant': 'k10'}), (10, 9, {'reaction_constant': 'k11'}), (10, 11, {'reaction_constant': 'k12'})]
+
