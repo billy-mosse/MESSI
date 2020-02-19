@@ -203,14 +203,17 @@ def main(debug=False):
 
     print("Do you prefer to get only 1 multistationarity witness instead of all of them? It's faster this way. (YES/NO. Default: YES)")
     only_one_string = input()
-    print("Getting equal sign vectors...")
+
+
     #only_one = False
     equal_sign_vectors = []
     only_one = False
     if 'y' in only_one_string.lower() or len(only_one_string) == 0:
         only_one = True
+        print("Getting only one pair of equal sign vectors...")
         equal_sign_vectors = CircuitUtils.get_only_one_equal_sign_vector(s, circuits_information_Bperp, circuits_information_M)
     else:
+        print("Getting all equal sign vectors...")
         equal_sign_vectors = CircuitUtils.get_equal_sign_vectors(s, circuits_information_Bperp, circuits_information_M)
 
     #print(M)
@@ -249,6 +252,8 @@ def main(debug=False):
 
             f.write('Species'  + '\n')
             f.write(str(messi_network.species_names) + '\n\n' )
+            f.write('Complexes'  + '\n')
+            f.write(str(messi_network.complexes_names) + '\n\n' )
             f.write('Partitions'  + '\n')
             f.write(str(messi_network.partitions_names)  + '\n\n')
             f.write('G'  + '\n')
