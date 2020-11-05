@@ -7,11 +7,26 @@ import json
 app = Flask(__name__)
 app.config["TRAP_HTTP_EXCEPTIONS"] = True
 
+from messi import MESSINetworkBuilder
+
+import sys
 
 @app.route("/process", methods = ['POST'])
 def process_pdf():
-    net = request.form.get("net").replace('\n', '')
-    return json.dumps({'answer': net})
+    network = request.form.get("network")
+    partition = request.form.get("partitions")
+
+    network_rows = network.split('\n')
+    partition_rows = partition.split('\n')
+
+    print(network)
+    print(partition)
+    sys.stdout.flush()
+
+    return json.dumps({'answer': "GOL"})
+
+    messi = MESSINetworkBuilder.get_network_from_text(network_rows, partition_rows)
+    return json.dumps({'answer': str(messi)})
 
 
 @app.errorhandler(404)

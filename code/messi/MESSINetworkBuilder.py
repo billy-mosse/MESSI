@@ -906,3 +906,137 @@ END
 F
 END_CORES
 '''
+
+
+
+
+def get_network_from_text(network_rows, partitions):
+    reactions = []
+    species_names = []
+    species = []
+    complexes_names = []
+    complexes = []
+    lines = network_rows
+    for line in lines:
+        if ',' not in line:
+            continue
+        r = line[1:-1].split(',')
+        r = [x.strip() for x in r]
+        reactions.append(r)
+
+    species_index = 0
+    reactions_only_indices = []
+    constants_names = []
+    for reaction in reactions:
+        reaction_only_indices = []
+        constants_names.append(reaction[2])
+        #[:2] So we don't get the coefficients
+        for complex_name in reaction[:2]:
+            complex_numbers = []
+            for s in complex_name.split('+'):
+                s = s.strip()
+                if s not in species_names:
+                    species_names.append(s)
+                    species.append(species_index)
+                    complex_numbers.append(species_index)
+                    species_index += 1
+                else:
+                    complex_numbers.append(species_names.index(s))
+            #the complex might not be new
+            if complex_name not in complexes_names:
+                complexes_names.append(complex_name)
+                complexes.append(complex_numbers)
+
+            #The reaction as [complex_origin_index, complex_target_index]
+            reaction_only_indices.append(complexes.index(complex_numbers))
+        #Coefficient
+        reaction_only_indices.append(reaction[2])
+
+        reactions_only_indices.append(reaction_only_indices)
+
+    #This part needs some work.
+    #I think we should use a multigraph for (label) visualization but a digraph for computations
+    G_to_show = nx.DiGraph(directed=True)
+
+    sources = set([reaction[0] for reaction in reactions])
+    targets = set([reaction[1] for reaction in reactions])
+    nodes = sources.union(targets)
+
+
+    G_to_show.add_nodes_from(nodes)
+    for reaction in reactions:
+        G_to_show.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
+
+    df = pd.DataFrame(index=G_to_show.nodes(), columns=G_to_show.nodes())
+    for row, data in nx.shortest_path_length(G_to_show):
+        for col, dist in data.items():
+            df.loc[row,col] = dist
+
+    df = df.fillna(df.max().max())
+
+    layout = nx.kamada_kawai_layout(G_to_show, dist=df.to_dict())
+
+    #pos = nx.spring_layout(G)
+
+    plot_as_multi_digraph(G_to_show)
+
+    G = nx.DiGraph(directed=True)
+
+    sources_names = set([reaction[0] for reaction in reactions])
+    targets_names = set([reaction[1] for reaction in reactions])
+    nodes = sources.union(targets)
+
+    #print(reactions_only_indices)
+    G.add_nodes_from(nodes)
+    for reaction in reactions_only_indices:
+        G.add_edge(reaction[0], reaction[1], reaction_constant=reaction[2])
+
+    #exit(0)
+
+    #nx.draw(G,layout,arrows=True, edge_color='black',width=1,linewidths=1,\
+    #node_size=500,node_color='pink',alpha=0.9,arrowsize=12,arrowstyle='-|>',\
+    #labels={node:node for node in G.nodes()},
+    #)
+
+
+    #edge_labels = nx.get_edge_attributes(G,'reaction_constant')
+    #nx.draw_networkx_edge_labels(G, pos=layout, edge_labels = edge_labels)
+
+
+    P0_intermediates = []
+    P_cores = []
+
+    lines = partitions
+    core_nodes = False
+    i = 1
+    P = []
+    for line in lines:
+        node = line.strip()
+
+        if node == 'END' and not core_nodes:
+            core_nodes = True
+            continue
+
+        if not core_nodes:
+            P0_intermediates.append(node)
+        else:
+            if 'END' in node:
+                i = i+1
+                new_P = P.copy()
+                P_cores.append(new_P)
+                P = []
+            else:
+                P.append(node)
+
+    partitions_names = []
+    partitions_names.append(P0_intermediates)
+    for core_partition in P_cores:
+        partitions_names.append(core_partition)
+    partitions = []
+    for partition_name in partitions_names:
+        partition_indices = []
+        for species_name in partition_name:
+            partition_indices.append(species_names.index(species_name))
+        partitions.append(partition_indices)
+
+    return MESSINetwork(G, complexes, species, partitions, complexes_names, species_names, partitions_names, constants_names)
