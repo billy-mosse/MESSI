@@ -8,6 +8,8 @@ app = Flask(__name__)
 app.config["TRAP_HTTP_EXCEPTIONS"] = True
 
 from messi import MESSINetworkBuilder
+from utils import SigmaUtils, CircuitUtils, HardcodedUtils, MatrixUtils, Utils
+
 
 import sys
 
@@ -21,7 +23,7 @@ def process_pdf():
 
     sys.stdout.flush()
 
-    return json.dumps({"kappa": "GOL"})
+    #return json.dumps({"kappa": "GOL"})
 
     messi = MESSINetworkBuilder.get_network_from_text(network_rows, partition_rows)
 
