@@ -25,7 +25,7 @@ def process_pdf():
 
     #return json.dumps({"kappa": "GOL"})
 
-    messi = MESSINetworkBuilder.get_network_from_text(network_rows, partition_rows)
+    messi_network = MESSINetworkBuilder.get_network_from_text(network_rows, partition_rows)
 
     # for easier reading
     # Bperp, Mt = HardcodedUtils.get_hardcoded_matrices()
