@@ -41,6 +41,9 @@ def process_pdf():
     network = request.form.get("network")
     partition = request.form.get("partitions")
 
+    print('network', network)
+    print('partition', partition)
+
     network_rows = network.split('\n')
     partition_rows = partition.split('\n')
 
@@ -163,7 +166,6 @@ def process_pdf():
 
     sys.stdout.flush()
 
-    sys.stdout.flush()
     # input("")
     # print("d")
     # print(d)
