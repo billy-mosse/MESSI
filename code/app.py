@@ -1,3 +1,26 @@
+
+#This shouldn't be necessary, as we are using python 3 now
+from __future__ import division, absolute_import, print_function
+
+#For documentation
+from pygments import highlight
+from pygments.lexers import PythonLexer
+from pygments.formatters import HtmlFormatter
+#Tutorial! https://codeandchaos.wordpress.com/2012/07/30/sphinx-autodoc-tutorial-for-dummies/
+
+import sys
+import os
+import numpy as np
+
+from numpy.linalg import det
+from numpy import shape
+import copy
+
+#For nice-printing of tables
+import texttable as tt
+import os, os.path
+
+
 import traceback
 
 from flask import Flask
