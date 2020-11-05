@@ -188,7 +188,7 @@ def process_pdf():
 
     # Steps 2-5
 
-    only_one_string = True
+    only_one_string = 'Yes'
 
     # only_one = False
     equal_sign_vectors = []
