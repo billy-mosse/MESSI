@@ -21,7 +21,7 @@ def process_pdf():
 
     sys.stdout.flush()
 
-    return json.dumps({'kappa': "GOL"})
+    return json.dumps({"kappa": "GOL"})
 
     messi = MESSINetworkBuilder.get_network_from_text(network_rows, partition_rows)
 
